@@ -1,106 +1,83 @@
-Appcelerator Titanium Mobile Module Project
-===========================================
+# Extended Imageview
 
-This is a skeleton Titanium Mobile Mobile module project.
+Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ImageView) doesn't support the contentMode property so your rendered image will everytime fit your ImageView. This module allows you to specify which behavior your ImageView must have and adds some extra features to improve the user experience.
 
+## Get it
 
-MODULE NAMING
--------------
+Clone this repository or directly download the latest packaged module version [here](https://github.com/AndreaVitale/imageview/blob/master/dist/av.imageview-iphone-1.0.0.zip?raw=true).\
+Now, follow [these steps](http://docs.appcelerator.com/platform/latest/#!/guide/Using_a_Module-section-30082372_UsingaModule-Installingmodules) to install the packaged version of this module into your application.
 
-Choose a unique module id for your module.  This ID usually follows a namespace
-convention using DNS notation.  For example, com.appcelerator.module.test.  This
-ID can only be used once by all public modules in Titanium.
+## Usage
+You can easily use this module via Alloy or in a classic way.
+### Alloy
+Here is how you can use the extended-imageview directly in alloy:
 
+    <Alloy>
+        <Window>
+            <View class="container">
+                <ImageView platform="ios" module="av.imageview" />
+            </View>
+        </Window>
+    </Alloy>
 
-GET STARTED
-------------
+and inside the related TSS you can do
 
-1. Edit manifest with the appropriate details about your module.
-2. Edit LICENSE to add your license details.
-3. Place any assets (such as PNG files) that are required anywhere in the module folder.
-4. Edit the timodule.json and configure desired settings.
-5. Code and build.
+    "ImageView": {
+        width: 100,
+        height: 100,
+        image: "https://static.pexels.com/photos/27954/pexels-photo-27954.jpg",
+    }
 
+### Classic
+You can instantiate an extended-imageview in this way:
 
-DOCUMENTATION FOR YOUR MODULE
------------------------------
+    require('av.imageview').createImageView({
+        width: 100,
+        height: 100,
+        image: "https://static.pexels.com/photos/27954/pexels-photo-27954.jpg",
+    });
 
-You should provide at least minimal documentation for your module in `documentation` folder using the Markdown syntax.
+## API
 
-For more information on the Markdown syntax, refer to this documentation at:
+All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.View) properties and methods are supported.\
+About the enabled `contentMode`, you can learn more about this [here](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/index.html#//apple_ref/c/econst/UIViewContentModeScaleToFill).
 
-<http://daringfireball.net/projects/markdown/>
+### Extra properties
 
+| Property | Description | Note |
+| ---------- | ---------- | ----- |
+| image | Set the image to display | When the image download is in progress, an ActivityIndicator is automatically displayed |
+| contentMode | Set the ImageView content mode | Supported contentmodes are listed in a next section. |
+| defaultImage | __Local__ image to display when the image download is in progress |  |
+| brokenLinkImage | __Local__ image to display when the given link doesn't work or the image doesn't exists |  |
+| clipsToBound | More details [here](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/#//apple_ref/occ/instp/UIView/clipsToBounds) |  |
 
-TEST HARNESS EXAMPLE FOR YOUR MODULE
-------------------------------------
+### Extra methods
 
-The `example` directory contains a skeleton application test harness that can be
-used for testing and providing an example of usage to the users of your module.
+| Method | Description |
+| ---------- | ---------- |
+| setImage | Set the `image` property |
+| setContentMode | Set the `contentMode` property |
+| setClipsToBound | Set the `clipToBounds` property |
+| startActivityIndicator | Force the activity indicator to show |
+| stopActivityIndicator | Force the activity indicator to hide |
 
+### Supported Content Modes
+Here is a list of supported content modes:
 
-BUILDING YOUR MODULE
---------------------
+- CONTENT_MODE_SCALE_TO_FIT
+- CONTENT_MODE_ASPECT_FIT
+- CONTENT_MODE_ASPECT_FILL
+- CONTENT_MODE_REDRAW
+- CONTENT_MODE_CENTER
+- CONTENT_MODE_TOP
+- CONTENT_MODE_BOTTOM
+- CONTENT_MODE_LEFT
+- CONTENT_MODE_RIGHT
+- CONTENT_MODE_TOP_LEFT
+- CONTENT_MODE_TOP_RIGHT
+- CONTENT_MODE_BOTTOM_LEFT
+- CONTENT_MODE_BOTTOM_RIGHT
 
-Simply run `titanium build --platform <name of platform> --build-type production --dir /path/to/module`.
-You can omit the --dir option if your working directory is in the module's project directory.
-
-
-INSTALL YOUR MODULE
--------------------
-
-Mac OS X
---------
-Copy the distribution zip file into the `~/Library/Application Support/Titanium` folder
-
-Linux
------
-Copy the distribution zip file into the `~/.titanium` folder
-
-Windows
--------
-Copy the distribution zip file into the `C:\ProgramData\Titanium` folder
-
-
-REGISTER YOUR MODULE
---------------------
-
-Register your module with your application by editing `tiapp.xml` and adding your module.
-Example:
-
-<modules>
-	<module version="0.1">av.imageview</module>
-</modules>
-
-When you run your project, the compiler will combine your module along with its dependencies
-and assets into the application.
-
-
-USING YOUR MODULE IN CODE
--------------------------
-
-To use your module in code, you will need to require it.
-
-For example,
-
-	var my_module = require('av.imageview');
-	my_module.foo();
-
-
-TESTING YOUR MODULE
--------------------
-
-To test with the script, execute:
-
-	titanium run --dir=YOURMODULEDIR
-
-This will execute the app.js in the example folder as a Titanium application.
-
-
-DISTRIBUTING YOUR MODULE
--------------------------
-
-You can choose to manually distribute your module distribution zip file or through the Titanium Marketplace!
-
-
-Cheers!
+## Credits
+[@mads](https://github.com/viezel) that with his code inspired me to make this module
