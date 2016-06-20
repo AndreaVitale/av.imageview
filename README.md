@@ -28,6 +28,11 @@ and inside the related TSS you can do
         height: 100,
         image: "https://static.pexels.com/photos/27954/pexels-photo-27954.jpg",
     }
+    
+### ListView ItemTemplate
+Here is how you can use the extended-imageview directly in alloy:
+
+    <ImageView ns="AvImageview" />
 
 ### Classic
 You can instantiate an extended-imageview in this way:
