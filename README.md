@@ -4,7 +4,8 @@ Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#
 
 ## Get it
 
-Clone this repository or directly download the latest packaged module version [here](https://github.com/AndreaVitale/imageview/blob/master/dist/av.imageview-iphone-1.0.0.zip?raw=true).\
+Clone this repository or directly download the latest packaged module version [here](https://github.com/AndreaVitale/imageview/blob/master/dist/av.imageview-iphone-1.0.0.zip?raw=true).
+
 Now, follow [these steps](http://docs.appcelerator.com/platform/latest/#!/guide/Using_a_Module-section-30082372_UsingaModule-Installingmodules) to install the packaged version of this module into your application.
 
 ## Usage
@@ -40,6 +41,7 @@ You can instantiate an extended-imageview in this way:
 ## API
 
 All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.View) properties and methods are supported.
+
 About the enabled `contentMode`, you can learn more about this [here](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/index.html#//apple_ref/c/econst/UIViewContentModeScaleToFill).
 
 ### Extra properties
@@ -100,5 +102,7 @@ Using the Android version inside a ListItemTemplate will cause a rendering probl
 
 ## Credits
 [@mads](https://github.com/viezel) that with his code inspired me to make this module.
+
 [@rs](https://github.com/rs) for the amazing [SDWebImage](https://github.com/rs/SDWebImage) library.
+
 [@bumptech](https://github.com/bumptech) for the amazing [Glide](https://github.com/bumptech/glide) library.
