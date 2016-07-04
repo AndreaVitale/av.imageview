@@ -26,6 +26,8 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -70,7 +72,8 @@ public class ImageViewProxy extends TiViewProxy
 			if (loadingIndicatorEnabled) {
 				try {
 					progressBar = new ProgressBar(proxy.getActivity(), null, TiRHelper.getAndroidResource("attr.progressBarStyleSmall"));
-					progressBar.setProgressDrawable(proxy.getActivity().getDrawable(TiRHelper.getApplicationResource("drawable.circular_progress")));
+					//progressBar.setProgressDrawable(ContextCompat.getDrawable(TiRHelper.getApplicationResource("drawable.circular_progress")));
+					progressBar.setProgressDrawable(ContextCompat.getDrawable(proxy.getActivity().getBaseContext(), TiRHelper.getApplicationResource("drawable.circular_progress")));
 					progressBar.setVisibility(View.VISIBLE);
 
 					layout.addView(imageView);
