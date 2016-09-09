@@ -7,7 +7,7 @@
 // http://developer.apple.com/mac/library/documentation/DeveloperTools/Conceptual/XcodeBuildSystem/400-Build_Configurations/build_configs.html
 // 
 
-FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/av.imageview/1.0.2/platform /Library/Application\ Support/Titanium/modules/iphone/av.imageview/1.0.2/platform ~/Library/Application\ Support/Titanium/modules/iphone/av.imageview/1.0.2/platform
+FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/av.imageview/1.0.4/platform /Library/Application\ Support/Titanium/modules/iphone/av.imageview/1.0.4/platform ~/Library/Application\ Support/Titanium/modules/iphone/av.imageview/1.0.4/platform
 
 OTHER_LDFLAGS=$(inherited) -framework SDWebImage
 

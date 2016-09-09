@@ -12,6 +12,7 @@
 
 @implementation AvImageviewImageViewProxy
 
-
+USE_VIEW_FOR_CONTENT_WIDTH
+USE_VIEW_FOR_CONTENT_HEIGHT
 
 @end

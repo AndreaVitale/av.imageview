@@ -15,6 +15,11 @@
         BOOL loadingIndicator;
         BOOL clipsToBounds;
     
+        TiDimension width;
+        TiDimension height;
+        CGFloat autoHeight;
+        CGFloat autoWidth;
+    
         UIViewContentMode contentMode;
         UIImageView *imageView;
         UIActivityIndicatorView  *activityIndicator;
@@ -23,6 +28,8 @@
         NSString *brokenLinkImagePath;
 }
 
+-(void)setWidth_:(id)width;
+-(void)setHeight_:(id)height;
 -(void)setImage_:(id)args;
 -(void)setDefaultImage_:(id)args;
 -(void)setBrokenLinkImage_:(id)args;

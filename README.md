@@ -28,11 +28,15 @@ and inside the related TSS you can do
         height: 100,
         image: "https://static.pexels.com/photos/27954/pexels-photo-27954.jpg",
     }
-    
+
 ### ListView ItemTemplate
-Here is how you can use the extended-imageview directly in alloy:
+To include this module in a ListItemTemplate (iOS only atm), you have to do:
 
     <ImageView ns="AvImageview" />
+
+where `AvImageView` is a variable declared in `alloy.js` like this:
+
+    var AvImageview = require("av.imageview");
 
 ### Classic
 You can instantiate an extended-imageview in this way:
@@ -101,9 +105,6 @@ Here is a list of supported content modes:
 - CONTENT_MODE_TOP_RIGHT
 - CONTENT_MODE_BOTTOM_LEFT
 - CONTENT_MODE_BOTTOM_RIGHT
-
-### Known issues
-Using the Android version inside a ListItemTemplate will cause a rendering problem. To avoid this, set the `loadingIndicator` property to `false` as a temporary workaround.
 
 ## Credits
 [@mads](https://github.com/viezel) that with his code inspired me to make this module.

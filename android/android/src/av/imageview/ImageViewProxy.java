@@ -8,24 +8,29 @@
  */
 package av.imageview;
 
+import android.graphics.Color;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.TiConfig;
+import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.util.TiRHelper;
 import org.appcelerator.titanium.util.TiRHelper.ResourceNotFoundException;
 import org.appcelerator.titanium.proxy.TiViewProxy;
-import org.appcelerator.titanium.view.TiCompositeLayout;
-import org.appcelerator.titanium.view.TiCompositeLayout.LayoutArrangement;
-import org.appcelerator.titanium.view.TiCompositeLayout.LayoutParams;
 import org.appcelerator.titanium.view.TiDrawableReference;
 import org.appcelerator.titanium.view.TiUIView;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 
@@ -33,6 +38,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.animation.GlideAnimation;
 
 @Kroll.proxy(creatableInModule=ImageviewAndroidModule.class)
 public class ImageViewProxy extends TiViewProxy
@@ -40,6 +47,9 @@ public class ImageViewProxy extends TiViewProxy
 	// Standard Debugging variables
 	private static final String LCAT = "AVImageViewProxy";
 	private static final boolean DBG = TiConfig.LOGD;
+
+	private TiApplication applicationContext;
+	private Activity activity;
 
 	private String image;
 	private String defaultImage;
@@ -51,16 +61,23 @@ public class ImageViewProxy extends TiViewProxy
 
 	private class ExtendedImageView extends TiUIView
 	{
-		private TiCompositeLayout layout;
+		private ImageViewProxy imageViewProxy;
 		private ImageView imageView;
+		private RelativeLayout layout;
 		private ProgressBar progressBar;
 
-		public ExtendedImageView(TiViewProxy proxy) {
+		public ExtendedImageView(final TiViewProxy proxy) {
 			super(proxy);
 
+			activity = proxy.getActivity();
+			imageViewProxy = (ImageViewProxy) proxy;
+
 			//Setting up layout and imageview
-			layout = new TiCompositeLayout(proxy.getActivity());
-			imageView = new ImageView(proxy.getActivity());
+			layout = new RelativeLayout(activity);
+			imageView = new ImageView(activity);
+
+			layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+			imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
 			if (scaleType == null)
 				setScaleType(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FILL);
@@ -71,10 +88,14 @@ public class ImageViewProxy extends TiViewProxy
 			//Setting up progress indicator if desired (enabled by default)
 			if (loadingIndicatorEnabled) {
 				try {
-					progressBar = new ProgressBar(proxy.getActivity(), null, TiRHelper.getAndroidResource("attr.progressBarStyleSmall"));
-					//progressBar.setProgressDrawable(ContextCompat.getDrawable(TiRHelper.getApplicationResource("drawable.circular_progress")));
-					progressBar.setProgressDrawable(ContextCompat.getDrawable(proxy.getActivity().getBaseContext(), TiRHelper.getApplicationResource("drawable.circular_progress")));
+					progressBar = new ProgressBar(activity, null, TiRHelper.getAndroidResource("attr.progressBarStyleSmall"));
+					progressBar.setProgressDrawable(ContextCompat.getDrawable(activity.getBaseContext(), TiRHelper.getApplicationResource("drawable.circular_progress")));
 					progressBar.setVisibility(View.VISIBLE);
+
+					RelativeLayout.LayoutParams style = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+					style.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+
+					progressBar.setLayoutParams(style);
 
 					layout.addView(imageView);
 					layout.addView(progressBar);
@@ -105,6 +126,17 @@ public class ImageViewProxy extends TiViewProxy
 				setMemoryCacheEnabled(TiConvert.toBoolean(proxy.getProperty("enableMemoryCache")));
 		}
 
+		public void setImage(final Bitmap blob) {
+			activity.runOnUiThread(new Runnable() {
+				public void run() {
+					if (loadingIndicatorEnabled)
+						progressBar.setVisibility(View.GONE);
+
+					imageView.setImageBitmap(blob);
+				}
+			});
+		}
+
 		public void setImage(String newImage) {
 			if (newImage == null)
 				return;
@@ -121,6 +153,7 @@ public class ImageViewProxy extends TiViewProxy
 					Drawable brokenLinkImageDrawable = (brokenLinkImage != null) ? TiDrawableReference.fromUrl(proxy, brokenLinkImage).getDrawable() : null;
 
 					RequestListener<String, GlideDrawable> requestListener = new RequestListener<String, GlideDrawable>() {
+						@Override
 						public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
 							if (loadingIndicatorEnabled)
 								progressBar.setVisibility(View.GONE);
@@ -131,6 +164,7 @@ public class ImageViewProxy extends TiViewProxy
 			                return false;
 			            }
 
+						@Override
 						public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
 							if (loadingIndicatorEnabled)
 								progressBar.setVisibility(View.GONE);
@@ -151,7 +185,7 @@ public class ImageViewProxy extends TiViewProxy
 							 .listener(requestListener)
 							 .into(imageView);
 					else
-						Glide.with(proxy.getActivity().getBaseContext()).load(image)
+						Glide.with(proxy.getActivity().getApplicationContext()).load(image)
 							 .skipMemoryCache(memoryCacheEnabled)
 							 .placeholder(defaultImageDrawable)
 							 .error(brokenLinkImageDrawable)
@@ -177,6 +211,9 @@ public class ImageViewProxy extends TiViewProxy
 	public ImageViewProxy()
 	{
 		super();
+
+		applicationContext = TiApplication.getInstance();
+		activity = applicationContext.getCurrentActivity();
 
 		//Enabling load indicator by default
 		this.loadingIndicatorEnabled = true;
@@ -228,11 +265,17 @@ public class ImageViewProxy extends TiViewProxy
 
 	@Kroll.setProperty
 	@Kroll.method
-	public void setImage(String uri)
+	public void setImage(Object uri)
 	{
-	    this.image = uri;
+		if (uri instanceof String) {
+	    	this.image = uri.toString();
 
-	    getView().setImage(this.image);
+			getView().setImage(this.image);
+		} else {
+			TiDrawableReference drawableReference = TiDrawableReference.fromBlob(activity, (TiBlob)uri);
+
+			getView().setImage(drawableReference.getBitmap());
+		}
 	}
 
 	@Kroll.getProperty
