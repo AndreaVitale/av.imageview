@@ -1,0 +1,18 @@
+%define lookup-function-name lookupGeneratedInit
+%define class-name ImageviewAndroidBindings
+%{
+
+#include <string.h>
+#include <v8.h>
+#include <KrollBindings.h>
+
+#include "av.imageview.ImageviewAndroidModule.h"
+#include "av.imageview.ImageViewProxy.h"
+
+
+%}
+struct titanium::bindings::BindEntry;
+%%
+av.imageview.ImageviewAndroidModule, ::av::imageview::ImageviewAndroidModule::bindProxy, ::av::imageview::ImageviewAndroidModule::dispose
+av.imageview.ImageViewProxy, ::av::imageview::imageviewandroid::ImageViewProxy::bindProxy, ::av::imageview::imageviewandroid::ImageViewProxy::dispose
+%%

@@ -30,13 +30,34 @@ and inside the related TSS you can do
     }
 
 ### ListView ItemTemplate
-To include this module in a ListItemTemplate (iOS only atm), you have to do:
+To include this module in a ListItemTemplate, you have to do:
 
-    <ImageView ns="AvImageview" />
+    <ImageView ns="AV" />
 
-where `AvImageView` is a variable declared in `alloy.js` like this:
+where `AV` is a variable declared in `alloy.js` like this:
 
-    var AvImageview = require("av.imageview");
+    var AV = require("av.imageview");
+
+    //and to use contentmodes constants via alloy
+    Alloy.Globals.CONTENT_MODE_FIT = AV.CONTENT_MODE_ASPECT_FIT;
+    Alloy.Globals.CONTENT_MODE_FILL = AV.CONTENT_MODE_ASPECT_FILL;
+
+A complete example can be:
+
+    <ListView id="listView" defaultItemTemplate="template">
+	    <Templates>
+	        <ItemTemplate name="template" height="160">
+	            <ImageView ns="AV" bindId="photo" height="160" width="Ti.UI.FILL" contentMode="Alloy.Globals.CONTENT_MODE_FILL" />
+	        </ItemTemplate>
+	    </Templates>
+		<ListSection>
+			<ListItem template="template" photo:image="https://static.pexels.com/photos/1475/food-vegetables-italian-restaurant-large.jpg"></ListItem>
+			<ListItem template="template" photo:image="https://static.pexels.com/photos/109016/pexels-photo-109016-large.jpeg"></ListItem>
+			<ListItem template="template" photo:image="https://static.pexels.com/photos/10922/pexels-photo-10922-large.jpeg"></ListItem>
+			<ListItem template="template" photo:image="https://static.pexels.com/photos/31838/pexels-photo-large.jpg"></ListItem>
+			<ListItem template="template" photo:image="https://static.pexels.com/photos/4483/black-and-white-historical-statue-monument-large.jpg"></ListItem>
+		</ListSection>
+	</ListView>
 
 ### Classic
 You can instantiate an extended-imageview in this way:
