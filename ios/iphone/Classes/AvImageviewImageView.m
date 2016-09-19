@@ -24,19 +24,15 @@
         [self processProperties];
 
         imageView = [[UIImageView alloc] initWithFrame:[self bounds]];
-        //imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         imageView.clipsToBounds = YES;
 
+        activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        activityIndicator.center = CGPointMake(self.frame.size.width/2, self.frame.size.height/2);
+        activityIndicator.hidesWhenStopped = YES;
+        activityIndicator.hidden = YES;
+
         [self addSubview:imageView];
-
-        if (loadingIndicator) {
-            activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            activityIndicator.center = CGPointMake(self.frame.size.width/2, self.frame.size.height/2);
-            activityIndicator.hidesWhenStopped = YES;
-            activityIndicator.hidden = NO;
-
-            [self addSubview:activityIndicator];
-        }
+        [self addSubview:activityIndicator];
     }
 }
 
@@ -128,10 +124,17 @@
     else if ([args isKindOfClass:[NSString class]]) {
         NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:args]];
 
-        if (loadingIndicator)
+        if (loadingIndicator) {
+            activityIndicator.hidden = NO;
+
             [activityIndicator startAnimating];
+        }
 
         if ([imageUrl.scheme isEqualToString:@"http"] || [imageUrl.scheme isEqualToString:@"https"]) {
+            NSString *userAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleExecutableKey] ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleIdentifierKey], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
+
+            [[SDWebImageDownloader sharedDownloader] setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+
             [imageView cancelCurrentImageLoad];
             [imageView setImageWithURL:imageUrl
                       placeholderImage:placeholderImage
@@ -145,8 +148,11 @@
                                  [event setValue:[[NSNumber alloc] initWithFloat:image.size.width]  forKey:@"width"];
                                  [event setValue:[[NSNumber alloc] initWithFloat:image.size.height] forKey:@"height"];
 
-                                 if (error != nil && brokenLinkImage != nil) {
-                                     imageView.image = brokenLinkImage;
+                                 if (error != nil) {
+                                     if (brokenLinkImage != nil)
+                                        imageView.image = brokenLinkImage;
+
+                                    [event setValue:[error localizedDescription] forKey:@"reason"];
 
                                      if ([self.proxy _hasListeners:@"error"])
                                         [self.proxy fireEvent:@"error" withObject:event];
@@ -155,7 +161,7 @@
                                          [self.proxy fireEvent:@"load" withObject:event];
                                  }
 
-                                 if (loadingIndicator)
+                                 if ([activityIndicator isAnimating])
                                     [activityIndicator stopAnimating];
 
                                  [(TiViewProxy*)[self proxy] contentsWillChange];
@@ -171,7 +177,7 @@
         }
     } else if ([args isKindOfClass:[TiBlob class]]) {
         TiBlob *blob = (TiBlob*)args;
-        
+
         imageView.image = [blob image];
     }
 }

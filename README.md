@@ -44,20 +44,20 @@ where `AV` is a variable declared in `alloy.js` like this:
 
 A complete example can be:
 
-    <ListView id="listView" defaultItemTemplate="template">
-	    <Templates>
-	        <ItemTemplate name="template" height="160">
-	            <ImageView ns="AV" bindId="photo" height="160" width="Ti.UI.FILL" contentMode="Alloy.Globals.CONTENT_MODE_FILL" />
-	        </ItemTemplate>
-	    </Templates>
-		<ListSection>
-			<ListItem template="template" photo:image="https://static.pexels.com/photos/1475/food-vegetables-italian-restaurant-large.jpg"></ListItem>
-			<ListItem template="template" photo:image="https://static.pexels.com/photos/109016/pexels-photo-109016-large.jpeg"></ListItem>
-			<ListItem template="template" photo:image="https://static.pexels.com/photos/10922/pexels-photo-10922-large.jpeg"></ListItem>
-			<ListItem template="template" photo:image="https://static.pexels.com/photos/31838/pexels-photo-large.jpg"></ListItem>
-			<ListItem template="template" photo:image="https://static.pexels.com/photos/4483/black-and-white-historical-statue-monument-large.jpg"></ListItem>
-		</ListSection>
-	</ListView>
+    <ListView id="Images" defaultItemTemplate="template">
+        <Templates>
+            <ItemTemplate name="template" height="160">
+                <ImageView ns="AvImageview" bindId="photo" height="160" width="Ti.UI.FILL" loadingIndicator="true" contentMode="Alloy.Globals.CONTENT_MODE_FILL" />
+            </ItemTemplate>
+        </Templates>
+        <ListSection>
+            <ListItem template="template" photo:image="http://www.nationalgeographic.com/content/dam/photography/photos/000/060/6018.ngsversion.1467254523217.adapt.1900.1.jpg"></ListItem>
+            <ListItem template="template" photo:image="http://www.italiangoodnews.com/wp-content/uploads/2014/11/italy-04.jpg"></ListItem>
+            <ListItem template="template" photo:image="https://walkingtree.org/wp-content/uploads/2015/09/Elia-Locardi-Whispers-From-The-Past-The-Colosseum-Rome-Italy-1280-WM.jpg"></ListItem>
+            <ListItem template="template" photo:image="http://wp-admin.goldenbird-italy.com/wp-content/uploads/2015/07/italy_2631046a.jpg"></ListItem>
+            <ListItem template="template" photo:image="http://www.travelviaitaly.com/wp-content/uploads/2015/12/Rome-Italy.jpg"></ListItem>
+        </ListSection>
+    </ListView>
 
 ### Classic
 You can instantiate an extended-imageview in this way:
@@ -132,4 +132,4 @@ Here is a list of supported content modes:
 
 [@rs](https://github.com/rs) for the amazing [SDWebImage](https://github.com/rs/SDWebImage) library.
 
-[@bumptech](https://github.com/bumptech) for the amazing [Glide](https://github.com/bumptech/glide) library.
+[@bumptech](https://github.com/bumptech) for the amazing [Glide](https://github.com/bumptech/glide) library.

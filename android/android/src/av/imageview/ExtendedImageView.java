@@ -156,22 +156,40 @@ public class ExtendedImageView extends TiUIView {
         this.requestListener = new RequestListener<String, GlideDrawable>() {
             @Override
             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                if (spinnerPresent)
+                if (progressBar.getVisibility() == View.VISIBLE)
                     progressBar.setVisibility(View.INVISIBLE);
+
+				if (proxy.hasListeners("error")) {
+					KrollDict payload = new KrollDict();
+
+					payload.put("image", source);
+					payload.put("reason", e.getMessage());
+
+ 					proxy.fireEvent("error", payload);
+				}
 
                 return false;
             }
 
             @Override
             public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                if (spinnerPresent)
+                if (progressBar.getVisibility() == View.VISIBLE)
                     progressBar.setVisibility(View.INVISIBLE);
+
+				if (proxy.hasListeners("load")) {
+					KrollDict payload = new KrollDict();
+
+					payload.put("image", source);
+
+ 					proxy.fireEvent("load", payload);
+				}
 
                 return false;
             }
         };
 
-        this.progressBar.setVisibility(View.VISIBLE);
+		if (this.loadingIndicator)
+        	this.progressBar.setVisibility(View.VISIBLE);
 
         if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
             Glide.with(this.proxy.getActivity().getBaseContext()).load(url)
@@ -199,8 +217,7 @@ public class ExtendedImageView extends TiUIView {
     }
 
     @Override
-	public void release()
-	{
+	public void release() {
 		super.release();
 	}
 

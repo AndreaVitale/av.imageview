@@ -218,7 +218,7 @@ def package_module(manifest,mf,config):
 	name = manifest['name'].lower()
 	moduleid = manifest['moduleid'].lower()
 	version = manifest['version']
-	modulezip = 'dist/%s-iphone-%s.zip' % (moduleid,version)
+	modulezip = '../../releases/%s-iphone-%s.zip' % (moduleid,version)
 	if os.path.exists(modulezip): os.remove(modulezip)
 	zf = zipfile.ZipFile(modulezip, 'w', zipfile.ZIP_DEFLATED)
 	modulepath = 'modules/iphone/%s/%s' % (moduleid,version)
