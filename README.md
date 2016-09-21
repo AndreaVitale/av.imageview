@@ -32,15 +32,15 @@ and inside the related TSS you can do
 ### ListView ItemTemplate
 To include this module in a ListItemTemplate, you have to do:
 
-    <ImageView ns="AV" />
+    <ImageView ns="AvImageview" />
 
-where `AV` is a variable declared in `alloy.js` like this:
+where `AvImageview` is a variable declared in `alloy.js` like this:
 
-    var AV = require("av.imageview");
+    var AvImageview = require("av.imageview");
 
     //and to use contentmodes constants via alloy
-    Alloy.Globals.CONTENT_MODE_FIT = AV.CONTENT_MODE_ASPECT_FIT;
-    Alloy.Globals.CONTENT_MODE_FILL = AV.CONTENT_MODE_ASPECT_FILL;
+    Alloy.Globals.CONTENT_MODE_FIT = AvImageview.CONTENT_MODE_ASPECT_FIT;
+    Alloy.Globals.CONTENT_MODE_FILL = AvImageview.CONTENT_MODE_ASPECT_FILL;
 
 A complete example can be:
 
