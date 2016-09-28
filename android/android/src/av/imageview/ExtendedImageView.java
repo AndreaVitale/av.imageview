@@ -133,6 +133,7 @@ public class ExtendedImageView extends TiUIView {
     public void displayBlob(TiBlob blob) {
         TiDrawableReference drawableReference = TiDrawableReference.fromBlob(this.proxy.getActivity(), blob);
 
+		this.imageView.setScaleType((this.contentMode != null && this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FILL)) ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
         this.imageView.setImageBitmap(drawableReference.getBitmap());
 
         drawableReference = null;
@@ -142,6 +143,7 @@ public class ExtendedImageView extends TiUIView {
     public void displayLocalImage(String url) {
         TiDrawableReference localImage = (url != null) ? TiDrawableReference.fromUrl(this.proxy.getActivity(), url) : null;
 
+		this.imageView.setScaleType((this.contentMode != null && this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FILL)) ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
         this.imageView.setImageBitmap(localImage.getBitmap());
 
         localImage = null;

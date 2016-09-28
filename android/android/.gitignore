@@ -1,0 +1,6 @@
+# Ignoring bash utility scripts
+*.sh
+
+# Ignoring build
+build/
+dist/
