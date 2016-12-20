@@ -14,6 +14,7 @@
 #import "TiBlob.h"
 #import "AvImageviewImageViewProxy.h"
 #import "AvImageviewImageView.h"
+#import <CommonCrypto/CommonDigest.h>
 
 @implementation AvImageviewImageView
 
@@ -21,7 +22,7 @@
     [super initializeState];
 
     if (self) {
-        [self processProperties];
+        //[self processProperties];
 
         imageView = [[UIImageView alloc] initWithFrame:[self bounds]];
         imageView.clipsToBounds = YES;
@@ -37,10 +38,10 @@
 }
 
 -(void)processProperties {
-    [self setDefaultImage_: [[self.proxy allProperties] valueForKey:@"defaultImage"]];
-    [self setBrokenLinkImage_: [[self.proxy allProperties] valueForKey:@"brokenLinkImage"]];
-    [self setLoadingIndicator_: [[self.proxy allProperties] valueForKey:@"loadingIndicator"]];
-    [self setContentMode_: [[self.proxy allProperties] valueForKey:@"contentMode"]];
+    [self setDefaultImage_: [self.proxy valueForKey:@"defaultImage"]];
+    [self setBrokenLinkImage_: [self.proxy valueForKey:@"brokenLinkImage"]];
+    [self setLoadingIndicator_: [self.proxy valueForKey:@"loadingIndicator"]];
+    [self setContentMode_: [self.proxy valueForKey:@"contentMode"]];
 }
 
 -(void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds {
@@ -58,9 +59,66 @@
     [super dealloc];
 }
 
+-(UIImage *)loadImageFromAssetsCatalog:(NSURL *)img {
+    UIImage *image = nil;
+
+    NSString *imageArg = nil;
+    NSString *pathStr = [img path];
+
+    NSRange range = [pathStr rangeOfString:@".app"];
+
+    if (range.location != NSNotFound)
+        imageArg = [pathStr substringFromIndex:range.location+5];
+
+    imageArg = [imageArg stringByReplacingOccurrencesOfString:@"@3x" withString:@""];
+    imageArg = [imageArg stringByReplacingOccurrencesOfString:@"@2x" withString:@""];
+    imageArg = [imageArg stringByReplacingOccurrencesOfString:@"~iphone" withString:@""];
+    imageArg = [imageArg stringByReplacingOccurrencesOfString:@"~ipad" withString:@""];
+
+    if (imageArg != nil) {
+        unsigned char digest[CC_SHA1_DIGEST_LENGTH];
+        NSData *stringBytes = [imageArg dataUsingEncoding: NSUTF8StringEncoding];
+
+        if (CC_SHA1([stringBytes bytes], (CC_LONG)[stringBytes length], digest)) {
+            NSMutableString *sha = [[NSMutableString alloc] init];
+
+            for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+                [sha appendFormat:@"%02x", digest[i]];
+
+			[sha appendString:@"."];
+            [sha appendString:[img pathExtension]];
+
+            image = [UIImage imageNamed:sha];
+
+            RELEASE_TO_NIL(sha)
+        }
+    }
+
+    if (image == nil)
+        image = [UIImage imageWithContentsOfFile:[img path]];
+
+    return image;
+}
+
 -(UIImage *)loadLocalImage:(NSString *)imagePath {
+    if (imagePath == nil || imagePath.length == 0)
+        return;
+
     if(imagePath != nil){
         UIImage *image = nil;
+
+        //Load image from asset
+        image = [self loadImageFromAssetsCatalog: [TiUtils toURL:imagePath proxy:self.proxy]];
+
+        if (image != nil)
+            return image;
+
+        // Load the image from the application assets
+        NSString *fileNamePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:imagePath];;
+        image = [UIImage imageWithContentsOfFile:fileNamePath];
+
+        if (image != nil)
+            return image;
 
         //image from URL
         image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imagePath]]];
@@ -70,13 +128,6 @@
 
         //load remote image
         image = [UIImage imageWithContentsOfFile:imagePath];
-
-        if (image != nil)
-            return image;
-
-        // Load the image from the application assets
-        NSString *fileNamePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:imagePath];;
-        image = [UIImage imageWithContentsOfFile:fileNamePath];
 
         if (image != nil)
             return image;
@@ -170,7 +221,8 @@
                              }
              ];
         } else {
-            imageView.image = [self loadLocalImage:[TiUtils stringValue:args]];
+            if ([TiUtils stringValue:args].length > 0)
+                imageView.image = [self loadLocalImage:[TiUtils stringValue:args]];
 
             if (loadingIndicator)
                 [activityIndicator stopAnimating];
@@ -184,6 +236,12 @@
 
 -(void)setDefaultImage_:(id)args {
     placeholderImagePath = [TiUtils stringValue:args];
+
+    if (placeholderImagePath != nil) {
+        imageView.image = (placeholderImagePath != nil) ? [self loadLocalImage:placeholderImagePath] : nil;
+
+        [self fadeImage:nil];
+    }
 }
 
 -(void)setBrokenLinkImage_:(id)args {
@@ -204,38 +262,35 @@
 }
 
 #pragma mark utility methodds
--(CGFloat)contentWidthForWidth:(CGFloat)suggestedWidth
-{
+-(CGFloat)contentWidthForWidth:(CGFloat)suggestedWidth {
     if (autoWidth > 0) {
         //If height is DIP returned a scaled autowidth to maintain aspect ratio
-        if (TiDimensionIsDip(height) && autoHeight > 0) {
+        if (TiDimensionIsDip(height) && autoHeight > 0)
             return roundf(autoWidth*height.value/autoHeight);
-        }
+
         return autoWidth;
     }
 
     CGFloat calculatedWidth = TiDimensionCalculateValue(width, autoWidth);
-    if (calculatedWidth > 0) {
+
+    if (calculatedWidth > 0)
         return calculatedWidth;
-    }
+
 
     return 0;
 }
 
--(CGFloat)contentHeightForWidth:(CGFloat)width_
-{
-    if (width_ != autoWidth && autoWidth>0 && autoHeight > 0) {
+-(CGFloat)contentHeightForWidth:(CGFloat)width_ {
+    if (width_ != autoWidth && autoWidth>0 && autoHeight > 0)
         return (width_*autoHeight/autoWidth);
-    }
 
-    if (autoHeight > 0) {
+    if (autoHeight > 0)
         return autoHeight;
-    }
 
     CGFloat calculatedHeight = TiDimensionCalculateValue(height, autoHeight);
-    if (calculatedHeight > 0) {
+
+    if (calculatedHeight > 0)
         return calculatedHeight;
-    }
 
     return 0;
 }

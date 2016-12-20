@@ -14,16 +14,16 @@
     @private
         BOOL loadingIndicator;
         BOOL clipsToBounds;
-    
+
         TiDimension width;
         TiDimension height;
         CGFloat autoHeight;
         CGFloat autoWidth;
-    
+
         UIViewContentMode contentMode;
         UIImageView *imageView;
         UIActivityIndicatorView  *activityIndicator;
-    
+
         NSString *placeholderImagePath;
         NSString *brokenLinkImagePath;
 }
@@ -36,5 +36,5 @@
 -(void)setLoadingIndicator_:(id)args;
 -(void)setContentMode_:(id)args;
 -(void)setClipsToBounds_:(id)clips;
-    
+
 @end
