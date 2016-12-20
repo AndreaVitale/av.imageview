@@ -2,6 +2,9 @@
 
 Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ImageView) doesn't support the contentMode property so your rendered image will everytime fit your ImageView. This module allows you to specify which behavior your ImageView must have and adds some extra features to improve the user experience.
 
+**Warning**: after the major release of Ti SDK 6.0.0.GA, all Android titanium modules must be rebuilt with V8 and will not longer be compatible with previous version of the SDK like 5.x.x. 
+To give a support on both situations, every release will be built - following the semantic versioning - with two different major number version: 1.x.y for SDK <= 5.5.1.GA and 2.x.y for SDK >= 6.0.0.GA.
+
 ## Get it
 
 Clone this repository or directly download the latest packaged module version [here](https://github.com/AndreaVitale/imageview/blob/master/dist/av.imageview-iphone-1.0.0.zip?raw=true).
