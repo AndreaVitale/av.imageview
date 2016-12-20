@@ -1,39 +1,63 @@
-// This is a test harness for your module
-// You should do something interesting in this harness
-// to test out the module and to provide instructions
-// to users on how to use it by example.
+var AvImageview = require("av.imageview");
 
+//Defining URLs
+var photos = [
+    "http://www.nationalgeographic.com/content/dam/photography/photos/000/060/6018.ngsversion.1467254523217.adapt.1900.1.jpg",
+    "http://www.italiangoodnews.com/wp-content/uploads/2014/11/italy-04.jpg",
+    "http://wp-admin.goldenbird-italy.com/wp-content/uploads/2015/07/italy_2631046a.jpg",
+    "http://www.travelviaitaly.com/wp-content/uploads/2015/12/Rome-Italy.jpg",
+    "http://an.example.of.broken.link.image/"
+];
 
-// open a single window
-var win = Ti.UI.createWindow({
-	backgroundColor:'white'
+//and creating data source for listview
+var source = (function() {
+    var array = [];
+
+    photos.forEach(function(photo) {
+        array.push({
+            photo: {
+                image: photo
+            }
+        });
+    });
+
+    return array;
+})();
+
+//UI
+var default_template = {
+    properties: {
+        height: 160,
+    },
+    childTemplates: [{
+        type: 'AvImageview.ImageView',
+        bindId: 'photo',
+        properties: {
+            width: Ti.UI.FILL,
+            height: 160,
+            loadingIndicator: true,
+            defaultImage: "/placeholder.png",
+            brokenLinkImage: "/broken.png",
+            contentMode: AvImageview.CONTENT_MODE_ASPECT_FILL
+        }
+    }]
+};
+
+var window = Ti.UI.createWindow({
+    backgroundColor: "white"
 });
-var label = Ti.UI.createLabel();
-win.add(label);
-win.open();
 
-// TODO: write your module tests here
-var imageview_android = require('av.imageview');
-Ti.API.info("module is => " + imageview_android);
+var list_view = Ti.UI.createListView({
+    defaultItemTemplate: 'default',
+    templates: {
+        'default': default_template
+    }
+});
 
-label.text = imageview_android.example();
+var list_section = Ti.UI.createListSection();
 
-Ti.API.info("module exampleProp is => " + imageview_android.exampleProp);
-imageview_android.exampleProp = "This is a test value";
+list_section.items = source;
+list_view.sections = [list_section];
 
-if (Ti.Platform.name == "android") {
-	var proxy = imageview_android.createExample({
-		message: "Creating an example Proxy",
-		backgroundColor: "red",
-		width: 100,
-		height: 100,
-		top: 100,
-		left: 150
-	});
-
-	proxy.printMessage("Hello world!");
-	proxy.message = "Hi world!.  It's me again.";
-	proxy.printMessage("Hello world!");
-	win.add(proxy);
-}
-
+window.add(list_view);
+window.open();
