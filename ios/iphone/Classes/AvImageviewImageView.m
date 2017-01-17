@@ -22,8 +22,6 @@
     [super initializeState];
 
     if (self) {
-        //[self processProperties];
-
         imageView = [[UIImageView alloc] initWithFrame:[self bounds]];
         imageView.clipsToBounds = YES;
 
@@ -172,7 +170,10 @@
 
     if ([args isKindOfClass:[NSNull class]])
         return;
-    else if ([args isKindOfClass:[NSString class]]) {
+
+    [imageView cancelCurrentImageLoad];
+
+    if ([args isKindOfClass:[NSString class]]) {
         NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:args]];
 
         if (loadingIndicator) {
@@ -186,7 +187,6 @@
 
             [[SDWebImageDownloader sharedDownloader] setValue:userAgent forHTTPHeaderField:@"User-Agent"];
 
-            [imageView cancelCurrentImageLoad];
             [imageView setImageWithURL:imageUrl
                       placeholderImage:placeholderImage
                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
