@@ -25,8 +25,6 @@ public class ImageLoader implements Runnable {
         if (this.url != null) {
             if (this.url.startsWith("http") || this.url.startsWith("ftp"))
                 this.module.startRequest(this.url, this.module.getLoadingIndicator());
-            else
-                this.module.displayLocalImage(this.url);
         } else if (this.blob != null) {
             this.module.displayBlob(this.blob);
             this.blob = null;

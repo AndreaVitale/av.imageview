@@ -8,16 +8,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.ImageView;
+import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.GifRequestBuilder;
+import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.animation.GlideAnimation;
 
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.KrollModule;
@@ -113,14 +117,10 @@ public class ExtendedImageView extends TiUIView {
     }
 
     public void setImage(String image) {
-        if (TiApplication.isUIThread()) {
-            if (image.startsWith("http") || image.startsWith("ftp"))
-                startRequest(image, this.loadingIndicator);
-            else
-                displayLocalImage(image);
-        } else {
+        if (TiApplication.isUIThread())
+            startRequest(image, this.loadingIndicator);
+        else
             this.proxy.getActivity().runOnUiThread(new ImageLoader(this, this.source));
-        }
     }
 
     public void setBlob(TiBlob blob) {
@@ -140,75 +140,45 @@ public class ExtendedImageView extends TiUIView {
         blob = null;
     }
 
-    public void displayLocalImage(String url) {
-        TiDrawableReference localImage = (url != null) ? TiDrawableReference.fromUrl(this.proxy.getActivity(), url) : null;
-
-		this.imageView.setScaleType((this.contentMode != null && this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FILL)) ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
-        this.imageView.setImageBitmap(localImage.getBitmap());
-
-        localImage = null;
-    }
-
     public void startRequest(String url, Boolean loadingIndicator) {
-        final boolean spinnerPresent = loadingIndicator;
+		RequestListenerBuilder requestListenerBuilder = new RequestListenerBuilder();
+
+		GifRequestBuilder gifRequestBuilder;
+		DrawableRequestBuilder drawableRequestBuilder;
 
         Drawable defaultImageDrawable = (this.defaultImage != null) ? TiDrawableReference.fromUrl(proxy, this.defaultImage).getDrawable() : null;
         Drawable brokenLinkImageDrawable = (this.brokenImage != null) ? TiDrawableReference.fromUrl(proxy, this.brokenImage).getDrawable() : null;
 
-        this.requestListener = new RequestListener<String, GlideDrawable>() {
-            @Override
-            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                if (progressBar.getVisibility() == View.VISIBLE)
-                    progressBar.setVisibility(View.INVISIBLE);
-
-				if (proxy.hasListeners("error")) {
-					KrollDict payload = new KrollDict();
-
-					payload.put("image", source);
-					payload.put("reason", e.getMessage());
-
- 					proxy.fireEvent("error", payload);
-				}
-
-                return false;
-            }
-
-            @Override
-            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                if (progressBar.getVisibility() == View.VISIBLE)
-                    progressBar.setVisibility(View.INVISIBLE);
-
-				if (proxy.hasListeners("load")) {
-					KrollDict payload = new KrollDict();
-
-					payload.put("image", source);
-
- 					proxy.fireEvent("load", payload);
-				}
-
-                return false;
-            }
-        };
-
 		if (this.loadingIndicator)
         	this.progressBar.setVisibility(View.VISIBLE);
 
-        if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
-            Glide.with(this.proxy.getActivity().getBaseContext()).load(url)
-                .skipMemoryCache(this.memoryCache)
-                .placeholder(defaultImageDrawable)
-                .error(brokenLinkImageDrawable)
-                .fitCenter()
-                .listener(this.requestListener)
-                .into(this.imageView);
-        else
-            Glide.with(this.proxy.getActivity().getBaseContext()).load(url)
-                .skipMemoryCache(this.memoryCache)
-                .placeholder(defaultImageDrawable)
-                .error(brokenLinkImageDrawable)
-                .centerCrop()
-                .listener(this.requestListener)
-                .into(this.imageView);
+		//Handling GIF
+		if (this.getMimeType(url) != null && this.getMimeType(url) == "image/gif") {
+			gifRequestBuilder = Glide.with(this.proxy.getActivity().getBaseContext()).load(url).asGif()
+				.skipMemoryCache(this.memoryCache)
+				.diskCacheStrategy(DiskCacheStrategy.SOURCE)
+				.placeholder(defaultImageDrawable)
+				.error(brokenLinkImageDrawable)
+				.listener(requestListenerBuilder.getListenerForUrl(url));
+
+			if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
+	            gifRequestBuilder.fitCenter().into(this.imageView);
+	        else
+	            gifRequestBuilder.centerCrop().into(this.imageView);
+		}
+		//Handling simple images
+		else {
+			drawableRequestBuilder = Glide.with(this.proxy.getActivity().getBaseContext()).load(url)
+				.skipMemoryCache(this.memoryCache)
+				.placeholder(defaultImageDrawable)
+				.error(brokenLinkImageDrawable)
+				.listener(requestListenerBuilder.getListenerForUrl(url));
+
+			if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
+	            drawableRequestBuilder.fitCenter().into(this.imageView);
+        	else
+	            drawableRequestBuilder.centerCrop().into(this.imageView);
+		}
     }
 
     private String sanitizeUrl(String url) {
@@ -217,6 +187,43 @@ public class ExtendedImageView extends TiUIView {
 
         return (url.toString().startsWith("http") || url.toString().startsWith("ftp")) ? url.toString() : this.proxy.resolveUrl(null, url.toString());
     }
+
+	private String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+
+        if (extension != null)
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+
+        return type;
+    }
+
+	private void handleException(Exception e) {
+		if (progressBar.getVisibility() == View.VISIBLE)
+			progressBar.setVisibility(View.INVISIBLE);
+
+		if (proxy.hasListeners("error")) {
+			KrollDict payload = new KrollDict();
+
+			payload.put("image", source);
+			payload.put("reason", e.getMessage());
+
+			proxy.fireEvent("error", payload);
+		}
+	}
+
+	private void handleResourceReady() {
+		if (progressBar.getVisibility() == View.VISIBLE)
+			progressBar.setVisibility(View.INVISIBLE);
+
+		if (proxy.hasListeners("load")) {
+			KrollDict payload = new KrollDict();
+
+			payload.put("image", source);
+
+			proxy.fireEvent("load", payload);
+		}
+	}
 
     @Override
 	public void release() {
@@ -266,5 +273,49 @@ public class ExtendedImageView extends TiUIView {
 
     synchronized public String getDefaultImage() {
         return this.defaultImage;
+    }
+
+	//Utility to create a specific request listener
+	private class RequestListenerBuilder {
+        private String LCAT = "RequestListenerBuilder";
+
+        public RequestListener getListenerForUrl(String url) {
+            if (url ==  null)
+                return null;
+
+            if (getMimeType(url) == "image/gif") {
+                return new RequestListener<String, GifDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GifDrawable> target, boolean isFirstResource) {
+                        handleException(e);
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GifDrawable resource, String model, Target<GifDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        handleResourceReady();
+
+                        return false;
+                    }
+                };
+            }
+
+            return new RequestListener<String, GlideDrawable>() {
+                @Override
+                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+					handleException(e);
+
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+					handleResourceReady();
+
+                    return false;
+                }
+            };
+        }
     }
 }

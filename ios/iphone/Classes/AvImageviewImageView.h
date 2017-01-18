@@ -8,7 +8,7 @@
  */
 
 #import "TiUIView.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "SDWebImage/UIImageView+WebCache.h"
 
 @interface AvImageviewImageView : TiUIView {
     @private

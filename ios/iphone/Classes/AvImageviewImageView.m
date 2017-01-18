@@ -171,7 +171,7 @@
     if ([args isKindOfClass:[NSNull class]])
         return;
 
-    [imageView cancelCurrentImageLoad];
+    [imageView sd_cancelCurrentImageLoad];
 
     if ([args isKindOfClass:[NSString class]]) {
         NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:args]];
@@ -187,39 +187,39 @@
 
             [[SDWebImageDownloader sharedDownloader] setValue:userAgent forHTTPHeaderField:@"User-Agent"];
 
-            [imageView setImageWithURL:imageUrl
-                      placeholderImage:placeholderImage
-                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                                 autoWidth = image.size.width;
-                                 autoHeight = image.size.height;
+            [imageView sd_setImageWithURL:imageUrl
+                         placeholderImage:placeholderImage
+                                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *url) {
+                                    autoWidth = image.size.width;
+                                    autoHeight = image.size.height;
 
-                                 NSMutableDictionary *event = [[NSMutableDictionary alloc] init];
+                                    NSMutableDictionary *event = [[NSMutableDictionary alloc] init];
 
-                                 [event setValue:[imageUrl absoluteString] forKey:@"image"];
-                                 [event setValue:[[NSNumber alloc] initWithFloat:image.size.width]  forKey:@"width"];
-                                 [event setValue:[[NSNumber alloc] initWithFloat:image.size.height] forKey:@"height"];
+                                    [event setValue:[imageUrl absoluteString] forKey:@"image"];
+                                    [event setValue:[[NSNumber alloc] initWithFloat:image.size.width]  forKey:@"width"];
+                                    [event setValue:[[NSNumber alloc] initWithFloat:image.size.height] forKey:@"height"];
 
-                                 if (error != nil) {
-                                     if (brokenLinkImage != nil)
-                                        imageView.image = brokenLinkImage;
+                                    if (error != nil) {
+                                        if (brokenLinkImage != nil)
+                                            imageView.image = brokenLinkImage;
 
-                                    [event setValue:[error localizedDescription] forKey:@"reason"];
+                                        [event setValue:[error localizedDescription] forKey:@"reason"];
 
-                                     if ([self.proxy _hasListeners:@"error"])
-                                        [self.proxy fireEvent:@"error" withObject:event];
-                                 } else {
-                                     if ([self.proxy _hasListeners:@"load"])
-                                         [self.proxy fireEvent:@"load" withObject:event];
-                                 }
+                                        if ([self.proxy _hasListeners:@"error"])
+                                            [self.proxy fireEvent:@"error" withObject:event];
+                                    } else {
+                                        if ([self.proxy _hasListeners:@"load"])
+                                            [self.proxy fireEvent:@"load" withObject:event];
+                                    }
 
-                                 if ([activityIndicator isAnimating])
-                                    [activityIndicator stopAnimating];
+                                    if ([activityIndicator isAnimating])
+                                        [activityIndicator stopAnimating];
 
-                                 [(TiViewProxy*)[self proxy] contentsWillChange];
+                                    [(TiViewProxy*)[self proxy] contentsWillChange];
 
-                                 [self fadeImage:cacheType];
-                             }
-             ];
+                                    [self fadeImage:cacheType];
+                                }
+            ];
         } else {
             if ([TiUtils stringValue:args].length > 0)
                 imageView.image = [self loadLocalImage:[TiUtils stringValue:args]];
