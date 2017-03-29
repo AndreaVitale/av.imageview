@@ -2,6 +2,11 @@ var AvImageview = require("av.imageview");
 
 //Defining URLs
 var photos = [
+    "http://www.gstatic.com/webp/gallery/1.webp",
+    "http://www.gstatic.com/webp/gallery/2.webp",
+    "http://www.gstatic.com/webp/gallery/3.webp",
+    "http://www.gstatic.com/webp/gallery/4.webp",
+    "http://www.gstatic.com/webp/gallery/5.webp",
     "http://www.nationalgeographic.com/content/dam/photography/photos/000/060/6018.ngsversion.1467254523217.adapt.1900.1.jpg",
     "http://www.italiangoodnews.com/wp-content/uploads/2014/11/italy-04.jpg",
     "http://wp-admin.goldenbird-italy.com/wp-content/uploads/2015/07/italy_2631046a.jpg",
