@@ -10,9 +10,9 @@
 #import "UIImage+WebP.h"
 
 #if !COCOAPODS
-#import "webp/decode.h"
+#import "decode.h"
 #else
-#import "webp/decode.h"
+#import "decode.h"
 #endif
 
 // Callback for CGDataProviderRelease
