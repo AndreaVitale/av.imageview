@@ -1,8 +1,16 @@
-# Extended Imageview
+# Features
+---------------
+Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ImageView) doesn't support the contentMode property so your rendered image will everytime fit your ImageView. This module allows you to specify which behavior your ImageView must have and adds some extra features to improve the user experience. The module currently supports the following API's:
+- [x] Content Mode
+- [x] Broken link image fallback
+- [x] Loading image placeholder
+- [x] Custom HTTP header that are useful if the images are protected
+- [x] WebP support
+- [x] GIF support
 
-Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ImageView) doesn't support the contentMode property so your rendered image will everytime fit your ImageView. This module allows you to specify which behavior your ImageView must have and adds some extra features to improve the user experience.
+Any PR will be really appreciated!
 
-**Warning**: after the major release of Ti SDK 6.0.0.GA, all Android titanium modules must be rebuilt with V8 and will not longer be compatible with previous version of the SDK like 5.x.x.
+**Warning**: after the major release of Ti SDK 6.0.0.GA, all Android titanium modules must be rebuilt and will not longer be compatible with previous version of the SDK like 5.x.x.
 To give a support on both situations, every release will be built - following the semantic versioning - with two different major number version: 1.x.y for SDK <= 5.5.1.GA and 2.x.y for SDK >= 6.0.0.GA.
 
 ## Get it
