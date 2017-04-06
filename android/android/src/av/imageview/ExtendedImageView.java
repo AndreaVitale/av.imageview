@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -34,6 +35,8 @@ import org.appcelerator.titanium.util.TiRHelper.ResourceNotFoundException;
 import org.appcelerator.titanium.view.TiDrawableReference;
 import org.appcelerator.titanium.view.TiUIView;
 
+import java.util.HashMap;
+
 public class ExtendedImageView extends TiUIView {
 	private static final String LCAT = "ExtendedImageView";
 
@@ -50,6 +53,7 @@ public class ExtendedImageView extends TiUIView {
     private String defaultImage;
     private String brokenImage;
     private String contentMode;
+	private HashMap requestHeader;
 
     private RequestListener<String, GlideDrawable> requestListener;
 
@@ -104,6 +108,8 @@ public class ExtendedImageView extends TiUIView {
             this.setDefaultImage(d.getString("defaultImage"));
         if (d.containsKey("brokenLinkImage"))
             this.setBrokenLinkImage(d.getString("brokenLinkImage"));
+		if (d.containsKey("requestHeader"))
+			this.setRequestHeader((HashMap)d.getKrollDict("requestHeader"));
         if (d.containsKey("image"))
             this.setSource(d.getString("image"));
     }
@@ -154,7 +160,9 @@ public class ExtendedImageView extends TiUIView {
 
 		//Handling GIF
 		if (this.getMimeType(url) != null && this.getMimeType(url) == "image/gif") {
-			gifRequestBuilder = Glide.with(this.proxy.getActivity().getBaseContext()).load(url).asGif()
+			gifRequestBuilder = Glide.with(this.proxy.getActivity().getBaseContext())
+				.load(GlideUrlBuilder.build(url, this.requestHeader))
+				.asGif()
 				.skipMemoryCache(this.memoryCache)
 				.diskCacheStrategy(DiskCacheStrategy.SOURCE)
 				.placeholder(defaultImageDrawable)
@@ -168,7 +176,8 @@ public class ExtendedImageView extends TiUIView {
 		}
 		//Handling simple images
 		else {
-			drawableRequestBuilder = Glide.with(this.proxy.getActivity().getBaseContext()).load(url)
+			drawableRequestBuilder = Glide.with(this.proxy.getActivity().getBaseContext())
+				.load(GlideUrlBuilder.build(url, this.requestHeader))
 				.skipMemoryCache(this.memoryCache)
 				.placeholder(defaultImageDrawable)
 				.error(brokenLinkImageDrawable)
@@ -199,6 +208,9 @@ public class ExtendedImageView extends TiUIView {
     }
 
 	private void handleException(Exception e) {
+		Log.w(LCAT, source+": resource not loaded.");
+		Log.w(LCAT, (e != null) ? e.getMessage() : "No detailed message available.");
+
 		if (progressBar.getVisibility() == View.VISIBLE)
 			progressBar.setVisibility(View.INVISIBLE);
 
@@ -255,6 +267,10 @@ public class ExtendedImageView extends TiUIView {
         this.defaultImage = url;
     }
 
+	synchronized public void setRequestHeader(HashMap headers) {
+        this.requestHeader = headers;
+    }
+
     synchronized public boolean getLoadingIndicator() {
         return this.loadingIndicator;
     }
@@ -275,6 +291,10 @@ public class ExtendedImageView extends TiUIView {
         return this.defaultImage;
     }
 
+	synchronized public HashMap getRequestHeader() {
+        return this.requestHeader;
+    }
+
 	//Utility to create a specific request listener
 	private class RequestListenerBuilder {
         private String LCAT = "RequestListenerBuilder";
@@ -284,16 +304,16 @@ public class ExtendedImageView extends TiUIView {
                 return null;
 
             if (getMimeType(url) == "image/gif") {
-                return new RequestListener<String, GifDrawable>() {
+                return new RequestListener<GlideUrl, GifDrawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GifDrawable> target, boolean isFirstResource) {
+                    public boolean onException(Exception e, GlideUrl model, Target<GifDrawable> target, boolean isFirstResource) {
                         handleException(e);
 
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GifDrawable resource, String model, Target<GifDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(GifDrawable resource, GlideUrl model, Target<GifDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         handleResourceReady();
 
                         return false;
@@ -301,16 +321,16 @@ public class ExtendedImageView extends TiUIView {
                 };
             }
 
-            return new RequestListener<String, GlideDrawable>() {
+            return new RequestListener<GlideUrl, GlideDrawable>() {
                 @Override
-                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                public boolean onException(Exception e, GlideUrl model, Target<GlideDrawable> target, boolean isFirstResource) {
 					handleException(e);
 
                     return false;
                 }
 
                 @Override
-                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                public boolean onResourceReady(GlideDrawable resource, GlideUrl model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
 					handleResourceReady();
 
                     return false;

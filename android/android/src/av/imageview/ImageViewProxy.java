@@ -15,6 +15,10 @@ import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.view.TiUIView;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import android.app.Activity;
 
 @Kroll.proxy(creatableInModule=ImageviewAndroidModule.class)
@@ -60,6 +64,8 @@ public class ImageViewProxy extends TiViewProxy
 			this.setMemoryCacheEnabled(options.getBoolean("enableMemoryCache"));
 		if (options.containsKey("image"))
 			this.setImage(options.getString("image"));
+		if (options.containsKey("requestHeader"))
+			this.setRequestHeader((HashMap)options.get("requestHeader"));
 	}
 
 	protected ExtendedImageView getView() {
@@ -140,5 +146,11 @@ public class ImageViewProxy extends TiViewProxy
 	@Kroll.method
 	public void setMemoryCacheEnabled(Boolean enabled) {
 		getView().setMemoryCache(enabled);
+	}
+
+	@Kroll.setProperty
+	@Kroll.method
+	public void setRequestHeader(HashMap requestHeader) {
+		getView().setRequestHeader(requestHeader);
 	}
 }

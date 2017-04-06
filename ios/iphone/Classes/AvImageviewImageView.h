@@ -26,6 +26,8 @@
 
         NSString *placeholderImagePath;
         NSString *brokenLinkImagePath;
+    
+        NSDictionary *requestHeader;
 }
 
 -(void)setWidth_:(id)width;
@@ -36,5 +38,6 @@
 -(void)setLoadingIndicator_:(id)args;
 -(void)setContentMode_:(id)args;
 -(void)setClipsToBounds_:(id)clips;
+-(void)setRequestHeader_:(id)args;
 
 @end

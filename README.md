@@ -2,7 +2,7 @@
 
 Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ImageView) doesn't support the contentMode property so your rendered image will everytime fit your ImageView. This module allows you to specify which behavior your ImageView must have and adds some extra features to improve the user experience.
 
-**Warning**: after the major release of Ti SDK 6.0.0.GA, all Android titanium modules must be rebuilt with V8 and will not longer be compatible with previous version of the SDK like 5.x.x. 
+**Warning**: after the major release of Ti SDK 6.0.0.GA, all Android titanium modules must be rebuilt with V8 and will not longer be compatible with previous version of the SDK like 5.x.x.
 To give a support on both situations, every release will be built - following the semantic versioning - with two different major number version: 1.x.y for SDK <= 5.5.1.GA and 2.x.y for SDK >= 6.0.0.GA.
 
 ## Get it
@@ -45,12 +45,18 @@ where `AvImageview` is a variable declared in `alloy.js` like this:
     Alloy.Globals.CONTENT_MODE_FIT = AvImageview.CONTENT_MODE_ASPECT_FIT;
     Alloy.Globals.CONTENT_MODE_FILL = AvImageview.CONTENT_MODE_ASPECT_FILL;
 
+    //If you need to access to protected images you can define which request header fields the module has to use for every request
+    Alloy.Globals.REQUEST_HEADERS = {
+        'Authorization': 'place or assign dinamically your logged user access token',
+        'Another HTTP header field': 'with its value'
+    };
+
 A complete example can be:
 
     <ListView id="Images" defaultItemTemplate="template">
         <Templates>
             <ItemTemplate name="template" height="160">
-                <ImageView ns="AvImageview" bindId="photo" height="160" width="Ti.UI.FILL" loadingIndicator="true" contentMode="Alloy.Globals.CONTENT_MODE_FILL" />
+                <ImageView ns="AvImageview" bindId="photo" height="160" width="Ti.UI.FILL" loadingIndicator="true" contentMode="Alloy.Globals.CONTENT_MODE_FILL" requestHeader="Alloy.Globals.REQUEST_HEADERS" />
             </ItemTemplate>
         </Templates>
         <ListSection>
@@ -69,6 +75,9 @@ You can instantiate an extended-imageview in this way:
         width: 100,
         height: 100,
         image: "https://static.pexels.com/photos/27954/pexels-photo-27954.jpg",
+        requestHeader: {
+            'Authorization': 'Bearer your_access_token_here'
+        }
     });
 
 ## API
@@ -87,6 +96,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | loadingIndicator | Enable or disable the activity indicator when the download is in progress | `true` by default |
 | enableMemoryCache | Enable or disable the memory cache mechanism | `true` by default and *Android only* |
 | clipsToBound | More details [here](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/#//apple_ref/occ/instp/UIView/clipsToBounds) | (iOS Only) |
+| requestHeader | An object used to define extra http request header fields |  |
 
 ### Extra methods
 
@@ -97,11 +107,13 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | setDefaultImage | Set the `defaultImage` property |  |
 | setBrokenLinkImage | Set the `brokenLinkImage` property |  |
 | setClipsToBound | Set the `clipToBounds` property | __iOS only__ |
+| setRequestHeader | Set the `requestHeader` property |  |
 | getContentMode | Get the value of `contentMode` property |
 | getLoadingIndicator | Get the value of `loadingIndicator` property |  |
 | getDefaultImage | Get the value of `defaultImage` property |  |
 | getBrokenLinkImage | Get the value of `brokenLinkImage` property |  |
 | getClipsToBound | Get the value of `clipToBounds` property | __iOS only__ |
+| getRequestHeader | Get the `requestHeader` property |  |
 
 ### Events
 

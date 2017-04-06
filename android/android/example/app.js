@@ -2,11 +2,12 @@ var AvImageview = require("av.imageview");
 
 //Defining URLs
 var photos = [
+    "http://www.gstatic.com/webp/gallery/1.webp",
     "http://www.nationalgeographic.com/content/dam/photography/photos/000/060/6018.ngsversion.1467254523217.adapt.1900.1.jpg",
     "http://www.italiangoodnews.com/wp-content/uploads/2014/11/italy-04.jpg",
-    "http://wp-admin.goldenbird-italy.com/wp-content/uploads/2015/07/italy_2631046a.jpg",
+    "http://an.example.of.broken.link.image",
     "http://www.travelviaitaly.com/wp-content/uploads/2015/12/Rome-Italy.jpg",
-    "http://an.example.of.broken.link.image/"
+    "http://another.example.of.broken.link.image/"
 ];
 
 //and creating data source for listview
@@ -38,7 +39,10 @@ var default_template = {
             loadingIndicator: true,
             defaultImage: "/placeholder.png",
             brokenLinkImage: "/broken.png",
-            contentMode: AvImageview.CONTENT_MODE_ASPECT_FILL
+            contentMode: AvImageview.CONTENT_MODE_ASPECT_FILL,
+            requestHeader: {
+                'Authorization': "Bearer YOU_CAN_PLACE_YOUR_ACCESS_TOKEN_HERE"
+            }
         }
     }]
 };
