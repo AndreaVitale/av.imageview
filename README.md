@@ -4,7 +4,7 @@ Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#
 - [x] Content Mode
 - [x] Broken link image fallback
 - [x] Loading image placeholder
-- [x] Custom HTTP header that are useful if the images are protected
+- [x] Custom HTTP header, useful if the images are protected
 - [x] WebP support
 - [x] GIF support
 
@@ -151,7 +151,7 @@ Here is a list of supported content modes:
 - CONTENT_MODE_BOTTOM_RIGHT
 
 ## Credits
-[@mads](https://github.com/viezel) that with his code inspired me to make this module.
+Anyone who contributes to the module enhanchement!
 
 [@rs](https://github.com/rs) for the amazing [SDWebImage](https://github.com/rs/SDWebImage) library.
 
