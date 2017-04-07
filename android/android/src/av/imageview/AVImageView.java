@@ -1,5 +1,9 @@
 package av.imageview;
 
+import av.imageview.utils.ImageLoader;
+import av.imageview.utils.glide.GlideUrlBuilder;
+import av.imageview.utils.glide.GlideCircleTransform;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -38,8 +42,8 @@ import org.appcelerator.titanium.view.TiUIView;
 
 import java.util.HashMap;
 
-public class ExtendedImageView extends TiUIView {
-	private static final String LCAT = "ExtendedImageView";
+public class AVImageView extends TiUIView {
+	private static final String LCAT = "AVImageView";
 
     private TiViewProxy proxy;
 
@@ -59,14 +63,14 @@ public class ExtendedImageView extends TiUIView {
 
     private RequestListener<String, GlideDrawable> requestListener;
 
-    public ExtendedImageView(TiViewProxy proxy) {
+    public AVImageView(TiViewProxy proxy) {
         super(proxy);
 
         this.proxy = proxy;
 
         //Setting up default values
         this.loadingIndicator = true;
-        this.contentMode = ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT;
+        this.contentMode = AVImageViewModule.CONTENT_MODE_ASPECT_FIT;
         this.memoryCache = true;
 
         //Setting up layout and imageview
@@ -143,7 +147,7 @@ public class ExtendedImageView extends TiUIView {
     public void displayBlob(TiBlob blob) {
         TiDrawableReference drawableReference = TiDrawableReference.fromBlob(this.proxy.getActivity(), blob);
 
-		this.imageView.setScaleType((this.contentMode != null && this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FILL)) ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
+		this.imageView.setScaleType((this.contentMode != null && this.contentMode.equals(AVImageViewModule.CONTENT_MODE_ASPECT_FILL)) ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
         this.imageView.setImageBitmap(drawableReference.getBitmap());
 
         drawableReference = null;
@@ -179,9 +183,9 @@ public class ExtendedImageView extends TiUIView {
 				.listener(requestListenerBuilder.createListener(url));
 
 			if (this.roundedImage)
-				gifRequestBuilder.transform(new CircleTransform(this.proxy.getActivity().getBaseContext())).into(this.imageView);
+				gifRequestBuilder.transform(new GlideCircleTransform(this.proxy.getActivity().getBaseContext())).into(this.imageView);
 			else {
-				if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
+				if (this.contentMode == null || this.contentMode.equals(AVImageViewModule.CONTENT_MODE_ASPECT_FIT))
 		            gifRequestBuilder.fitCenter().into(this.imageView);
 	        	else
 		            gifRequestBuilder.centerCrop().into(this.imageView);
@@ -195,9 +199,9 @@ public class ExtendedImageView extends TiUIView {
 				.listener(requestListenerBuilder.createListener(url));
 
 			if (this.roundedImage)
-				drawableRequestBuilder.transform(new CircleTransform(this.proxy.getActivity().getBaseContext())).into(this.imageView);
+				drawableRequestBuilder.transform(new GlideCircleTransform(this.proxy.getActivity().getBaseContext())).into(this.imageView);
 			else {
-				if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
+				if (this.contentMode == null || this.contentMode.equals(AVImageViewModule.CONTENT_MODE_ASPECT_FIT))
 		            drawableRequestBuilder.fitCenter().into(this.imageView);
 	        	else
 		            drawableRequestBuilder.centerCrop().into(this.imageView);

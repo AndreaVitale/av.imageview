@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 import android.app.Activity;
 
-@Kroll.proxy(creatableInModule=ImageviewAndroidModule.class)
+@Kroll.proxy(creatableInModule=AVImageViewModule.class)
 public class ImageViewProxy extends TiViewProxy
 {
 	// Standard Debugging variables
@@ -39,7 +39,7 @@ public class ImageViewProxy extends TiViewProxy
 
 	@Override
 	public TiUIView createView(Activity activity) {
-		TiUIView view = new ExtendedImageView(this);
+		TiUIView view = new AVImageView(this);
 
 		view.getLayoutParams().autoFillsHeight = true;
 		view.getLayoutParams().autoFillsWidth = true;
@@ -70,8 +70,8 @@ public class ImageViewProxy extends TiViewProxy
 			this.setRequestHeader((HashMap)options.get("requestHeader"));
 	}
 
-	protected ExtendedImageView getView() {
-		return (ExtendedImageView)getOrCreateView();
+	protected AVImageView getView() {
+		return (AVImageView)getOrCreateView();
 	}
 
 	// Public API

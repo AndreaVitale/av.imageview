@@ -1,4 +1,4 @@
-package av.imageview;
+package av.imageview.utils.glide;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import com.bumptech.glide.load.model.LazyHeaders.Builder;
 
 import org.appcelerator.kroll.common.Log;
 
-class GlideUrlBuilder {
+public class GlideUrlBuilder {
     public static GlideUrl build(String url, HashMap headers) {
         if (url != null && headers != null) {
             Builder headerBuilder = new LazyHeaders.Builder();

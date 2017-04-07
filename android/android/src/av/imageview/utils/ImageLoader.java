@@ -1,4 +1,6 @@
-package av.imageview;
+package av.imageview.utils;
+
+import av.imageview.AVImageView;
 
 import android.widget.ImageView;
 
@@ -10,9 +12,9 @@ public class ImageLoader implements Runnable {
 
     private String url;
     private TiBlob blob;
-    private ExtendedImageView module;
+    private AVImageView module;
 
-    public ImageLoader(ExtendedImageView imageViewModule, Object image) {
+    public ImageLoader(AVImageView imageViewModule, Object image) {
         if (image instanceof String)
             this.url = image.toString();
         else if (image instanceof TiBlob)

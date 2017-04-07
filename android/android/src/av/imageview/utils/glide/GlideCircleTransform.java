@@ -1,4 +1,4 @@
-package av.imageview;
+package av.imageview.utils.glide;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,8 +10,8 @@ import android.support.v4.content.ContextCompat;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 
-public class CircleTransform extends BitmapTransformation {
-    public CircleTransform(Context context) {
+public class GlideCircleTransform extends BitmapTransformation {
+    public GlideCircleTransform(Context context) {
         super(context);
     }
 
