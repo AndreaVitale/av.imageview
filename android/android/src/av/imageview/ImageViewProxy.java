@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 import android.app.Activity;
 
-@Kroll.proxy(creatableInModule=AVImageViewModule.class)
+@Kroll.proxy(creatableInModule=ImageViewModule.class)
 public class ImageViewProxy extends TiViewProxy
 {
 	// Standard Debugging variables

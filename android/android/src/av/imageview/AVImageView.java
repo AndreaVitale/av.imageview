@@ -70,7 +70,7 @@ public class AVImageView extends TiUIView {
 
         //Setting up default values
         this.loadingIndicator = true;
-        this.contentMode = AVImageViewModule.CONTENT_MODE_ASPECT_FIT;
+        this.contentMode = ImageViewModule.CONTENT_MODE_ASPECT_FIT;
         this.memoryCache = true;
 
         //Setting up layout and imageview
@@ -147,7 +147,7 @@ public class AVImageView extends TiUIView {
     public void displayBlob(TiBlob blob) {
         TiDrawableReference drawableReference = TiDrawableReference.fromBlob(this.proxy.getActivity(), blob);
 
-		this.imageView.setScaleType((this.contentMode != null && this.contentMode.equals(AVImageViewModule.CONTENT_MODE_ASPECT_FILL)) ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
+		this.imageView.setScaleType((this.contentMode != null && this.contentMode.equals(ImageViewModule.CONTENT_MODE_ASPECT_FILL)) ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
         this.imageView.setImageBitmap(drawableReference.getBitmap());
 
         drawableReference = null;
@@ -185,7 +185,7 @@ public class AVImageView extends TiUIView {
 			if (this.roundedImage)
 				gifRequestBuilder.transform(new GlideCircleTransform(this.proxy.getActivity().getBaseContext())).into(this.imageView);
 			else {
-				if (this.contentMode == null || this.contentMode.equals(AVImageViewModule.CONTENT_MODE_ASPECT_FIT))
+				if (this.contentMode == null || this.contentMode.equals(ImageViewModule.CONTENT_MODE_ASPECT_FIT))
 		            gifRequestBuilder.fitCenter().into(this.imageView);
 	        	else
 		            gifRequestBuilder.centerCrop().into(this.imageView);
@@ -201,7 +201,7 @@ public class AVImageView extends TiUIView {
 			if (this.roundedImage)
 				drawableRequestBuilder.transform(new GlideCircleTransform(this.proxy.getActivity().getBaseContext())).into(this.imageView);
 			else {
-				if (this.contentMode == null || this.contentMode.equals(AVImageViewModule.CONTENT_MODE_ASPECT_FIT))
+				if (this.contentMode == null || this.contentMode.equals(ImageViewModule.CONTENT_MODE_ASPECT_FIT))
 		            drawableRequestBuilder.fitCenter().into(this.imageView);
 	        	else
 		            drawableRequestBuilder.centerCrop().into(this.imageView);

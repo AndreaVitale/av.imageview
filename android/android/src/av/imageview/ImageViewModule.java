@@ -12,9 +12,9 @@ import org.appcelerator.kroll.common.TiConfig;
 
 
 @Kroll.module(name="ImageviewAndroid", id="av.imageview")
-public class AVImageViewModule extends KrollModule
+public class ImageViewModule extends KrollModule
 {
-	private static final String LCAT = "AVImageViewModule";
+	private static final String LCAT = "ImageViewModule";
 	private static final boolean DBG = TiConfig.LOGD;
 
 	@Kroll.constant
@@ -23,7 +23,7 @@ public class AVImageViewModule extends KrollModule
 	@Kroll.constant
 	public static final String CONTENT_MODE_ASPECT_FIT = "fitCenter";
 
-	public AVImageViewModule()
+	public ImageViewModule()
 	{
 		super();
 	}
