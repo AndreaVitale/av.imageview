@@ -16,6 +16,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -50,6 +51,7 @@ public class ExtendedImageView extends TiUIView {
     //Config variables
     private boolean loadingIndicator;
     private boolean memoryCache;
+	private boolean roundedImage;
     private String defaultImage;
     private String brokenImage;
     private String contentMode;
@@ -110,6 +112,8 @@ public class ExtendedImageView extends TiUIView {
             this.setBrokenLinkImage(d.getString("brokenLinkImage"));
 		if (d.containsKey("requestHeader"))
 			this.setRequestHeader((HashMap)d.getKrollDict("requestHeader"));
+		if (d.containsKey("rounded"))
+			this.setRoundedImage(d.getBoolean("rounded"));
         if (d.containsKey("image"))
             this.setSource(d.getString("image"));
     }
@@ -117,7 +121,7 @@ public class ExtendedImageView extends TiUIView {
     public void setSource(String url) {
         this.source = sanitizeUrl(url);
 
-        //If is correctly set I'll display the image
+        //If it is correctly set I'll display the image
         if (this.source != null)
             this.setImage(this.source);
     }
@@ -149,8 +153,9 @@ public class ExtendedImageView extends TiUIView {
     public void startRequest(String url, Boolean loadingIndicator) {
 		RequestListenerBuilder requestListenerBuilder = new RequestListenerBuilder();
 
-		GifRequestBuilder gifRequestBuilder;
+		DrawableTypeRequest drawableRequest;
 		DrawableRequestBuilder drawableRequestBuilder;
+		GifRequestBuilder gifRequestBuilder;
 
         Drawable defaultImageDrawable = (this.defaultImage != null) ? TiDrawableReference.fromUrl(proxy, this.defaultImage).getDrawable() : null;
         Drawable brokenLinkImageDrawable = (this.brokenImage != null) ? TiDrawableReference.fromUrl(proxy, this.brokenImage).getDrawable() : null;
@@ -158,35 +163,45 @@ public class ExtendedImageView extends TiUIView {
 		if (this.loadingIndicator)
         	this.progressBar.setVisibility(View.VISIBLE);
 
+		//Switching between local and remote url
+		if (url.startsWith("file://"))
+			drawableRequest = Glide.with(this.proxy.getActivity().getBaseContext()).load(url);
+		else
+			drawableRequest = Glide.with(this.proxy.getActivity().getBaseContext()).load(GlideUrlBuilder.build(url, this.requestHeader));
+
 		//Handling GIF
 		if (this.getMimeType(url) != null && this.getMimeType(url) == "image/gif") {
-			gifRequestBuilder = Glide.with(this.proxy.getActivity().getBaseContext())
-				.load(GlideUrlBuilder.build(url, this.requestHeader))
-				.asGif()
+			gifRequestBuilder = drawableRequest.asGif()
 				.skipMemoryCache(this.memoryCache)
 				.diskCacheStrategy(DiskCacheStrategy.SOURCE)
 				.placeholder(defaultImageDrawable)
 				.error(brokenLinkImageDrawable)
-				.listener(requestListenerBuilder.getListenerForUrl(url));
+				.listener(requestListenerBuilder.createListener(url));
 
-			if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
-	            gifRequestBuilder.fitCenter().into(this.imageView);
-	        else
-	            gifRequestBuilder.centerCrop().into(this.imageView);
+			if (this.roundedImage)
+				gifRequestBuilder.transform(new CircleTransform(this.proxy.getActivity().getBaseContext())).into(this.imageView);
+			else {
+				if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
+		            gifRequestBuilder.fitCenter().into(this.imageView);
+	        	else
+		            gifRequestBuilder.centerCrop().into(this.imageView);
+			}
 		}
 		//Handling simple images
 		else {
-			drawableRequestBuilder = Glide.with(this.proxy.getActivity().getBaseContext())
-				.load(GlideUrlBuilder.build(url, this.requestHeader))
-				.skipMemoryCache(this.memoryCache)
+			drawableRequestBuilder = drawableRequest.skipMemoryCache(this.memoryCache)
 				.placeholder(defaultImageDrawable)
 				.error(brokenLinkImageDrawable)
-				.listener(requestListenerBuilder.getListenerForUrl(url));
+				.listener(requestListenerBuilder.createListener(url));
 
-			if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
-	            drawableRequestBuilder.fitCenter().into(this.imageView);
-        	else
-	            drawableRequestBuilder.centerCrop().into(this.imageView);
+			if (this.roundedImage)
+				drawableRequestBuilder.transform(new CircleTransform(this.proxy.getActivity().getBaseContext())).into(this.imageView);
+			else {
+				if (this.contentMode == null || this.contentMode.equals(ImageviewAndroidModule.CONTENT_MODE_ASPECT_FIT))
+		            drawableRequestBuilder.fitCenter().into(this.imageView);
+	        	else
+		            drawableRequestBuilder.centerCrop().into(this.imageView);
+			}
 		}
     }
 
@@ -207,7 +222,7 @@ public class ExtendedImageView extends TiUIView {
         return type;
     }
 
-	private void handleException(Exception e) {
+	private boolean handleException(Exception e) {
 		Log.w(LCAT, source+": resource not loaded.");
 		Log.w(LCAT, (e != null) ? e.getMessage() : "No detailed message available.");
 
@@ -222,9 +237,11 @@ public class ExtendedImageView extends TiUIView {
 
 			proxy.fireEvent("error", payload);
 		}
+
+		return false;
 	}
 
-	private void handleResourceReady() {
+	private boolean handleResourceReady() {
 		if (progressBar.getVisibility() == View.VISIBLE)
 			progressBar.setVisibility(View.INVISIBLE);
 
@@ -235,6 +252,8 @@ public class ExtendedImageView extends TiUIView {
 
 			proxy.fireEvent("load", payload);
 		}
+
+		return false;
 	}
 
     @Override
@@ -267,6 +286,10 @@ public class ExtendedImageView extends TiUIView {
         this.defaultImage = url;
     }
 
+	synchronized public void setRoundedImage(boolean enabled) {
+		this.roundedImage = enabled;
+	}
+
 	synchronized public void setRequestHeader(HashMap headers) {
         this.requestHeader = headers;
     }
@@ -291,6 +314,10 @@ public class ExtendedImageView extends TiUIView {
         return this.defaultImage;
     }
 
+	synchronized public boolean getRoundedImage() {
+		return this.roundedImage;
+	}
+
 	synchronized public HashMap getRequestHeader() {
         return this.requestHeader;
     }
@@ -299,27 +326,49 @@ public class ExtendedImageView extends TiUIView {
 	private class RequestListenerBuilder {
         private String LCAT = "RequestListenerBuilder";
 
-        public RequestListener getListenerForUrl(String url) {
+        public RequestListener createListener(String url) {
             if (url ==  null)
                 return null;
 
             if (getMimeType(url) == "image/gif") {
+				if (url.startsWith("file://"))
+					return new RequestListener<String, GifDrawable>() {
+						@Override
+						public boolean onException(Exception e, String model, Target<GifDrawable> target, boolean isFirstResource) {
+							return handleException(e);
+						}
+
+						@Override
+						public boolean onResourceReady(GifDrawable resource, String model, Target<GifDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+							return handleResourceReady();
+						}
+					};
+
                 return new RequestListener<GlideUrl, GifDrawable>() {
                     @Override
                     public boolean onException(Exception e, GlideUrl model, Target<GifDrawable> target, boolean isFirstResource) {
-                        handleException(e);
-
-                        return false;
+                        return handleException(e);
                     }
 
                     @Override
                     public boolean onResourceReady(GifDrawable resource, GlideUrl model, Target<GifDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        handleResourceReady();
-
-                        return false;
+                        return handleResourceReady();
                     }
                 };
             }
+
+			if (url.startsWith("file://"))
+				return new RequestListener<String, GlideDrawable>() {
+					@Override
+					public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+						return handleException(e);
+					}
+
+					@Override
+					public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+						return handleResourceReady();
+					}
+				};
 
             return new RequestListener<GlideUrl, GlideDrawable>() {
                 @Override

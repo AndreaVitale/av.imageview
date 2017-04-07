@@ -23,7 +23,7 @@ public class ImageLoader implements Runnable {
 
     public void run() {
         if (this.url != null) {
-            if (this.url.startsWith("http") || this.url.startsWith("ftp"))
+            if (this.url.startsWith("http") || this.url.startsWith("ftp") || this.url.startsWith("file"))
                 this.module.startRequest(this.url, this.module.getLoadingIndicator());
         } else if (this.blob != null) {
             this.module.displayBlob(this.blob);

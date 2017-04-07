@@ -7,11 +7,12 @@ Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#
 - [x] Custom HTTP header, useful if the images are protected
 - [x] WebP support
 - [x] GIF support
+- [x] Automatic circle transformation (Android only)
 
 Any PR will be really appreciated!
 
 **Warning**: after the major release of Ti SDK 6.0.0.GA, all Android titanium modules must be rebuilt and will not longer be compatible with previous version of the SDK like 5.x.x.
-To give a support on both situations, every release will be built - following the semantic versioning - with two different major number version: 1.x.y for SDK <= 5.5.1.GA and 2.x.y for SDK >= 6.0.0.GA.
+To give a support on both situations, every release will be built with two different major number version: 1.x.y for SDK <= 5.5.1.GA and 2.x.y for SDK >= 6.0.0.GA.
 
 ## Get it
 
@@ -103,8 +104,9 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | brokenLinkImage | __Local__ image to display when the given link doesn't work or the image doesn't exists |  |
 | loadingIndicator | Enable or disable the activity indicator when the download is in progress | `true` by default |
 | enableMemoryCache | Enable or disable the memory cache mechanism | `true` by default and *Android only* |
-| clipsToBound | More details [here](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/#//apple_ref/occ/instp/UIView/clipsToBounds) | (iOS Only) |
+| clipsToBound | More details [here](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/#//apple_ref/occ/instp/UIView/clipsToBounds) | iOS only |
 | requestHeader | An object used to define extra http request header fields |  |
+| rounded | Enable or disable the circle transformation that automatically render the image as a perfect circle | Android only |
 
 ### Extra methods
 
@@ -116,12 +118,14 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | setBrokenLinkImage | Set the `brokenLinkImage` property |  |
 | setClipsToBound | Set the `clipToBounds` property | __iOS only__ |
 | setRequestHeader | Set the `requestHeader` property |  |
+| setRounded | Set the `rounded` property | __Android only__ |
 | getContentMode | Get the value of `contentMode` property |
 | getLoadingIndicator | Get the value of `loadingIndicator` property |  |
 | getDefaultImage | Get the value of `defaultImage` property |  |
 | getBrokenLinkImage | Get the value of `brokenLinkImage` property |  |
 | getClipsToBound | Get the value of `clipToBounds` property | __iOS only__ |
 | getRequestHeader | Get the `requestHeader` property |  |
+| getRounded | Get the `rounded` property | __Android only__ |
 
 ### Events
 

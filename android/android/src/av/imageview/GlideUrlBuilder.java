@@ -8,6 +8,8 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.load.model.LazyHeaders.Builder;
 
+import org.appcelerator.kroll.common.Log;
+
 class GlideUrlBuilder {
     public static GlideUrl build(String url, HashMap headers) {
         if (url != null && headers != null) {

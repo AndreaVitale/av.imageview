@@ -62,6 +62,8 @@ public class ImageViewProxy extends TiViewProxy
 			this.setLoadingIndicator(options.getBoolean("loadingIndicator"));
 		if (options.containsKey("enableMemoryCache"))
 			this.setMemoryCacheEnabled(options.getBoolean("enableMemoryCache"));
+		if (options.containsKey("rounded"))
+			this.setRounded(options.getBoolean("rounded"));
 		if (options.containsKey("image"))
 			this.setImage(options.getString("image"));
 		if (options.containsKey("requestHeader"))
@@ -98,6 +100,18 @@ public class ImageViewProxy extends TiViewProxy
 	@Kroll.method
 	public void setContentMode(String contentMode) {
 	    getView().setContentMode(contentMode);
+	}
+
+	@Kroll.getProperty
+	@Kroll.method
+	public boolean getRounded() {
+		return getView().getRoundedImage();
+	}
+
+	@Kroll.setProperty
+	@Kroll.method
+	public void setRounded(boolean enabled) {
+		getView().setRoundedImage(enabled);
 	}
 
 	@Kroll.getProperty
