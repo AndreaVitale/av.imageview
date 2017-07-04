@@ -156,7 +156,7 @@ Here is a list of supported content modes:
 
 ## Donate
 
-If you enjoy this module, feel free to contribute with your PR or to [donate](paypal.me/VitaleAndrea) :-)
+If you enjoy this module, feel free to contribute with your PR or to [donate](https://paypal.me/VitaleAndrea) :-)
 
 ## Credits
 Anyone who contributes to the module enhanchement!
