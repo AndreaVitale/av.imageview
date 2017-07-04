@@ -154,6 +154,10 @@ Here is a list of supported content modes:
 - CONTENT_MODE_BOTTOM_LEFT
 - CONTENT_MODE_BOTTOM_RIGHT
 
+## Donate
+
+If you enjoy this module, feel free to contribute with your PR or to [donate](paypal.me/VitaleAndrea) :-)
+
 ## Credits
 Anyone who contributes to the module enhanchement!
 
