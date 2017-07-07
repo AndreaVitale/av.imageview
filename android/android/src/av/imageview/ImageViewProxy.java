@@ -65,7 +65,7 @@ public class ImageViewProxy extends TiViewProxy
 		if (options.containsKey("rounded"))
 			this.setRounded(options.getBoolean("rounded"));
 		if (options.containsKey("image"))
-			this.setImage(options.getString("image"));
+			this.setImage(options.get("image"));
 		if (options.containsKey("requestHeader"))
 			this.setRequestHeader((HashMap)options.get("requestHeader"));
 	}
