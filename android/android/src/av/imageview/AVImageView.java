@@ -114,12 +114,18 @@ public class AVImageView extends TiUIView {
             this.setDefaultImage(d.getString("defaultImage"));
         if (d.containsKey("brokenLinkImage"))
             this.setBrokenLinkImage(d.getString("brokenLinkImage"));
-		if (d.containsKey("requestHeader"))
-			this.setRequestHeader((HashMap)d.getKrollDict("requestHeader"));
-		if (d.containsKey("rounded"))
-			this.setRoundedImage(d.getBoolean("rounded"));
-        if (d.containsKey("image"))
-            this.setSource(d.getString("image"));
+	if (d.containsKey("requestHeader"))
+            this.setRequestHeader((HashMap)d.getKrollDict("requestHeader"));
+	if (d.containsKey("rounded"))
+            this.setRoundedImage(d.getBoolean("rounded"));
+        if (d.containsKey("image")) {
+            Object uri = d.get("image");
+            if (uri instanceof String) {	
+            	this.setSource(d.getString("image"));	
+            } else {		
+            	this.setBlob((TiBlob) uri);
+            }
+	}
     }
 
     public void setSource(String url) {
