@@ -21,7 +21,10 @@ import java.util.Iterator;
 
 import android.app.Activity;
 
-@Kroll.proxy(creatableInModule=ImageViewModule.class)
+@Kroll.proxy(creatableInModule=ImageViewModule.class, propertyAccessors = {
+	"image","scaleType","defaultImage","brokenLinkImage","loadingIndicator","enableMemoryCache",
+	"rounded","requestHeader"
+})
 public class ImageViewProxy extends TiViewProxy
 {
 	// Standard Debugging variables
@@ -47,124 +50,7 @@ public class ImageViewProxy extends TiViewProxy
 		return view;
 	}
 
-	// Handle creation options
-	@Override
-	public void handleCreationDict(KrollDict options) {
-		super.handleCreationDict(options);
-
-		if (options.containsKey("scaleType"))
-			this.setContentMode(options.getString("scaleType"));
-		if (options.containsKey("defaultImage"))
-			this.setDefaultImage(options.getString("defaultImage"));
-		if (options.containsKey("brokenLinkImage"))
-			this.setBrokenLinkImage(options.getString("brokenLinkImage"));
-		if (options.containsKey("loadingIndicator"))
-			this.setLoadingIndicator(options.getBoolean("loadingIndicator"));
-		if (options.containsKey("enableMemoryCache"))
-			this.setMemoryCacheEnabled(options.getBoolean("enableMemoryCache"));
-		if (options.containsKey("rounded"))
-			this.setRounded(options.getBoolean("rounded"));
-		if (options.containsKey("image"))
-			this.setImage(options.get("image"));
-		if (options.containsKey("requestHeader"))
-			this.setRequestHeader((HashMap)options.get("requestHeader"));
-	}
-
 	protected AVImageView getView() {
 		return (AVImageView)getOrCreateView();
-	}
-
-	// Public API
-	@Kroll.getProperty
-	@Kroll.method
-	public String getImage() {
-		return getView().getImage();
-	}
-
-	@Kroll.setProperty
-	@Kroll.method
-	public void setImage(Object uri) {
-		if (uri instanceof String)
-			getView().setSource(uri.toString());
-		else
-			getView().setBlob((TiBlob) uri);
-	}
-
-	@Kroll.getProperty
-	@Kroll.method
-	public String getContentMode() {
-        return getView().getContentMode();
-	}
-
-	@Kroll.setProperty
-	@Kroll.method
-	public void setContentMode(String contentMode) {
-	    getView().setContentMode(contentMode);
-	}
-
-	@Kroll.getProperty
-	@Kroll.method
-	public boolean getRounded() {
-		return getView().getRoundedImage();
-	}
-
-	@Kroll.setProperty
-	@Kroll.method
-	public void setRounded(boolean enabled) {
-		getView().setRoundedImage(enabled);
-	}
-
-	@Kroll.getProperty
-	@Kroll.method
-	public String getDefaultImage() {
-        return getView().getDefaultImage();
-	}
-
-	@Kroll.setProperty
-	@Kroll.method
-	public void setDefaultImage(String defaultImage) {
-	    getView().setDefaultImage(defaultImage);
-	}
-
-	@Kroll.getProperty
-	@Kroll.method
-	public String getBrokenLinkImage() {
-        return getView().getBrokenLinkImage();
-	}
-
-	@Kroll.setProperty
-	@Kroll.method
-	public void setBrokenLinkImage(String brokenLinkImage) {
-	    getView().setBrokenLinkImage(brokenLinkImage);
-	}
-
-	@Kroll.getProperty
-	@Kroll.method
-	public Boolean getLoadingIndicator() {
-	    return getView().getLoadingIndicator();
-	}
-
-	@Kroll.setProperty
-	@Kroll.method
-	public void setLoadingIndicator(Boolean enabled) {
-	    getView().setLoadingIndicator(enabled);
-	}
-
-	@Kroll.getProperty
-	@Kroll.method
-	public Boolean getMemoryCacheEnabled() {
-		return getView().getMemoryCache();
-	}
-
-	@Kroll.setProperty
-	@Kroll.method
-	public void setMemoryCacheEnabled(Boolean enabled) {
-		getView().setMemoryCache(enabled);
-	}
-
-	@Kroll.setProperty
-	@Kroll.method
-	public void setRequestHeader(HashMap requestHeader) {
-		getView().setRequestHeader(requestHeader);
 	}
 }
