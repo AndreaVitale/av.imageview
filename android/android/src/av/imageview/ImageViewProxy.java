@@ -5,6 +5,8 @@
 package av.imageview;
 
 import org.appcelerator.kroll.common.Log;
+import org.appcelerator.kroll.common.TiMessenger;
+import org.appcelerator.kroll.common.AsyncResult;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -20,13 +22,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Message;
 
-@Kroll.proxy(creatableInModule=ImageViewModule.class)
+@Kroll.proxy(creatableInModule=ImageViewModule.class, propertyAccessors = {
+	"loadingIndicator","enableMemoryCache","rounded"
+})
 public class ImageViewProxy extends TiViewProxy
 {
 	// Standard Debugging variables
 	private static final String LCAT = "AVImageViewProxy";
 	private static final boolean DBG = TiConfig.LOGD;
+
+	private static final int MSG_FIRST_ID = TiViewProxy.MSG_LAST_ID + 1;
+	private static final int MSG_SET_IMAGE_URL = MSG_FIRST_ID+1001;
+	private static final int MSG_SET_IMAGE_BLOB = MSG_FIRST_ID+1002;
+	private static final int MSG_SET_DEFAULT_IMAGE = MSG_FIRST_ID+1003;
+	private static final int MSG_SET_BROKEN_IMAGE = MSG_FIRST_ID+1004;
+	private static final int MSG_SET_CONTENT_MODE = MSG_FIRST_ID+1005;
+	private static final int MSG_SET_REQUEST_HEADER = MSG_FIRST_ID+1006;
 
 	private Activity activity;
 
@@ -47,59 +61,93 @@ public class ImageViewProxy extends TiViewProxy
 		return view;
 	}
 
-	// Handle creation options
-	@Override
-	public void handleCreationDict(KrollDict options) {
-		super.handleCreationDict(options);
-
-		if (options.containsKey("scaleType"))
-			this.setContentMode(options.getString("scaleType"));
-		if (options.containsKey("defaultImage"))
-			this.setDefaultImage(options.getString("defaultImage"));
-		if (options.containsKey("brokenLinkImage"))
-			this.setBrokenLinkImage(options.getString("brokenLinkImage"));
-		if (options.containsKey("loadingIndicator"))
-			this.setLoadingIndicator(options.getBoolean("loadingIndicator"));
-		if (options.containsKey("enableMemoryCache"))
-			this.setMemoryCacheEnabled(options.getBoolean("enableMemoryCache"));
-		if (options.containsKey("rounded"))
-			this.setRounded(options.getBoolean("rounded"));
-		if (options.containsKey("image"))
-			this.setImage(options.get("image"));
-		if (options.containsKey("requestHeader"))
-			this.setRequestHeader((HashMap)options.get("requestHeader"));
-	}
-
 	protected AVImageView getView() {
 		return (AVImageView)getOrCreateView();
 	}
 
-	// Public API
+	@Override
+	public boolean handleMessage(Message message) {
+		AsyncResult result = null;
+
+		switch (message.what) {
+			case MSG_SET_IMAGE_URL:
+				result = (AsyncResult)message.obj;
+				getView().setSource((String)result.getArg());
+				result.setResult(null);
+
+				return true;
+			case MSG_SET_IMAGE_BLOB:
+				result = (AsyncResult)message.obj;
+				getView().setBlob((TiBlob)result.getArg());
+				result.setResult(null);
+
+				return true;
+			case MSG_SET_CONTENT_MODE:
+				result = (AsyncResult)message.obj;
+				getView().setContentMode((String)result.getArg());
+				result.setResult(null);
+
+				return true;
+			case MSG_SET_DEFAULT_IMAGE:
+				result = (AsyncResult)message.obj;
+				getView().setDefaultImage((String)result.getArg());
+				result.setResult(null);
+
+				return true;
+			case MSG_SET_BROKEN_IMAGE:
+				result = (AsyncResult)message.obj;
+				getView().setBrokenLinkImage((String)result.getArg());
+				result.setResult(null);
+
+				return true;
+			case MSG_SET_REQUEST_HEADER:
+				result = (AsyncResult)message.obj;
+				getView().setRequestHeader((HashMap)result.getArg());
+				result.setResult(null);
+
+				return true;
+			default:
+				return super.handleMessage(message);
+		}
+	}
+
+	// Public APIs
 	@Kroll.getProperty
 	@Kroll.method
 	public String getImage() {
 		return getView().getImage();
 	}
 
-	@Kroll.setProperty
+	@Kroll.setProperty(retain=false)
 	@Kroll.method
-	public void setImage(Object uri) {
-		if (uri instanceof String)
-			getView().setSource(uri.toString());
-		else
-			getView().setBlob((TiBlob) uri);
+	public void setImage(final Object uri) {
+		if (TiApplication.isUIThread()) {
+			if (uri instanceof String)
+				getView().setSource(uri.toString());
+			else
+				getView().setBlob((TiBlob) uri);
+		} else {
+			if (uri instanceof String)
+				TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_IMAGE_URL), uri.toString());
+			else
+				TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_IMAGE_BLOB), (TiBlob)uri);
+		}
 	}
 
 	@Kroll.getProperty
 	@Kroll.method
 	public String getContentMode() {
-        return getView().getContentMode();
+		return getView().getContentMode();
 	}
 
-	@Kroll.setProperty
+	@Kroll.setProperty(retain=false)
 	@Kroll.method
 	public void setContentMode(String contentMode) {
-	    getView().setContentMode(contentMode);
+		if (TiApplication.isUIThread()) {
+			getView().setContentMode(contentMode);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_CONTENT_MODE), contentMode);
+		}
 	}
 
 	@Kroll.getProperty
@@ -108,7 +156,7 @@ public class ImageViewProxy extends TiViewProxy
 		return getView().getRoundedImage();
 	}
 
-	@Kroll.setProperty
+	@Kroll.setProperty(retain=false)
 	@Kroll.method
 	public void setRounded(boolean enabled) {
 		getView().setRoundedImage(enabled);
@@ -120,10 +168,14 @@ public class ImageViewProxy extends TiViewProxy
         return getView().getDefaultImage();
 	}
 
-	@Kroll.setProperty
+	@Kroll.setProperty(retain=false)
 	@Kroll.method
 	public void setDefaultImage(String defaultImage) {
-	    getView().setDefaultImage(defaultImage);
+		if (TiApplication.isUIThread()) {
+			getView().setDefaultImage(defaultImage);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_DEFAULT_IMAGE), defaultImage);
+		}
 	}
 
 	@Kroll.getProperty
@@ -132,10 +184,14 @@ public class ImageViewProxy extends TiViewProxy
         return getView().getBrokenLinkImage();
 	}
 
-	@Kroll.setProperty
+	@Kroll.setProperty(retain=false)
 	@Kroll.method
 	public void setBrokenLinkImage(String brokenLinkImage) {
-	    getView().setBrokenLinkImage(brokenLinkImage);
+		if (TiApplication.isUIThread()) {
+			getView().setBrokenLinkImage(brokenLinkImage);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_BROKEN_IMAGE), brokenLinkImage);
+		}
 	}
 
 	@Kroll.getProperty
@@ -144,10 +200,10 @@ public class ImageViewProxy extends TiViewProxy
 	    return getView().getLoadingIndicator();
 	}
 
-	@Kroll.setProperty
+	@Kroll.setProperty(retain=false)
 	@Kroll.method
 	public void setLoadingIndicator(Boolean enabled) {
-	    getView().setLoadingIndicator(enabled);
+		getView().setLoadingIndicator(enabled);
 	}
 
 	@Kroll.getProperty
@@ -156,15 +212,19 @@ public class ImageViewProxy extends TiViewProxy
 		return getView().getMemoryCache();
 	}
 
-	@Kroll.setProperty
+	@Kroll.setProperty(retain=false)
 	@Kroll.method
 	public void setMemoryCacheEnabled(Boolean enabled) {
 		getView().setMemoryCache(enabled);
 	}
 
-	@Kroll.setProperty
+	@Kroll.setProperty(retain=false)
 	@Kroll.method
 	public void setRequestHeader(HashMap requestHeader) {
-		getView().setRequestHeader(requestHeader);
+		if (TiApplication.isUIThread()) {
+			getView().setRequestHeader(requestHeader);
+		} else {
+			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_REQUEST_HEADER), requestHeader);
+		}
 	}
 }
