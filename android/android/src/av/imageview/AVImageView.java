@@ -32,6 +32,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.kroll.KrollPropertyChange;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
@@ -41,6 +43,7 @@ import org.appcelerator.titanium.view.TiDrawableReference;
 import org.appcelerator.titanium.view.TiUIView;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class AVImageView extends TiUIView {
 	private static final String LCAT = "AVImageView";
@@ -120,6 +123,7 @@ public class AVImageView extends TiUIView {
             this.setRoundedImage(d.getBoolean("rounded"));
         if (d.containsKey("image")) {
             Object uri = d.get("image");
+
             if (uri instanceof String) {
                 this.setSource(d.getString("image"));
             } else {
@@ -127,6 +131,18 @@ public class AVImageView extends TiUIView {
             }
         }
     }
+
+	@Override
+	public void propertyChanged(String key, Object oldValue, Object newValue, KrollProxy proxy) {
+		super.propertyChanged(key, oldValue, newValue, proxy);
+	}
+
+	@Override
+	public void propertiesChanged(List<KrollPropertyChange> changes, KrollProxy proxy) {
+		for (KrollPropertyChange change : changes) {
+			propertyChanged(change.getName(), change.getOldValue(), change.getNewValue(), proxy);
+		}
+	}
 
     public void setSource(String url) {
         this.source = sanitizeUrl(url);

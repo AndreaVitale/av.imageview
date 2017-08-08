@@ -26,7 +26,8 @@ import android.os.Handler;
 import android.os.Message;
 
 @Kroll.proxy(creatableInModule=ImageViewModule.class, propertyAccessors = {
-	"loadingIndicator","enableMemoryCache","rounded"
+	"defaultImage", "brokenLinkImage", "image", "contentMode",  "enableMemoryCache",
+	"loadingIndicator", "enableMemoryCache", "rounded", "requestHeader"
 })
 public class ImageViewProxy extends TiViewProxy
 {
@@ -53,7 +54,7 @@ public class ImageViewProxy extends TiViewProxy
 
 	@Override
 	public TiUIView createView(Activity activity) {
-		TiUIView view = new AVImageView(this);
+		view = new AVImageView(this);
 
 		view.getLayoutParams().autoFillsHeight = true;
 		view.getLayoutParams().autoFillsWidth = true;
@@ -118,7 +119,7 @@ public class ImageViewProxy extends TiViewProxy
 		return getView().getImage();
 	}
 
-	@Kroll.setProperty(retain=false)
+	@Kroll.setProperty
 	@Kroll.method
 	public void setImage(final Object uri) {
 		if (TiApplication.isUIThread()) {
@@ -140,7 +141,7 @@ public class ImageViewProxy extends TiViewProxy
 		return getView().getContentMode();
 	}
 
-	@Kroll.setProperty(retain=false)
+	@Kroll.setProperty
 	@Kroll.method
 	public void setContentMode(String contentMode) {
 		if (TiApplication.isUIThread()) {
@@ -156,7 +157,7 @@ public class ImageViewProxy extends TiViewProxy
 		return getView().getRoundedImage();
 	}
 
-	@Kroll.setProperty(retain=false)
+	@Kroll.setProperty
 	@Kroll.method
 	public void setRounded(boolean enabled) {
 		getView().setRoundedImage(enabled);
@@ -168,7 +169,7 @@ public class ImageViewProxy extends TiViewProxy
         return getView().getDefaultImage();
 	}
 
-	@Kroll.setProperty(retain=false)
+	@Kroll.setProperty
 	@Kroll.method
 	public void setDefaultImage(String defaultImage) {
 		if (TiApplication.isUIThread()) {
@@ -184,7 +185,7 @@ public class ImageViewProxy extends TiViewProxy
         return getView().getBrokenLinkImage();
 	}
 
-	@Kroll.setProperty(retain=false)
+	@Kroll.setProperty
 	@Kroll.method
 	public void setBrokenLinkImage(String brokenLinkImage) {
 		if (TiApplication.isUIThread()) {
@@ -200,7 +201,7 @@ public class ImageViewProxy extends TiViewProxy
 	    return getView().getLoadingIndicator();
 	}
 
-	@Kroll.setProperty(retain=false)
+	@Kroll.setProperty
 	@Kroll.method
 	public void setLoadingIndicator(Boolean enabled) {
 		getView().setLoadingIndicator(enabled);
@@ -212,13 +213,13 @@ public class ImageViewProxy extends TiViewProxy
 		return getView().getMemoryCache();
 	}
 
-	@Kroll.setProperty(retain=false)
+	@Kroll.setProperty
 	@Kroll.method
 	public void setMemoryCacheEnabled(Boolean enabled) {
 		getView().setMemoryCache(enabled);
 	}
 
-	@Kroll.setProperty(retain=false)
+	@Kroll.setProperty
 	@Kroll.method
 	public void setRequestHeader(HashMap requestHeader) {
 		if (TiApplication.isUIThread()) {
