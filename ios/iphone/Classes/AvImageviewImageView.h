@@ -9,6 +9,7 @@
 
 #import "TiUIView.h"
 #import "SDWebImage/UIImageView+WebCache.h"
+#import "SDWebImage/FLAnimatedImage/FLAnimatedImageView+WebCache.h"
 
 @interface AvImageviewImageView : TiUIView {
     @private
@@ -19,9 +20,9 @@
         TiDimension height;
         CGFloat autoHeight;
         CGFloat autoWidth;
-
+    
+        FLAnimatedImageView *imageView;
         UIViewContentMode contentMode;
-        UIImageView *imageView;
         UIActivityIndicatorView  *activityIndicator;
 
         NSString *placeholderImagePath;

@@ -7,28 +7,8 @@
 // http://developer.apple.com/mac/library/documentation/DeveloperTools/Conceptual/XcodeBuildSystem/400-Build_Configurations/build_configs.html
 //
 
-CURRENT_MODULE_VERSION="1.0.8"
-FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/av.imageview/$(CURRENT_MODULE_VERSION)/platform /Library/Application\ Support/Titanium/modules/iphone/av.imageview/$(CURRENT_MODULE_VERSION)/platform ~/Library/Application\ Support/Titanium/modules/iphone/av.imageview/$(CURRENT_MODULE_VERSION)/platform
+CURRENT_MODULE_VERSION="1.1.0"
+FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/av.imageview/$(CURRENT_MODULE_VERSION)/platform
 
 OTHER_LDFLAGS=$(inherited)
-
 //OTHER_LDFLAGS=$(inherited) -framework SDWebImage
-
-//
-// How to add a Framework (example)
-//
-// OTHER_LDFLAGS=$(inherited) -framework Foo
-//
-// Adding a framework for a specific version(s) of iPhone:
-//
-// OTHER_LDFLAGS[sdk=iphoneos4*]=$(inherited) -framework Foo
-// OTHER_LDFLAGS[sdk=iphonesimulator4*]=$(inherited) -framework Foo
-//
-//
-// How to add a compiler define:
-//
-// OTHER_CFLAGS=$(inherited) -DFOO=1
-//
-//
-// IMPORTANT NOTE: always use $(inherited) in your overrides
-//

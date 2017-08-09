@@ -22,7 +22,7 @@
     [super initializeState];
 
     if (self) {
-        imageView = [[UIImageView alloc] initWithFrame:[self bounds]];
+        imageView = [[FLAnimatedImageView alloc] initWithFrame:[self bounds]];
         imageView.clipsToBounds = YES;
 
         activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -49,13 +49,6 @@
 
     [super frameSizeChanged:frame bounds:bounds];
     [self updateContentMode];
-}
-
--(void)dealloc {
-    RELEASE_TO_NIL(imageView);
-    RELEASE_TO_NIL(activityIndicator);
-
-    [super dealloc];
 }
 
 -(UIImage *)loadImageFromAssetsCatalog:(NSURL *)img {
@@ -88,8 +81,6 @@
             [sha appendString:[img pathExtension]];
 
             image = [UIImage imageNamed:sha];
-
-            RELEASE_TO_NIL(sha)
         }
     }
 
@@ -171,8 +162,8 @@
 
     if ([args isKindOfClass:[NSNull class]])
         return;
-
-    [imageView sd_cancelCurrentImageLoad];
+    
+    [imageView sd_cancelCurrentImageFetch];
 
     if ([args isKindOfClass:[NSString class]]) {
         NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:args]];
