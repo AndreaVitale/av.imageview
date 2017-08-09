@@ -11,9 +11,6 @@ Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#
 
 Any PR will be really appreciated!
 
-**Warning**: after the major release of Ti SDK 6.0.0.GA, all Android titanium modules must be rebuilt and will not longer be compatible with previous version of the SDK like 5.x.x.
-To give a support on both situations, every release will be built with two different major number version: 1.x.y for SDK <= 5.5.1.GA and 2.x.y for SDK >= 6.0.0.GA.
-
 ## Get it
 
 Clone this repository or directly download the latest packaged module version [here](https://github.com/AndreaVitale/imageview/blob/master/dist/av.imageview-iphone-1.0.0.zip?raw=true).
@@ -156,11 +153,11 @@ Here is a list of supported content modes:
 
 ## Donate
 
-If you enjoy this module, feel free to contribute with your PR or to [donate](https://paypal.me/VitaleAndrea) :-)
+If you enjoy this module, feel free to contribute with your PR or [donate](https://paypal.me/VitaleAndrea) :-)
 
 ## Credits
 Anyone who contributes to the module enhanchement!
 
-[@rs](https://github.com/rs) for the amazing [SDWebImage](https://github.com/rs/SDWebImage) library.
+[@rs](https://github.com/rs) for the amazing [SDWebImage](https://github.com/rs/SDWebImage) library. Currently lib version used: 4.1.0.
 
-[@bumptech](https://github.com/bumptech) for the amazing [Glide](https://github.com/bumptech/glide) library.
+[@bumptech](https://github.com/bumptech) for the amazing [Glide](https://github.com/bumptech/glide) library. Currently lib version used: 3.8.0.
