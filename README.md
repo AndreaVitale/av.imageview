@@ -1,6 +1,7 @@
 # Features
----------------
-Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ImageView) doesn't support the contentMode property so your rendered image will everytime fit your ImageView. This module allows you to specify which behavior your ImageView must have and adds some extra features to improve the user experience. The module currently supports the following API's:
+[![gitTio](http://gitt.io/badge.svg)](http://gitt.io/component/av.imageview)
+
+Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ImageView) doesn't support the contentMode property so your rendered image will everytime fit your ImageView. This module allows you to specify which behavior your ImageView must have and adds some extra features to improve the user experience. The module currently supports the following APIs:
 - [x] Content Mode
 - [x] Broken link image fallback
 - [x] Loading image placeholder
@@ -13,7 +14,12 @@ Any PR will be really appreciated!
 
 ## Get it
 
-Clone this repository or directly download the latest packaged module version [here](https://github.com/AndreaVitale/imageview/blob/master/dist/av.imageview-iphone-1.0.0.zip?raw=true).
+You can install it directly via gittio using
+```bash
+$ gittio install av.imageview
+```
+
+or manually by cloning this repository or directly by downloading the latest packaged module version [here](https://github.com/AndreaVitale/av.imageview/releases).
 
 Now, follow [these steps](http://docs.appcelerator.com/platform/latest/#!/guide/Using_a_Module-section-30082372_UsingaModule-Installingmodules) to install the packaged version of this module into your application.
 
@@ -21,31 +27,32 @@ Now, follow [these steps](http://docs.appcelerator.com/platform/latest/#!/guide/
 You can easily use this module via Alloy or in a classic way.
 ### Alloy
 Here is how you can use the extended-imageview directly in alloy:
-
-    <Alloy>
+```xml
+    <Alloy>
         <Window>
             <View class="container">
                 <ImageView module="av.imageview" />
             </View>
         </Window>
-    </Alloy>
-
+    </Alloy>
+```
 and inside the related TSS you can do
-
-    "ImageView": {
+```css
+    "ImageView": {
         width: 100,
         height: 100,
         image: "https://static.pexels.com/photos/27954/pexels-photo-27954.jpg",
     }
+```
 
 ### ListView ItemTemplate
 To include this module in a ListItemTemplate, you have to do:
-
-    <ImageView ns="AvImageview" />
-
+```xml
+    <ImageView ns="AvImageview" />
+```
 where `AvImageview` is a variable declared in `alloy.js` like this:
-
-    var AvImageview = require("av.imageview");
+```javascript
+    var AvImageview = require("av.imageview");
 
     //and to use contentmodes constants via alloy
     Alloy.Globals.CONTENT_MODE_FIT = AvImageview.CONTENT_MODE_ASPECT_FIT;
@@ -55,10 +62,10 @@ where `AvImageview` is a variable declared in `alloy.js` like this:
     Alloy.Globals.REQUEST_HEADERS = {
         'Authorization': 'place or assign dinamically your logged user access token',
         'Another HTTP header field': 'with its value'
-    };
-
+    };
+```
 A complete example can be:
-
+```xml
     <ListView id="Images" defaultItemTemplate="template">
         <Templates>
             <ItemTemplate name="template" height="160">
@@ -72,11 +79,11 @@ A complete example can be:
             <ListItem template="template" photo:image="http://wp-admin.goldenbird-italy.com/wp-content/uploads/2015/07/italy_2631046a.jpg"></ListItem>
             <ListItem template="template" photo:image="http://www.travelviaitaly.com/wp-content/uploads/2015/12/Rome-Italy.jpg"></ListItem>
         </ListSection>
-    </ListView>
-
+    </ListView>
+```
 ### Classic
 You can instantiate an extended-imageview in this way:
-
+```javascript
     require('av.imageview').createImageView({
         width: 100,
         height: 100,
@@ -84,8 +91,8 @@ You can instantiate an extended-imageview in this way:
         requestHeader: {
             'Authorization': 'Bearer your_access_token_here'
         }
-    });
-
+    });
+```
 ## API
 
 All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.View) properties and methods are supported.
