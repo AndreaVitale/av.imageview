@@ -17,6 +17,10 @@
 #import "AvImageviewImageView.h"
 #import <CommonCrypto/CommonDigest.h>
 
+@interface AvImageviewImageView()
+
+
+@end
 @implementation AvImageviewImageView
 
 -(void)initializeState {
@@ -35,7 +39,17 @@
         [self addSubview:activityIndicator];
     }
 }
-
+- (void)configurationSet
+{
+    // This method is called right after all view properties have
+    // been initialized from the view proxy. If the view is dependent
+    // upon any properties being initialized then this is the method
+    // to implement the dependent functionality.
+    
+    [super configurationSet];
+    [self displayImage:imageObject];
+}
+//this looks like redundant code, prob a leftover
 -(void)processProperties {
     [self setDefaultImage_: [self.proxy valueForKey:@"defaultImage"]];
     [self setBrokenLinkImage_: [self.proxy valueForKey:@"brokenLinkImage"]];
@@ -90,6 +104,84 @@
         image = [UIImage imageWithContentsOfFile:[img path]];
 
     return image;
+}
+
+-(void)displayImage:(id)args
+{
+    UIImage *placeholderImage = (placeholderImagePath != nil) ? [self loadLocalImage:placeholderImagePath] : nil;
+    UIImage *brokenLinkImage = (brokenLinkImagePath != nil) ? [self loadLocalImage:brokenLinkImagePath] : nil;
+    
+    if ([args isKindOfClass:[NSNull class]])
+        return;
+    
+    [imageView sd_cancelCurrentImageFetch];
+    
+    if ([args isKindOfClass:[NSString class]]) {
+        NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:args]];
+        
+        if (loadingIndicator) {
+            activityIndicator.hidden = NO;
+            
+            [activityIndicator startAnimating];
+        }
+        
+        if ([imageUrl.scheme isEqualToString:@"http"] || [imageUrl.scheme isEqualToString:@"https"]) {
+            NSString *userAgent = [[TiApp app] userAgent];
+            
+            [[SDWebImageDownloader sharedDownloader] setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+            
+            //Extending HTTP header with custom values
+            if (requestHeader != nil)
+                for (id key in requestHeader)
+                    [[SDWebImageDownloader sharedDownloader] setValue:[requestHeader valueForKey:key] forHTTPHeaderField:key];
+            
+            [imageView sd_setImageWithURL:imageUrl
+                         placeholderImage:placeholderImage
+                                  options: handleCookies
+                                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *url) {
+                                    autoWidth = image.size.width;
+                                    autoHeight = image.size.height;
+                                    
+                                    NSMutableDictionary *event = [[NSMutableDictionary alloc] init];
+                                    
+                                    [event setValue:[imageUrl absoluteString] forKey:@"image"];
+                                    [event setValue:[[NSNumber alloc] initWithFloat:image.size.width]  forKey:@"width"];
+                                    [event setValue:[[NSNumber alloc] initWithFloat:image.size.height] forKey:@"height"];
+                                    
+                                    if (error != nil) {
+                                        if (brokenLinkImage != nil)
+                                            imageView.image = brokenLinkImage;
+                                        
+                                        [event setValue:[error localizedDescription] forKey:@"reason"];
+                                        
+                                        if ([self.proxy _hasListeners:@"error"])
+                                            [self.proxy fireEvent:@"error" withObject:event];
+                                    } else {
+                                        if ([self.proxy _hasListeners:@"load"])
+                                            [self.proxy fireEvent:@"load" withObject:event];
+                                    }
+                                    
+                                    if ([activityIndicator isAnimating])
+                                        [activityIndicator stopAnimating];
+                                    
+                                    [(TiViewProxy*)[self proxy] contentsWillChange];
+                                    
+                                    [self fadeImage:cacheType];
+                                }
+             ];
+        } else {
+            if ([TiUtils stringValue:args].length > 0)
+                imageView.image = [self loadLocalImage:[TiUtils stringValue:args]];
+            
+            if (loadingIndicator)
+                [activityIndicator stopAnimating];
+        }
+    } else if ([args isKindOfClass:[TiBlob class]]) {
+        TiBlob *blob = (TiBlob*)args;
+        
+        imageView.image = [blob image];
+    }
+
 }
 
 -(UIImage *)loadLocalImage:(NSString *)imagePath {
@@ -159,80 +251,9 @@
 }
 
 -(void)setImage_:(id)args {
-    UIImage *placeholderImage = (placeholderImagePath != nil) ? [self loadLocalImage:placeholderImagePath] : nil;
-    UIImage *brokenLinkImage = (brokenLinkImagePath != nil) ? [self loadLocalImage:brokenLinkImagePath] : nil;
-
-    if ([args isKindOfClass:[NSNull class]])
-        return;
     
-    [imageView sd_cancelCurrentImageFetch];
-
-    if ([args isKindOfClass:[NSString class]]) {
-        NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:args]];
-
-        if (loadingIndicator) {
-            activityIndicator.hidden = NO;
-
-            [activityIndicator startAnimating];
-        }
-
-        if ([imageUrl.scheme isEqualToString:@"http"] || [imageUrl.scheme isEqualToString:@"https"]) {
-            NSString *userAgent = [[TiApp app] userAgent];
-
-            [[SDWebImageDownloader sharedDownloader] setValue:userAgent forHTTPHeaderField:@"User-Agent"];
-            
-            //Extending HTTP header with custom values
-            if (requestHeader != nil)
-                for (id key in requestHeader)
-                    [[SDWebImageDownloader sharedDownloader] setValue:[requestHeader valueForKey:key] forHTTPHeaderField:key];
-
-            [imageView sd_setImageWithURL:imageUrl
-                         placeholderImage:placeholderImage
-                                options: handleCookies
-                                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *url) {
-                                    autoWidth = image.size.width;
-                                    autoHeight = image.size.height;
-
-                                    NSMutableDictionary *event = [[NSMutableDictionary alloc] init];
-
-                                    [event setValue:[imageUrl absoluteString] forKey:@"image"];
-                                    [event setValue:[[NSNumber alloc] initWithFloat:image.size.width]  forKey:@"width"];
-                                    [event setValue:[[NSNumber alloc] initWithFloat:image.size.height] forKey:@"height"];
-
-                                    if (error != nil) {
-                                        if (brokenLinkImage != nil)
-                                            imageView.image = brokenLinkImage;
-
-                                        [event setValue:[error localizedDescription] forKey:@"reason"];
-
-                                        if ([self.proxy _hasListeners:@"error"])
-                                            [self.proxy fireEvent:@"error" withObject:event];
-                                    } else {
-                                        if ([self.proxy _hasListeners:@"load"])
-                                            [self.proxy fireEvent:@"load" withObject:event];
-                                    }
-
-                                    if ([activityIndicator isAnimating])
-                                        [activityIndicator stopAnimating];
-
-                                    [(TiViewProxy*)[self proxy] contentsWillChange];
-
-                                    [self fadeImage:cacheType];
-                                }
-            ];
-        } else {
-            if ([TiUtils stringValue:args].length > 0)
-                imageView.image = [self loadLocalImage:[TiUtils stringValue:args]];
-
-            if (loadingIndicator)
-                [activityIndicator stopAnimating];
-        }
-    } else if ([args isKindOfClass:[TiBlob class]]) {
-        TiBlob *blob = (TiBlob*)args;
-
-        imageView.image = [blob image];
-    }
-}
+    imageObject = args;
+   }
 
 -(void)setDefaultImage_:(id)args {
     placeholderImagePath = [TiUtils stringValue:args];
