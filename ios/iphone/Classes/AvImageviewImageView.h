@@ -29,6 +29,7 @@
         NSString *brokenLinkImagePath;
     
         NSDictionary *requestHeader;
+        SDWebImageOptions handleCookies;
 }
 
 -(void)setWidth_:(id)width;

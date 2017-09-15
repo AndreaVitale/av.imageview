@@ -11,6 +11,7 @@
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
+#import "SDWebImage/FLAnimatedImage/FLAnimatedImageView+WebCache.h"
 
 @implementation AvImageviewModule
 
@@ -92,5 +93,6 @@ MAKE_SYSTEM_PROP(CONTENT_MODE_TOP_LEFT, UIViewContentModeTopLeft)
 MAKE_SYSTEM_PROP(CONTENT_MODE_TOP_RIGHT, UIViewContentModeTopRight)
 MAKE_SYSTEM_PROP(CONTENT_MODE_BOTTOM_LEFT, UIViewContentModeBottomLeft)
 MAKE_SYSTEM_PROP(CONTENT_MODE_BOTTOM_RIGHT, UIViewContentModeBottomRight)
+MAKE_SYSTEM_PROP(HANDLE_COOKIES, SDWebImageHandleCookies)
 
 @end

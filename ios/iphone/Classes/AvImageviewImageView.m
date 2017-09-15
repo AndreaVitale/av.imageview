@@ -12,6 +12,7 @@
 #import "TiViewProxy.h"
 #import "TiProxy.h"
 #import "TiBlob.h"
+#import "TiApp.h"
 #import "AvImageviewImageViewProxy.h"
 #import "AvImageviewImageView.h"
 #import <CommonCrypto/CommonDigest.h>
@@ -41,6 +42,7 @@
     [self setLoadingIndicator_: [self.proxy valueForKey:@"loadingIndicator"]];
     [self setContentMode_: [self.proxy valueForKey:@"contentMode"]];
     [self setRequestHeader_:[self.proxy valueForKey:@"requestHeader"]];
+    [self setHandleCookies_:[self.proxy valueForKey:@"handleCookies"]];
 }
 
 -(void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds {
@@ -175,7 +177,7 @@
         }
 
         if ([imageUrl.scheme isEqualToString:@"http"] || [imageUrl.scheme isEqualToString:@"https"]) {
-            NSString *userAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleExecutableKey] ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleIdentifierKey], [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] ?: [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
+            NSString *userAgent = [[TiApp app] userAgent];
 
             [[SDWebImageDownloader sharedDownloader] setValue:userAgent forHTTPHeaderField:@"User-Agent"];
             
@@ -186,6 +188,7 @@
 
             [imageView sd_setImageWithURL:imageUrl
                          placeholderImage:placeholderImage
+                                options: handleCookies
                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *url) {
                                     autoWidth = image.size.width;
                                     autoHeight = image.size.height;
@@ -261,6 +264,11 @@
 -(void)setRequestHeader_:(id)args {
     requestHeader = args;
 }
+
+-(void)setHandleCookies_:(id)args {
+    handleCookies = [[TiUtils numberFromObject:args] intValue];
+}
+
 
 #pragma mark utility methodds
 -(CGFloat)contentWidthForWidth:(CGFloat)suggestedWidth {

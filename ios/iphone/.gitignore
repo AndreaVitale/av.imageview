@@ -1,5 +1,19 @@
-# Ignoring bash utility scripts
-*.sh
-
-# Ignoring build
-build/
+.DS_Store
+tmp
+bin
+build
+modules
+dist
+.apt_generated
+build.properties
+.svn
+.settings
+*.pyc
+*~.nib/
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.xcworkspace/
+xcuserdata
+*.xcuserstate
+*.xcuserdata*
