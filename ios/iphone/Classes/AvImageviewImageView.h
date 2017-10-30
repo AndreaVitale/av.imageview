@@ -29,6 +29,8 @@
         NSString *brokenLinkImagePath;
     
         NSDictionary *requestHeader;
+    
+        NSTimeInterval timeout;
 }
 
 -(void)setWidth_:(id)width;
@@ -40,5 +42,6 @@
 -(void)setContentMode_:(id)args;
 -(void)setClipsToBounds_:(id)clips;
 -(void)setRequestHeader_:(id)args;
+-(void)setTimeout_:(id)args;
 
 @end

@@ -42,7 +42,8 @@ var default_template = {
             contentMode: AvImageview.CONTENT_MODE_ASPECT_FILL,
             requestHeader: {
                 'Authorization': "Bearer YOU_CAN_PLACE_YOUR_ACCESS_TOKEN_HERE"
-            }
+            }.
+            timeout: 2500
         }
     }]
 };
