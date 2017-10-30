@@ -60,7 +60,7 @@ public class AVImageView extends TiUIView {
     private ImageView imageView;
     private ProgressBar progressBar;
     private RelativeLayout layout;
-    private OkHttpClient longTimeoutClient;
+    private OkHttpClient okHttpClient;
 
     //Config variables
     private boolean loadingIndicator;
@@ -82,9 +82,9 @@ public class AVImageView extends TiUIView {
         this.loadingIndicator = true;
         this.contentMode = ImageViewModule.CONTENT_MODE_ASPECT_FIT;
         this.memoryCache = true;
-        this.longTimeoutClient = new OkHttpClient.Builder() // default timeouts are 10 seconds
-           .connectTimeout(15, TimeUnit.SECONDS)
-           .readTimeout(15, TimeUnit.SECONDS)
+        this.okHttpClient = new OkHttpClient.Builder()// default timeouts are 5 seconds
+           .connectTimeout(5, TimeUnit.SECONDS)
+           .readTimeout(5, TimeUnit.SECONDS)
            .build();
 
         //Setting up layout and imageview
@@ -140,6 +140,12 @@ public class AVImageView extends TiUIView {
             } else {
                 this.setBlob((TiBlob) uri);
             }
+        }
+        if (d.containsKey("timeout")) {
+            this.okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(d.getInt("timeout"), TimeUnit.MILLISECONDS)
+                .readTimeout(d.getInt("timeout"), TimeUnit.MILLISECONDS)
+                .build();
         }
     }
 
@@ -206,7 +212,7 @@ public class AVImageView extends TiUIView {
 		else
 			drawableRequest = Glide
 				.with(this.proxy.getActivity().getBaseContext())
-				.using(new StreamModelLoaderWrapper<GlideUrl>(new OkHttpUrlLoader(longTimeoutClient)))
+				.using(new StreamModelLoaderWrapper<GlideUrl>(new OkHttpUrlLoader(okHttpClient)))
 				.load(GlideUrlBuilder.build(url, this.requestHeader));
 
 		//Handling GIF
@@ -243,6 +249,13 @@ public class AVImageView extends TiUIView {
 		            drawableRequestBuilder.centerCrop().into(this.imageView);
 			}
 		}
+    }
+
+    public void setTimeout(int timeout) {
+        this.okHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(timeout, TimeUnit.MILLISECONDS)
+            .readTimeout(timeout, TimeUnit.MILLISECONDS)
+            .build();
     }
 
     private String sanitizeUrl(String url) {
