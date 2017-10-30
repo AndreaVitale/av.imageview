@@ -31,6 +31,7 @@
         NSDictionary *requestHeader;
         SDWebImageOptions handleCookies;
         id imageObject;
+        BOOL configurationComplete;
 }
 
 -(void)setWidth_:(id)width;

@@ -45,12 +45,13 @@
     // been initialized from the view proxy. If the view is dependent
     // upon any properties being initialized then this is the method
     // to implement the dependent functionality.
-    
     [super configurationSet];
+     configurationComplete = YES;
     [self displayImage:imageObject];
 }
 //this looks like redundant code, prob a leftover
 -(void)processProperties {
+    [self setImage_: [self.proxy valueForKey:@"image"]];
     [self setDefaultImage_: [self.proxy valueForKey:@"defaultImage"]];
     [self setBrokenLinkImage_: [self.proxy valueForKey:@"brokenLinkImage"]];
     [self setLoadingIndicator_: [self.proxy valueForKey:@"loadingIndicator"]];
@@ -253,6 +254,9 @@
 -(void)setImage_:(id)args {
     
     imageObject = args;
+    if(configurationComplete){
+        [self displayImage:imageObject];
+    }
    }
 
 -(void)setDefaultImage_:(id)args {
