@@ -42,6 +42,7 @@ public class ImageViewProxy extends TiViewProxy
 	private static final int MSG_SET_BROKEN_IMAGE = MSG_FIRST_ID+1004;
 	private static final int MSG_SET_CONTENT_MODE = MSG_FIRST_ID+1005;
 	private static final int MSG_SET_REQUEST_HEADER = MSG_FIRST_ID+1006;
+	private static final int MSG_SET_TIMEOUT = MSG_FIRST_ID+1007;
 
 	private Activity activity;
 
@@ -104,6 +105,12 @@ public class ImageViewProxy extends TiViewProxy
 			case MSG_SET_REQUEST_HEADER:
 				result = (AsyncResult)message.obj;
 				getView().setRequestHeader((HashMap)result.getArg());
+				result.setResult(null);
+
+				return true;
+			case MSG_SET_TIMEOUT:
+				int timeout = message.arg1;
+				getView().setTimeout(timeout);
 				result.setResult(null);
 
 				return true;
@@ -227,5 +234,11 @@ public class ImageViewProxy extends TiViewProxy
 		} else {
 			TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_SET_REQUEST_HEADER), requestHeader);
 		}
+	}
+
+	@Kroll.setProperty
+	@Kroll.method
+	public void setTimeout(int timeout) {
+		getView().setTimeout(timeout);
 	}
 }
