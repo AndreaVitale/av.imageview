@@ -111,6 +111,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | clipsToBound | More details [here](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/#//apple_ref/occ/instp/UIView/clipsToBounds) | iOS only |
 | requestHeader | An object used to define extra http request header fields |  |
 | rounded | Enable or disable the circle transformation that automatically render the image as a perfect circle | Android only |
+| timeout | Set timeout for requests |  |
 
 ### Extra methods
 
@@ -123,6 +124,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | setClipsToBound | Set the `clipToBounds` property | __iOS only__ |
 | setRequestHeader | Set the `requestHeader` property |  |
 | setRounded | Set the `rounded` property | __Android only__ |
+| setTimeout | Set timeout for requests |  |
 | getContentMode | Get the value of `contentMode` property |
 | getLoadingIndicator | Get the value of `loadingIndicator` property |  |
 | getDefaultImage | Get the value of `defaultImage` property |  |
@@ -130,6 +132,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | getClipsToBound | Get the value of `clipToBounds` property | __iOS only__ |
 | getRequestHeader | Get the `requestHeader` property |  |
 | getRounded | Get the `rounded` property | __Android only__ |
+| getTimeout | Get current timeout of requests |  |
 
 ### Events
 

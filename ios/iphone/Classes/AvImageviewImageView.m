@@ -290,10 +290,16 @@
     requestHeader = args;
 }
 
+
 -(void)setHandleCookies_:(id)args {
     handleCookies = [[TiUtils numberFromObject:args] intValue];
 }
 
+-(void)setTimeout_:(id)args {
+    NSTimeInterval timeout = [TiUtils doubleValue:args def:5000] / 1000;
+    [[SDWebImageDownloader sharedDownloader] setDownloadTimeout:timeout];
+    
+}
 
 #pragma mark utility methodds
 -(CGFloat)contentWidthForWidth:(CGFloat)suggestedWidth {
