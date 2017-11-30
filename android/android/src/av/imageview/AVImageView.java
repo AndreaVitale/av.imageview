@@ -51,6 +51,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import av.imageview.utils.CookiesHelper;
+
 public class AVImageView extends TiUIView {
 	private static final String LCAT = "AVImageView";
 
@@ -70,6 +72,7 @@ public class AVImageView extends TiUIView {
     private String brokenImage;
     private String contentMode;
 	private HashMap requestHeader;
+	private boolean handleCookies;
 
     private RequestListener<String, GlideDrawable> requestListener;
 
@@ -78,10 +81,11 @@ public class AVImageView extends TiUIView {
 
         this.proxy = proxy;
 
-        //Setting up default values
+				//Setting up default values
         this.loadingIndicator = true;
         this.contentMode = ImageViewModule.CONTENT_MODE_ASPECT_FIT;
         this.memoryCache = true;
+				this.handleCookies = true;
         this.okHttpClient = new OkHttpClient.Builder()// default timeouts are 5 seconds
            .connectTimeout(5, TimeUnit.SECONDS)
            .readTimeout(5, TimeUnit.SECONDS)
@@ -147,6 +151,8 @@ public class AVImageView extends TiUIView {
                 .readTimeout(d.getInt("timeout"), TimeUnit.MILLISECONDS)
                 .build();
         }
+				if (d.containsKey("handleCookies"))
+            this.setHandleCookies(d.getBoolean("handleCookies"));
     }
 
 	@Override
@@ -210,10 +216,25 @@ public class AVImageView extends TiUIView {
 		if (url.startsWith("file://"))
 			drawableRequest = Glide.with(this.proxy.getActivity().getBaseContext()).load(url);
 		else
+		{
+			if(this.handleCookies)
+			{
+				String cookiesString = CookiesHelper.getCookiesStringForURL(url);
+				if(cookiesString != null && cookiesString.length() > 0)
+				{
+					if(this.requestHeader == null)
+					{
+						this.requestHeader = new HashMap();
+					}
+					this.requestHeader.put("Cookie", cookiesString);
+				}
+			}
 			drawableRequest = Glide
 				.with(this.proxy.getActivity().getBaseContext())
 				.using(new StreamModelLoaderWrapper<GlideUrl>(new OkHttpUrlLoader(okHttpClient)))
 				.load(GlideUrlBuilder.build(url, this.requestHeader));
+		}
+
 
 		//Handling GIF
 		if (this.getMimeType(url) != null && this.getMimeType(url) == "image/gif") {
@@ -374,6 +395,14 @@ public class AVImageView extends TiUIView {
 	synchronized public HashMap getRequestHeader() {
         return this.requestHeader;
     }
+
+	synchronized public void setHandleCookies(boolean handleCookies) {
+			this.handleCookies = handleCookies;
+	}
+
+	synchronized public boolean getHandleCookies() {
+			return this.handleCookies;
+	}
 
 	//Utility to create a specific request listener
 	private class RequestListenerBuilder {
