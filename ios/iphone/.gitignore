@@ -4,6 +4,7 @@ bin
 build
 modules
 dist
+Index
 .apt_generated
 build.properties
 .svn
