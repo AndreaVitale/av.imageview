@@ -3,6 +3,7 @@ package av.imageview;
 import av.imageview.utils.ImageLoader;
 import av.imageview.utils.glide.GlideUrlBuilder;
 import av.imageview.utils.glide.GlideCircleTransform;
+import av.imageview.utils.glide.StreamModelLoaderWrapper;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -17,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
+import okhttp3.OkHttpClient;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.DrawableRequestBuilder;
@@ -28,6 +31,8 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
+import com.bumptech.glide.load.model.stream.StreamModelLoader;
 
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.KrollModule;
@@ -44,6 +49,7 @@ import org.appcelerator.titanium.view.TiUIView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AVImageView extends TiUIView {
 	private static final String LCAT = "AVImageView";
@@ -54,6 +60,7 @@ public class AVImageView extends TiUIView {
     private ImageView imageView;
     private ProgressBar progressBar;
     private RelativeLayout layout;
+    private OkHttpClient okHttpClient;
 
     //Config variables
     private boolean loadingIndicator;
@@ -75,6 +82,10 @@ public class AVImageView extends TiUIView {
         this.loadingIndicator = true;
         this.contentMode = ImageViewModule.CONTENT_MODE_ASPECT_FIT;
         this.memoryCache = true;
+        this.okHttpClient = new OkHttpClient.Builder()// default timeouts are 5 seconds
+           .connectTimeout(5, TimeUnit.SECONDS)
+           .readTimeout(5, TimeUnit.SECONDS)
+           .build();
 
         //Setting up layout and imageview
         layout = new RelativeLayout(this.proxy.getActivity());
@@ -129,6 +140,12 @@ public class AVImageView extends TiUIView {
             } else {
                 this.setBlob((TiBlob) uri);
             }
+        }
+        if (d.containsKey("timeout")) {
+            this.okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(d.getInt("timeout"), TimeUnit.MILLISECONDS)
+                .readTimeout(d.getInt("timeout"), TimeUnit.MILLISECONDS)
+                .build();
         }
     }
 
@@ -193,7 +210,10 @@ public class AVImageView extends TiUIView {
 		if (url.startsWith("file://"))
 			drawableRequest = Glide.with(this.proxy.getActivity().getBaseContext()).load(url);
 		else
-			drawableRequest = Glide.with(this.proxy.getActivity().getBaseContext()).load(GlideUrlBuilder.build(url, this.requestHeader));
+			drawableRequest = Glide
+				.with(this.proxy.getActivity().getBaseContext())
+				.using(new StreamModelLoaderWrapper<GlideUrl>(new OkHttpUrlLoader(okHttpClient)))
+				.load(GlideUrlBuilder.build(url, this.requestHeader));
 
 		//Handling GIF
 		if (this.getMimeType(url) != null && this.getMimeType(url) == "image/gif") {
@@ -229,6 +249,13 @@ public class AVImageView extends TiUIView {
 		            drawableRequestBuilder.centerCrop().into(this.imageView);
 			}
 		}
+    }
+
+    public void setTimeout(int timeout) {
+        this.okHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(timeout, TimeUnit.MILLISECONDS)
+            .readTimeout(timeout, TimeUnit.MILLISECONDS)
+            .build();
     }
 
     private String sanitizeUrl(String url) {
