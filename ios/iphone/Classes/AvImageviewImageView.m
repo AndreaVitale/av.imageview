@@ -292,7 +292,11 @@
 
 
 -(void)setHandleCookies_:(id)args {
-    handleCookies = [[TiUtils numberFromObject:args] intValue];
+    BOOL useCookies = [TiUtils boolValue:args];
+    if(useCookies){
+        handleCookies = SDWebImageHandleCookies;
+    }
+    
 }
 
 -(void)setTimeout_:(id)args {
