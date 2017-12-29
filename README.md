@@ -166,7 +166,7 @@ Here is a list of supported content modes:
 If you enjoy this module, feel free to contribute with your PR or [donate](https://paypal.me/VitaleAndrea) :-)
 
 ## Credits
-Anyone who contributes to the module enhanchement!
+Anyone who contributes to the module enhancement!
 
 [@rs](https://github.com/rs) for the amazing [SDWebImage](https://github.com/rs/SDWebImage) library. Currently lib version used: 4.1.0.
 
