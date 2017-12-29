@@ -2,10 +2,10 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 2.3.0
-apiversion: 3
-architectures: armeabi-v7a x86
-description: andreavitale-imageview
+version: 3.0.0
+apiversion: 4
+architectures: arm64-v8a armeabi-v7a x86
+description: av.imageview
 author: Andrea Vitale
 license: MIT
 copyright: Copyright (c) 2016 by Andrea Vitale
@@ -15,4 +15,4 @@ name: av.imageview
 moduleid: av.imageview
 guid: ec658f35-69c8-45fa-8f7c-6354b4f761b4
 platform: android
-minsdk: 6.0.0.GA
+minsdk: 7.0.0
