@@ -112,6 +112,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | requestHeader | An object used to define extra http request header fields |  |
 | rounded | Enable or disable the circle transformation that automatically render the image as a perfect circle | Android only |
 | timeout | Set timeout for requests |  |
+| handleCookies | Enable cookie handling for remote images |  |
 
 ### Extra methods
 

@@ -107,18 +107,18 @@
     return image;
 }
 
--(void)displayImage:(id)args
+-(void)displayImage:(id)imageObj
 {
     UIImage *placeholderImage = (placeholderImagePath != nil) ? [self loadLocalImage:placeholderImagePath] : nil;
     UIImage *brokenLinkImage = (brokenLinkImagePath != nil) ? [self loadLocalImage:brokenLinkImagePath] : nil;
     
-    if ([args isKindOfClass:[NSNull class]])
+    if ([imageObj isKindOfClass:[NSNull class]])
         return;
     
     [imageView sd_cancelCurrentImageFetch];
     
-    if ([args isKindOfClass:[NSString class]]) {
-        NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:args]];
+    if ([imageObj isKindOfClass:[NSString class]]) {
+        NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:imageObj]];
         
         if (loadingIndicator) {
             activityIndicator.hidden = NO;
@@ -171,14 +171,14 @@
                                 }
              ];
         } else {
-            if ([TiUtils stringValue:args].length > 0)
-                imageView.image = [self loadLocalImage:[TiUtils stringValue:args]];
+            if ([TiUtils stringValue:imageObj].length > 0)
+                imageView.image = [self loadLocalImage:[TiUtils stringValue:imageObj]];
             
             if (loadingIndicator)
                 [activityIndicator stopAnimating];
         }
-    } else if ([args isKindOfClass:[TiBlob class]]) {
-        TiBlob *blob = (TiBlob*)args;
+    } else if ([imageObj isKindOfClass:[TiBlob class]]) {
+        TiBlob *blob = (TiBlob*)imageObj;
         
         imageView.image = [blob image];
     }
