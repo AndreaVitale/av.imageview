@@ -29,8 +29,11 @@
         NSString *brokenLinkImagePath;
     
         NSDictionary *requestHeader;
-    
+        SDWebImageOptions handleCookies;
+        id imageObject;
+        BOOL configurationComplete;
         NSTimeInterval timeout;
+
 }
 
 -(void)setWidth_:(id)width;

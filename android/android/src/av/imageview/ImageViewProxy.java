@@ -27,7 +27,7 @@ import android.os.Message;
 
 @Kroll.proxy(creatableInModule=ImageViewModule.class, propertyAccessors = {
 	"defaultImage", "brokenLinkImage", "image", "contentMode",  "enableMemoryCache",
-	"loadingIndicator", "enableMemoryCache", "rounded", "requestHeader"
+	"loadingIndicator", "enableMemoryCache", "rounded", "requestHeader", "handleCookies"
 })
 public class ImageViewProxy extends TiViewProxy
 {
@@ -240,5 +240,17 @@ public class ImageViewProxy extends TiViewProxy
 	@Kroll.method
 	public void setTimeout(int timeout) {
 		getView().setTimeout(timeout);
+	}
+
+	@Kroll.getProperty
+	@Kroll.method
+	public Boolean getHandleCookies() {
+		return getView().getHandleCookies();
+	}
+
+	@Kroll.setProperty
+	@Kroll.method
+	public void setHandleCookies(Boolean handleCookies) {
+		getView().setHandleCookies(handleCookies);
 	}
 }
