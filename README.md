@@ -161,11 +161,11 @@ Here is a list of supported content modes:
 - CONTENT_MODE_BOTTOM_LEFT
 - CONTENT_MODE_BOTTOM_RIGHT
 
-### Global properties (iOS)
+### Global properties (iOS only)
 | Property | Description | Note |
 | ---------- | ---------- | ----- |
-| shouldCacheImagesInMemory | use memory cache [defaults to true] | boolean, disable for less memory usage
-| shouldDecompressImages | use memory cache [defaults to true] | boolean , disable for less memory usage
+| shouldCacheImagesInMemory | Specify if memory will be used to cache images | `true` by default
+| shouldDecompressImages | Specify if image decompression must be enabled or not | `true` by default
 | maxCacheAge | The maximum length of time to keep an image in the cache, in seconds | int
 | maxCacheSize | The maximum size of the cache, in bytes | int
 

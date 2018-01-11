@@ -96,14 +96,12 @@
 {
     ENSURE_SINGLE_ARG(maxCacheSize, NSNumber);
     [SDImageCache sharedImageCache].config.maxCacheSize = [TiUtils intValue:maxCacheSize];
-    
 }
 
 -(void)setMaxCacheAge:(id)maxCacheAge
 {
     ENSURE_SINGLE_ARG(maxCacheAge, NSNumber);
     [SDImageCache sharedImageCache].config.maxCacheAge = [TiUtils intValue:maxCacheAge];
-    
 }
 
 
