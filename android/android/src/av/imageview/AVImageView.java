@@ -42,6 +42,7 @@ import org.appcelerator.kroll.KrollPropertyChange;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
+import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.util.TiRHelper;
 import org.appcelerator.titanium.util.TiRHelper.ResourceNotFoundException;
 import org.appcelerator.titanium.view.TiDrawableReference;
@@ -85,8 +86,9 @@ public class AVImageView extends TiUIView {
         this.loadingIndicator = true;
         this.contentMode = ImageViewModule.CONTENT_MODE_ASPECT_FIT;
         this.memoryCache = true;
+
 				this.handleCookies = true;
-        this.okHttpClient = new OkHttpClient.Builder()// default timeouts are 5 seconds
+        this.okHttpClient = new OkHttpClient.Builder() // default timeouts are 5 seconds
            .connectTimeout(5, TimeUnit.SECONDS)
            .readTimeout(5, TimeUnit.SECONDS)
            .build();
@@ -119,36 +121,55 @@ public class AVImageView extends TiUIView {
     }
 
     @Override
-    public void processProperties(KrollDict d) {
-        super.processProperties(d);
+    public void processProperties(KrollDict args) {
+        super.processProperties(args);
 
-        if (d.containsKey("loadingIndicator"))
-            this.setLoadingIndicator(d.getBoolean("loadingIndicator"));
-        if (d.containsKey("enableMemoryCache"))
-            this.setMemoryCache(d.getBoolean("enableMemoryCache"));
-        if (d.containsKey("contentMode"))
-            this.setContentMode(d.getString("contentMode"));
-        if (d.containsKey("defaultImage"))
-            this.setDefaultImage(d.getString("defaultImage"));
-        if (d.containsKey("brokenLinkImage"))
-            this.setBrokenLinkImage(d.getString("brokenLinkImage"));
-        if (d.containsKey("requestHeader"))
-            this.setRequestHeader((HashMap)d.getKrollDict("requestHeader"));
-        if (d.containsKey("rounded"))
-            this.setRoundedImage(d.getBoolean("rounded"));
-        if (d.containsKey("image")) {
-            Object uri = d.get("image");
+		String[] properties = {
+			"loadingIndicator",
+			"enableMemoryCache",
+			"contentMode",
+			"defaultImage",
+			"brokenLinkImage",
+			"requestHeader",
+			"rounded",
+			"image"
+		};
+
+		for (String key : properties) {
+			if (args.containsKey(key)) {
+				this.applyPropertyChanges(key, args.get(key));
+			}
+		}
+    }
+
+	public void applyPropertyChanges(String key, Object value) {
+		if (key.equals("loadingIndicator"))
+            this.setLoadingIndicator(TiConvert.toBoolean(value));
+        if (key.equals("enableMemoryCache"))
+            this.setMemoryCache(TiConvert.toBoolean(value));
+        if (key.equals("contentMode"))
+            this.setContentMode(value.toString());
+        if (key.equals("defaultImage"))
+            this.setDefaultImage(value.toString());
+        if (key.equals("brokenLinkImage"))
+            this.setBrokenLinkImage(value.toString());
+        if (key.equals("requestHeader"))
+            this.setRequestHeader((HashMap)value);
+        if (key.equals("rounded"))
+            this.setRoundedImage(TiConvert.toBoolean(value));
+        if (key.equals("image")) {
+            Object uri = value;
 
             if (uri instanceof String) {
-                this.setSource(d.getString("image"));
+                this.setSource(value.toString());
             } else {
-                this.setBlob((TiBlob) uri);
+                this.setBlob(TiConvert.toBlob(uri));
             }
         }
-        if (d.containsKey("timeout")) {
+        if (key.equals("timeout")) {
             this.okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(d.getInt("timeout"), TimeUnit.MILLISECONDS)
-                .readTimeout(d.getInt("timeout"), TimeUnit.MILLISECONDS)
+                .connectTimeout(TiConvert.toInt(value), TimeUnit.MILLISECONDS)
+                .readTimeout(TiConvert.toInt(value), TimeUnit.MILLISECONDS)
                 .build();
         }
 				if (d.containsKey("handleCookies"))
@@ -158,6 +179,8 @@ public class AVImageView extends TiUIView {
 	@Override
 	public void propertyChanged(String key, Object oldValue, Object newValue, KrollProxy proxy) {
 		super.propertyChanged(key, oldValue, newValue, proxy);
+
+		this.applyPropertyChanges(key, newValue);
 	}
 
 	@Override

@@ -252,7 +252,6 @@
 }
 
 -(void)setImage_:(id)args {
-    
     imageObject = args;
     if(configurationComplete){
         [self displayImage:imageObject];

@@ -162,12 +162,20 @@ Here is a list of supported content modes:
 - CONTENT_MODE_BOTTOM_LEFT
 - CONTENT_MODE_BOTTOM_RIGHT
 
+### Global properties (iOS only)
+| Property | Description | Note |
+| ---------- | ---------- | ----- |
+| shouldCacheImagesInMemory | Specify if memory will be used to cache images | `true` by default
+| shouldDecompressImages | Specify if image decompression must be enabled or not | `true` by default
+| maxCacheAge | The maximum length of time to keep an image in the cache, in seconds | int
+| maxCacheSize | The maximum size of the cache, in bytes | int
+
 ## Donate
 
 If you enjoy this module, feel free to contribute with your PR or [donate](https://paypal.me/VitaleAndrea) :-)
 
 ## Credits
-Anyone who contributes to the module enhanchement!
+Anyone who contributes to the module enhancement!
 
 [@rs](https://github.com/rs) for the amazing [SDWebImage](https://github.com/rs/SDWebImage) library. Currently lib version used: 4.1.0.
 
