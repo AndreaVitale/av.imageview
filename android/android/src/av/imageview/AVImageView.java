@@ -172,8 +172,8 @@ public class AVImageView extends TiUIView {
                 .readTimeout(TiConvert.toInt(value), TimeUnit.MILLISECONDS)
                 .build();
         }
-				if (d.containsKey("handleCookies"))
-            this.setHandleCookies(d.getBoolean("handleCookies"));
+		if (key.equals("handleCookies"))
+            this.setHandleCookies(TiConvert.toBoolean(value));
     }
 
 	@Override

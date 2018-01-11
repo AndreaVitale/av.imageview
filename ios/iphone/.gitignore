@@ -18,3 +18,4 @@ build.properties
 xcuserdata
 *.xcuserstate
 *.xcuserdata*
+*.sh

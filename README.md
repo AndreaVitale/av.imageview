@@ -103,16 +103,15 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 
 | Property | Description | Note |
 | ---------- | ---------- | ----- |
-| contentMode | Set the ImageView content mode | Supported contentmodes are listed in a next section. |
+| contentMode | Set the ImageView content mode | Supported content modes are listed in a [next section](https://github.com/AndreaVitale/av.imageview#supported-content-modes). |
 | defaultImage | __Local__ image to display when the image download is in progress |  |
 | brokenLinkImage | __Local__ image to display when the given link doesn't work or the image doesn't exists |  |
 | loadingIndicator | Enable or disable the activity indicator when the download is in progress | `true` by default |
-| enableMemoryCache | Enable or disable the memory cache mechanism | `true` by default and *Android only* |
-| clipsToBound | More details [here](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/#//apple_ref/occ/instp/UIView/clipsToBounds) | iOS only |
 | requestHeader | An object used to define extra http request header fields |  |
-| rounded | Enable or disable the circle transformation that automatically render the image as a perfect circle | Android only |
 | timeout | Set timeout for requests |  |
 | handleCookies | Enable cookie handling for remote images |  |
+| enableMemoryCache | Enable or disable the memory cache mechanism | `true` by default and *Android only*, for iOS have a look to module properties [here](https://github.com/AndreaVitale/av.imageview#global-properties-ios-only) |
+| rounded | Enable or disable the circle transformation that automatically render the image as a perfect circle | Android only |
 
 ### Extra methods
 
