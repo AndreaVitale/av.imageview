@@ -161,6 +161,14 @@ Here is a list of supported content modes:
 - CONTENT_MODE_BOTTOM_LEFT
 - CONTENT_MODE_BOTTOM_RIGHT
 
+### Global properties (iOS)
+| Property | Description | Note |
+| ---------- | ---------- | ----- |
+| shouldCacheImagesInMemory | use memory cache [defaults to true] | boolean, disable for less memory usage
+| shouldDecompressImages | use memory cache [defaults to true] | boolean , disable for less memory usage
+| maxCacheAge | The maximum length of time to keep an image in the cache, in seconds | int
+| maxCacheSize | The maximum size of the cache, in bytes | int
+
 ## Donate
 
 If you enjoy this module, feel free to contribute with your PR or [donate](https://paypal.me/VitaleAndrea) :-)

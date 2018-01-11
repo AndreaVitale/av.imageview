@@ -11,6 +11,7 @@
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 
 @implementation AvImageviewModule
 
@@ -78,6 +79,33 @@
 		// since no body is listening at this point for that event
 	}
 }
+#pragma Public APIs
+-(void)setShouldCacheImagesInMemory:(id)shouldCacheImagesInMemory
+{
+    ENSURE_SINGLE_ARG(shouldCacheImagesInMemory, NSNumber);
+    [SDImageCache sharedImageCache].config.shouldCacheImagesInMemory = [TiUtils boolValue:shouldCacheImagesInMemory];
+}
+
+-(void)setShouldDecompressImages:(id)shouldDecompressImages
+{
+    ENSURE_SINGLE_ARG(shouldDecompressImages, NSNumber);
+    [SDImageCache sharedImageCache].config.shouldDecompressImages = [TiUtils boolValue:shouldDecompressImages];
+}
+
+-(void)setMaxCacheSize:(id)maxCacheSize
+{
+    ENSURE_SINGLE_ARG(maxCacheSize, NSNumber);
+    [SDImageCache sharedImageCache].config.maxCacheSize = [TiUtils intValue:maxCacheSize];
+    
+}
+
+-(void)setMaxCacheAge:(id)maxCacheAge
+{
+    ENSURE_SINGLE_ARG(maxCacheAge, NSNumber);
+    [SDImageCache sharedImageCache].config.maxCacheAge = [TiUtils intValue:maxCacheAge];
+    
+}
+
 
 MAKE_SYSTEM_PROP(CONTENT_MODE_SCALE_TO_FIT, UIViewContentModeScaleToFill)
 MAKE_SYSTEM_PROP(CONTENT_MODE_ASPECT_FIT, UIViewContentModeScaleAspectFit)
