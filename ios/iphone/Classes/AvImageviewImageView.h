@@ -15,6 +15,7 @@
     @private
         BOOL loadingIndicator;
         BOOL clipsToBounds;
+        TiColor *loadingIndicatorColor;
 
         TiDimension width;
         TiDimension height;
@@ -42,6 +43,7 @@
 -(void)setDefaultImage_:(id)args;
 -(void)setBrokenLinkImage_:(id)args;
 -(void)setLoadingIndicator_:(id)args;
+-(void)setLoadingIndicatorColor_:(id)args;
 -(void)setContentMode_:(id)args;
 -(void)setClipsToBounds_:(id)clips;
 -(void)setRequestHeader_:(id)args;

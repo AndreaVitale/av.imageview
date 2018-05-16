@@ -55,6 +55,7 @@
     [self setDefaultImage_: [self.proxy valueForKey:@"defaultImage"]];
     [self setBrokenLinkImage_: [self.proxy valueForKey:@"brokenLinkImage"]];
     [self setLoadingIndicator_: [self.proxy valueForKey:@"loadingIndicator"]];
+    [self setLoadingIndicatorColor_: [self.proxy valueForKey:@"loadingIndicatorColor"]];
     [self setContentMode_: [self.proxy valueForKey:@"contentMode"]];
     [self setRequestHeader_:[self.proxy valueForKey:@"requestHeader"]];
     [self setHandleCookies_:[self.proxy valueForKey:@"handleCookies"]];
@@ -120,8 +121,12 @@
     if ([imageObj isKindOfClass:[NSString class]]) {
         NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:imageObj]];
         
-        if (loadingIndicator) {
+        if (`gIndicator) {
             activityIndicator.hidden = NO;
+            
+            if(loadingIndicatorColor != nil){
+                activityIndicator.color = [loadingIndicatorColor color];
+            }
             
             [activityIndicator startAnimating];
         }
@@ -281,8 +286,13 @@
     imageView.clipsToBounds = clipsToBounds;
 }
 
+
 -(void)setLoadingIndicator_:(id)value {
     loadingIndicator = [TiUtils boolValue:value def:YES];
+}
+
+-(void)setLoadingIndicatorColor_:(id)value {
+    loadingIndicatorColor = [TiUtils colorValue:value];
 }
 
 -(void)setRequestHeader_:(id)args {

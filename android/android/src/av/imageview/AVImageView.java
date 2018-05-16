@@ -66,6 +66,7 @@ public class AVImageView extends TiUIView {
     private OkHttpClient okHttpClient;
 
     //Config variables
+    private String loadingIndicatorColor;
     private boolean loadingIndicator;
     private boolean memoryCache;
 	private boolean roundedImage;
@@ -83,6 +84,7 @@ public class AVImageView extends TiUIView {
         this.proxy = proxy;
 
 				//Setting up default values
+        this.loadingIndicatorColor = null;
         this.loadingIndicator = true;
         this.contentMode = ImageViewModule.CONTENT_MODE_ASPECT_FIT;
         this.memoryCache = true;
@@ -126,6 +128,7 @@ public class AVImageView extends TiUIView {
 
 		String[] properties = {
 			"loadingIndicator",
+			"loadingIndicatorColor",
 			"enableMemoryCache",
 			"contentMode",
 			"defaultImage",
@@ -145,6 +148,8 @@ public class AVImageView extends TiUIView {
 	public void applyPropertyChanges(String key, Object value) {
 		if (key.equals("loadingIndicator"))
             this.setLoadingIndicator(TiConvert.toBoolean(value));
+		if (key.equals("loadingIndicatorColor") && value != null)
+            this.setLoadingIndicatorColor(value.toString());
         if (key.equals("enableMemoryCache"))
             this.setMemoryCache(TiConvert.toBoolean(value));
         if (key.equals("contentMode"))
@@ -232,8 +237,14 @@ public class AVImageView extends TiUIView {
         Drawable defaultImageDrawable = (this.defaultImage != null) ? TiDrawableReference.fromUrl(proxy, this.defaultImage).getDrawable() : null;
         Drawable brokenLinkImageDrawable = (this.brokenImage != null) ? TiDrawableReference.fromUrl(proxy, this.brokenImage).getDrawable() : null;
 
-		if (this.loadingIndicator)
+		if (this.loadingIndicator){
+			
+			//if user provide loading indicator color
+			if(this.loadingIndicatorColor != null) // update the spinner color
+				this.progressBar.getIndeterminateDrawable().setColorFilter(TiConvert.toColor(this.loadingIndicatorColor), android.graphics.PorterDuff.Mode.MULTIPLY);
+	        
         	this.progressBar.setVisibility(View.VISIBLE);
+		}
 
 		//Switching between local and remote url
 		if (url.startsWith("file://"))
@@ -363,6 +374,10 @@ public class AVImageView extends TiUIView {
         return this.source;
     }
 
+    synchronized public void setLoadingIndicatorColor(String color) {
+        this.loadingIndicatorColor = color;
+    }
+    
     synchronized public void setLoadingIndicator(boolean enabled) {
         this.loadingIndicator = enabled;
     }
@@ -394,7 +409,11 @@ public class AVImageView extends TiUIView {
     synchronized public boolean getLoadingIndicator() {
         return this.loadingIndicator;
     }
-
+    
+    synchronized public String getLoadingIndicatorColor() {
+        return this.loadingIndicatorColor;
+    }
+    
     synchronized public boolean getMemoryCache() {
         return this.memoryCache;
     }
