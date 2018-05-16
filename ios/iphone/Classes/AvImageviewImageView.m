@@ -121,7 +121,7 @@
     if ([imageObj isKindOfClass:[NSString class]]) {
         NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:imageObj]];
         
-        if (`gIndicator) {
+        if (loadingIndicator) {
             activityIndicator.hidden = NO;
             
             if(loadingIndicatorColor != nil){
