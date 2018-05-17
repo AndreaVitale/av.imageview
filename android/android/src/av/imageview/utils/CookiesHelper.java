@@ -40,7 +40,9 @@ public class CookiesHelper
       }
       else
       {
-        Log.d(LCAT, "No cookie found for " + urlString);
+        if (Log.isDebugModeEnabled()) {
+          Log.d(LCAT, "No cookie found for " + urlString);
+        }
         return null;
       }
     }
@@ -56,7 +58,10 @@ public class CookiesHelper
     URL url = new URL(urlString);
     String domain = url.getHost();
     String path = url.getPath();
-    Log.d(LCAT, "Getting HTTP Cookies for " + domain);
+    
+    if (Log.isDebugModeEnabled()) {
+      Log.d(LCAT, "Getting HTTP Cookies for " + domain);
+    }
 
 		if (domain == null || domain.length() == 0) {
 			if (Log.isDebugModeEnabled()) {
