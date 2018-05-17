@@ -216,6 +216,19 @@ public class ImageViewProxy extends TiViewProxy
 
 	@Kroll.getProperty
 	@Kroll.method
+	public String getLoadingIndicatorColor() {
+	    return getView().getLoadingIndicatorColor();
+	}
+	
+	@Kroll.setProperty
+	@Kroll.method
+	public void setLoadingIndicatorColor(String color) {
+		getView().setLoadingIndicatorColor(color);
+	}
+
+	
+	@Kroll.getProperty
+	@Kroll.method
 	public Boolean getMemoryCacheEnabled() {
 		return getView().getMemoryCache();
 	}

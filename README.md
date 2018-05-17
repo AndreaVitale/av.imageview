@@ -107,6 +107,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | defaultImage | __Local__ image to display when the image download is in progress |  |
 | brokenLinkImage | __Local__ image to display when the given link doesn't work or the image doesn't exists |  |
 | loadingIndicator | Enable or disable the activity indicator when the download is in progress | `true` by default |
+| loadingIndicatorColor | change the loading indicator color |  |
 | requestHeader | An object used to define extra http request header fields |  |
 | timeout | Set timeout for requests |  |
 | handleCookies | Enable cookie handling for remote images |  |
@@ -119,6 +120,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | ---------- | ---------- | --- |
 | setContentMode | Set the `contentMode` property |  |
 | setLoadingIndicator | Set the `loadingIndicator` property |  |
+| setLoadingIndicatorColor | Set the `loadingIndicatorColor` property |  |
 | setDefaultImage | Set the `defaultImage` property |  |
 | setBrokenLinkImage | Set the `brokenLinkImage` property |  |
 | setClipsToBound | Set the `clipToBounds` property | __iOS only__ |
@@ -127,6 +129,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | setTimeout | Set timeout for requests |  |
 | getContentMode | Get the value of `contentMode` property |
 | getLoadingIndicator | Get the value of `loadingIndicator` property |  |
+| getLoadingIndicatorColor | Get the value of `loadingIndicatorColor` property |  |
 | getDefaultImage | Get the value of `defaultImage` property |  |
 | getBrokenLinkImage | Get the value of `brokenLinkImage` property |  |
 | getClipsToBound | Get the value of `clipToBounds` property | __iOS only__ |
