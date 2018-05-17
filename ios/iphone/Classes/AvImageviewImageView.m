@@ -119,7 +119,12 @@
     [imageView sd_cancelCurrentImageFetch];
     
     if ([imageObj isKindOfClass:[NSString class]]) {
-        NSURL *imageUrl = [NSURL URLWithString:[TiUtils stringValue:imageObj]];
+        //fix downloading the image if url contains spaces or none ASCII characters
+        //source : https://stackoverflow.com/questions/1441106/nsdata-nsurl-url-with-space-having-problem
+        NSString * srtImageUrl = [TiUtils stringValue:imageObj];
+        srtImageUrl = [srtImageUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        NSURL *imageUrl = [NSURL URLWithString:srtImageUrl];
         
         if (loadingIndicator) {
             activityIndicator.hidden = NO;
