@@ -116,7 +116,7 @@
     if ([imageObj isKindOfClass:[NSNull class]])
         return;
     
-    [imageView sd_cancelCurrentImageFetch];
+    [imageView sd_cancelCurrentAnimationImagesLoad];
     
     if ([imageObj isKindOfClass:[NSString class]]) {
         //fix downloading the image if url contains spaces or none ASCII characters
