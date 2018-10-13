@@ -218,11 +218,21 @@ public class AVImageView extends TiUIView {
     this.source = sanitizeUrl(url);
 
     // If it is correctly set I'll display the image
-    if (this.source != null)
+    if (this.source != null && this.source != "") {
       this.setImage(this.source);
+    } else {
+      this.imageView.setImageBitmap(null);
+    }
   }
 
   public void setImage(String image) {
+
+    if (image == null || image == "") {
+      // clear image
+      this.imageView.setImageBitmap(null);
+      return;
+    }
+
     if (TiApplication.isUIThread())
       startRequest(image, this.loadingIndicator);
     else

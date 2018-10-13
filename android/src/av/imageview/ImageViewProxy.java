@@ -131,17 +131,25 @@ public class ImageViewProxy extends TiViewProxy {
       @Kroll.method
       public void setImage(final Object uri) {
     if (TiApplication.isUIThread()) {
-      if (uri instanceof String)
+
+      if (uri == null) {
+        getView().setSource(null);
+      } else if (uri instanceof String) {
         getView().setSource(uri.toString());
-      else
+      } else {
         getView().setBlob((TiBlob)uri);
+      }
     } else {
-      if (uri instanceof String)
+      if (uri == null) {
+        TiMessenger.sendBlockingMainMessage(
+            getMainHandler().obtainMessage(MSG_SET_IMAGE_URL), "");
+      } else if (uri instanceof String) {
         TiMessenger.sendBlockingMainMessage(
             getMainHandler().obtainMessage(MSG_SET_IMAGE_URL), uri.toString());
-      else
+      } else {
         TiMessenger.sendBlockingMainMessage(
             getMainHandler().obtainMessage(MSG_SET_IMAGE_BLOB), (TiBlob)uri);
+      }
     }
   }
 
