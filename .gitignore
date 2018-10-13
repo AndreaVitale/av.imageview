@@ -1,4 +1,5 @@
 .DS_Store
 ios/iphone/*.zip
-android/android/dist/*.zip
+android/dist/*.zip
+android/build/*
 phobeous-build.properties
