@@ -31,10 +31,12 @@ private:
 
 	// Methods -----------------------------------------------------------
 	static void setHandleCookies(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void getDontAnimate(const v8::FunctionCallbackInfo<v8::Value>&);
 	static void getLoadingIndicator(const v8::FunctionCallbackInfo<v8::Value>&);
 	static void setRequestHeader(const v8::FunctionCallbackInfo<v8::Value>&);
 	static void getContentMode(const v8::FunctionCallbackInfo<v8::Value>&);
 	static void getDefaultImage(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void setDontAnimate(const v8::FunctionCallbackInfo<v8::Value>&);
 	static void setMemoryCacheEnabled(const v8::FunctionCallbackInfo<v8::Value>&);
 	static void getMemoryCacheEnabled(const v8::FunctionCallbackInfo<v8::Value>&);
 	static void setTimeout(const v8::FunctionCallbackInfo<v8::Value>&);
@@ -54,24 +56,26 @@ private:
 	// Dynamic property accessors ----------------------------------------
 	static void getter_image(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
 	static void setter_image(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
-	static void getter_contentMode(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
-	static void setter_contentMode(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 	static void getter_loadingIndicator(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
 	static void setter_loadingIndicator(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
-	static void getter_rounded(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
-	static void setter_rounded(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 	static void getter_handleCookies(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
 	static void setter_handleCookies(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 	static void getter_loadingIndicatorColor(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
 	static void setter_loadingIndicatorColor(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 	static void getter_memoryCacheEnabled(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
 	static void setter_memoryCacheEnabled(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
-	static void setter_requestHeader(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
-	static void getter_defaultImage(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
-	static void setter_defaultImage(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 	static void setter_timeout(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 	static void getter_brokenLinkImage(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
 	static void setter_brokenLinkImage(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
+	static void getter_dontAnimate(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
+	static void setter_dontAnimate(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
+	static void getter_contentMode(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
+	static void setter_contentMode(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
+	static void getter_rounded(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
+	static void setter_rounded(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
+	static void setter_requestHeader(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
+	static void getter_defaultImage(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info);
+	static void setter_defaultImage(v8::Local<v8::Name> name, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 
 };
 

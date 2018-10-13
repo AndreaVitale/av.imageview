@@ -167,6 +167,20 @@ public class ImageViewProxy extends TiViewProxy {
   @Kroll
       .getProperty
       @Kroll.method
+      public boolean getDontAnimate() {
+    return getView().getDontAnimate();
+  }
+
+  @Kroll
+      .setProperty
+      @Kroll.method
+      public void setDontAnimate(boolean enabled) {
+    getView().setDontAnimate(enabled);
+  }
+
+  @Kroll
+      .getProperty
+      @Kroll.method
       public boolean getRounded() {
     return getView().getRoundedImage();
   }

@@ -86,10 +86,12 @@ Local<FunctionTemplate> ImageViewProxy::getProxyTemplate(Isolate* isolate)
 
 	// Method bindings --------------------------------------------------------
 	titanium::SetProtoMethod(isolate, t, "setHandleCookies", ImageViewProxy::setHandleCookies);
+	titanium::SetProtoMethod(isolate, t, "getDontAnimate", ImageViewProxy::getDontAnimate);
 	titanium::SetProtoMethod(isolate, t, "getLoadingIndicator", ImageViewProxy::getLoadingIndicator);
 	titanium::SetProtoMethod(isolate, t, "setRequestHeader", ImageViewProxy::setRequestHeader);
 	titanium::SetProtoMethod(isolate, t, "getContentMode", ImageViewProxy::getContentMode);
 	titanium::SetProtoMethod(isolate, t, "getDefaultImage", ImageViewProxy::getDefaultImage);
+	titanium::SetProtoMethod(isolate, t, "setDontAnimate", ImageViewProxy::setDontAnimate);
 	titanium::SetProtoMethod(isolate, t, "setMemoryCacheEnabled", ImageViewProxy::setMemoryCacheEnabled);
 	titanium::SetProtoMethod(isolate, t, "getMemoryCacheEnabled", ImageViewProxy::getMemoryCacheEnabled);
 	titanium::SetProtoMethod(isolate, t, "setTimeout", ImageViewProxy::setTimeout);
@@ -122,21 +124,9 @@ Local<FunctionTemplate> ImageViewProxy::getProxyTemplate(Isolate* isolate)
 			Local<Value>(), DEFAULT,
 			static_cast<v8::PropertyAttribute>(v8::DontDelete)
 		);
-	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "contentMode"),
-			ImageViewProxy::getter_contentMode,
-			ImageViewProxy::setter_contentMode,
-			Local<Value>(), DEFAULT,
-			static_cast<v8::PropertyAttribute>(v8::DontDelete)
-		);
 	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "loadingIndicator"),
 			ImageViewProxy::getter_loadingIndicator,
 			ImageViewProxy::setter_loadingIndicator,
-			Local<Value>(), DEFAULT,
-			static_cast<v8::PropertyAttribute>(v8::DontDelete)
-		);
-	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "rounded"),
-			ImageViewProxy::getter_rounded,
-			ImageViewProxy::setter_rounded,
 			Local<Value>(), DEFAULT,
 			static_cast<v8::PropertyAttribute>(v8::DontDelete)
 		);
@@ -158,18 +148,6 @@ Local<FunctionTemplate> ImageViewProxy::getProxyTemplate(Isolate* isolate)
 			Local<Value>(), DEFAULT,
 			static_cast<v8::PropertyAttribute>(v8::DontDelete)
 		);
-	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "requestHeader"),
-			titanium::Proxy::getProperty,
-			ImageViewProxy::setter_requestHeader,
-			Local<Value>(), DEFAULT,
-			static_cast<v8::PropertyAttribute>(v8::DontDelete)
-		);
-	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "defaultImage"),
-			ImageViewProxy::getter_defaultImage,
-			ImageViewProxy::setter_defaultImage,
-			Local<Value>(), DEFAULT,
-			static_cast<v8::PropertyAttribute>(v8::DontDelete)
-		);
 	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "timeout"),
 			titanium::Proxy::getProperty,
 			ImageViewProxy::setter_timeout,
@@ -179,6 +157,36 @@ Local<FunctionTemplate> ImageViewProxy::getProxyTemplate(Isolate* isolate)
 	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "brokenLinkImage"),
 			ImageViewProxy::getter_brokenLinkImage,
 			ImageViewProxy::setter_brokenLinkImage,
+			Local<Value>(), DEFAULT,
+			static_cast<v8::PropertyAttribute>(v8::DontDelete)
+		);
+	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "dontAnimate"),
+			ImageViewProxy::getter_dontAnimate,
+			ImageViewProxy::setter_dontAnimate,
+			Local<Value>(), DEFAULT,
+			static_cast<v8::PropertyAttribute>(v8::DontDelete)
+		);
+	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "contentMode"),
+			ImageViewProxy::getter_contentMode,
+			ImageViewProxy::setter_contentMode,
+			Local<Value>(), DEFAULT,
+			static_cast<v8::PropertyAttribute>(v8::DontDelete)
+		);
+	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "rounded"),
+			ImageViewProxy::getter_rounded,
+			ImageViewProxy::setter_rounded,
+			Local<Value>(), DEFAULT,
+			static_cast<v8::PropertyAttribute>(v8::DontDelete)
+		);
+	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "requestHeader"),
+			titanium::Proxy::getProperty,
+			ImageViewProxy::setter_requestHeader,
+			Local<Value>(), DEFAULT,
+			static_cast<v8::PropertyAttribute>(v8::DontDelete)
+		);
+	instanceTemplate->SetAccessor(NEW_SYMBOL(isolate, "defaultImage"),
+			ImageViewProxy::getter_defaultImage,
+			ImageViewProxy::setter_defaultImage,
 			Local<Value>(), DEFAULT,
 			static_cast<v8::PropertyAttribute>(v8::DontDelete)
 		);
@@ -334,6 +342,71 @@ void ImageViewProxy::setHandleCookies(const FunctionCallbackInfo<Value>& args)
 
 
 	args.GetReturnValue().Set(v8::Undefined(isolate));
+
+}
+void ImageViewProxy::getDontAnimate(const FunctionCallbackInfo<Value>& args)
+{
+	LOGD(TAG, "getDontAnimate()");
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		titanium::JSException::GetJNIEnvironmentError(isolate);
+		return;
+	}
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "getDontAnimate", "()Z");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'getDontAnimate' with signature '()Z'";
+			LOGE(TAG, error);
+				titanium::JSException::Error(isolate, error);
+				return;
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		args.GetReturnValue().Set(Undefined(isolate));
+		return;
+	}
+
+	jvalue* jArguments = 0;
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	jboolean jResult = (jboolean)env->CallBooleanMethodA(javaProxy, methodID, jArguments);
+
+
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		Local<Value> jsException = titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+		return;
+	}
+
+
+	Local<Boolean> v8Result = titanium::TypeConverter::javaBooleanToJsBoolean(isolate, env, jResult);
+
+
+
+	args.GetReturnValue().Set(v8Result);
 
 }
 void ImageViewProxy::getLoadingIndicator(const FunctionCallbackInfo<Value>& args)
@@ -631,6 +704,93 @@ void ImageViewProxy::getDefaultImage(const FunctionCallbackInfo<Value>& args)
 
 
 	args.GetReturnValue().Set(v8Result);
+
+}
+void ImageViewProxy::setDontAnimate(const FunctionCallbackInfo<Value>& args)
+{
+	LOGD(TAG, "setDontAnimate()");
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		titanium::JSException::GetJNIEnvironmentError(isolate);
+		return;
+	}
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setDontAnimate", "(Z)V");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'setDontAnimate' with signature '(Z)V'";
+			LOGE(TAG, error);
+				titanium::JSException::Error(isolate, error);
+				return;
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		args.GetReturnValue().Set(Undefined(isolate));
+		return;
+	}
+
+	if (args.Length() < 1) {
+		char errorStringBuffer[100];
+		sprintf(errorStringBuffer, "setDontAnimate: Invalid number of arguments. Expected 1 but got %d", args.Length());
+		titanium::JSException::Error(isolate, errorStringBuffer);
+		return;
+	}
+
+	jvalue jArguments[1];
+
+
+
+
+	if (!args[0]->IsBoolean() && !args[0]->IsNull()) {
+		const char *error = "Invalid value, expected type Boolean.";
+		LOGE(TAG, error);
+		titanium::JSException::Error(isolate, error);
+		return;
+	}
+	
+
+	if (!args[0]->IsNull()) {
+		Local<Boolean> arg_0 = args[0]->ToBoolean(isolate);
+		jArguments[0].z =
+			titanium::TypeConverter::jsBooleanToJavaBoolean(
+				env, arg_0);
+	} else {
+		jArguments[0].z = NULL;
+	}
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	env->CallVoidMethodA(javaProxy, methodID, jArguments);
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+	}
+
+
+
+
+	args.GetReturnValue().Set(v8::Undefined(isolate));
 
 }
 void ImageViewProxy::setMemoryCacheEnabled(const FunctionCallbackInfo<Value>& args)
@@ -1969,147 +2129,6 @@ void ImageViewProxy::setter_image(Local<Name> property, Local<Value> value, cons
 }
 
 
-void ImageViewProxy::getter_contentMode(Local<Name> property, const PropertyCallbackInfo<Value>& args)
-{
-	Isolate* isolate = args.GetIsolate();
-	HandleScope scope(isolate);
-
-	JNIEnv *env = titanium::JNIScope::getEnv();
-	if (!env) {
-		titanium::JSException::GetJNIEnvironmentError(isolate);
-		return;
-	}
-	static jmethodID methodID = NULL;
-	if (!methodID) {
-		methodID = env->GetMethodID(ImageViewProxy::javaClass, "getContentMode", "()Ljava/lang/String;");
-		if (!methodID) {
-			const char *error = "Couldn't find proxy method 'getContentMode' with signature '()Ljava/lang/String;'";
-			LOGE(TAG, error);
-				titanium::JSException::Error(isolate, error);
-				return;
-		}
-	}
-
-	Local<Object> holder = args.Holder();
-	if (!JavaObject::isJavaObject(holder)) {
-		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
-	}
-	if (holder.IsEmpty() || holder->IsNull()) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
-	if (!proxy) {
-		args.GetReturnValue().Set(Undefined(isolate));
-		return;
-	}
-
-	jvalue* jArguments = 0;
-
-	jobject javaProxy = proxy->getJavaObject();
-	if (javaProxy == NULL) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	jstring jResult = (jstring)env->CallObjectMethodA(javaProxy, methodID, jArguments);
-
-
-
-	proxy->unreferenceJavaObject(javaProxy);
-
-
-
-	if (env->ExceptionCheck()) {
-		Local<Value> jsException = titanium::JSException::fromJavaException(isolate);
-		env->ExceptionClear();
-		return;
-	}
-
-	if (jResult == NULL) {
-		args.GetReturnValue().Set(Null(isolate));
-		return;
-	}
-
-	Local<Value> v8Result = titanium::TypeConverter::javaStringToJsString(isolate, env, jResult);
-
-	env->DeleteLocalRef(jResult);
-
-
-	args.GetReturnValue().Set(v8Result);
-
-}
-
-void ImageViewProxy::setter_contentMode(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
-{
-	Isolate* isolate = args.GetIsolate();
-	HandleScope scope(isolate);
-
-	JNIEnv *env = titanium::JNIScope::getEnv();
-	if (!env) {
-		LOGE(TAG, "Failed to get environment, contentMode wasn't set");
-		return;
-	}
-
-	static jmethodID methodID = NULL;
-	if (!methodID) {
-		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setContentMode", "(Ljava/lang/String;)V");
-		if (!methodID) {
-			const char *error = "Couldn't find proxy method 'setContentMode' with signature '(Ljava/lang/String;)V'";
-			LOGE(TAG, error);
-		}
-	}
-
-	Local<Object> holder = args.Holder();
-	if (!JavaObject::isJavaObject(holder)) {
-		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
-	}
-	if (holder.IsEmpty() || holder->IsNull()) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
-	if (!proxy) {
-		return;
-	}
-
-	jvalue jArguments[1];
-
-	
-
-	if (!value->IsNull()) {
-		Local<Value> arg_0 = value;
-		jArguments[0].l =
-			titanium::TypeConverter::jsValueToJavaString(
-				isolate,
-				env, arg_0);
-	} else {
-		jArguments[0].l = NULL;
-	}
-
-	jobject javaProxy = proxy->getJavaObject();
-	if (javaProxy == NULL) {
-		return;
-	}
-	env->CallVoidMethodA(javaProxy, methodID, jArguments);
-
-	proxy->unreferenceJavaObject(javaProxy);
-
-
-
-				env->DeleteLocalRef(jArguments[0].l);
-
-
-	if (env->ExceptionCheck()) {
-		titanium::JSException::fromJavaException(isolate);
-		env->ExceptionClear();
-	}
-
-
-
-
-}
-
-
 void ImageViewProxy::getter_loadingIndicator(Local<Name> property, const PropertyCallbackInfo<Value>& args)
 {
 	Isolate* isolate = args.GetIsolate();
@@ -2240,142 +2259,6 @@ void ImageViewProxy::setter_loadingIndicator(Local<Name> property, Local<Value> 
 			if (isNew_0) {
 				env->DeleteLocalRef(jArguments[0].l);
 			}
-
-
-	if (env->ExceptionCheck()) {
-		titanium::JSException::fromJavaException(isolate);
-		env->ExceptionClear();
-	}
-
-
-
-
-}
-
-
-void ImageViewProxy::getter_rounded(Local<Name> property, const PropertyCallbackInfo<Value>& args)
-{
-	Isolate* isolate = args.GetIsolate();
-	HandleScope scope(isolate);
-
-	JNIEnv *env = titanium::JNIScope::getEnv();
-	if (!env) {
-		titanium::JSException::GetJNIEnvironmentError(isolate);
-		return;
-	}
-	static jmethodID methodID = NULL;
-	if (!methodID) {
-		methodID = env->GetMethodID(ImageViewProxy::javaClass, "getRounded", "()Z");
-		if (!methodID) {
-			const char *error = "Couldn't find proxy method 'getRounded' with signature '()Z'";
-			LOGE(TAG, error);
-				titanium::JSException::Error(isolate, error);
-				return;
-		}
-	}
-
-	Local<Object> holder = args.Holder();
-	if (!JavaObject::isJavaObject(holder)) {
-		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
-	}
-	if (holder.IsEmpty() || holder->IsNull()) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
-	if (!proxy) {
-		args.GetReturnValue().Set(Undefined(isolate));
-		return;
-	}
-
-	jvalue* jArguments = 0;
-
-	jobject javaProxy = proxy->getJavaObject();
-	if (javaProxy == NULL) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	jboolean jResult = (jboolean)env->CallBooleanMethodA(javaProxy, methodID, jArguments);
-
-
-
-	proxy->unreferenceJavaObject(javaProxy);
-
-
-
-	if (env->ExceptionCheck()) {
-		Local<Value> jsException = titanium::JSException::fromJavaException(isolate);
-		env->ExceptionClear();
-		return;
-	}
-
-
-	Local<Boolean> v8Result = titanium::TypeConverter::javaBooleanToJsBoolean(isolate, env, jResult);
-
-
-
-	args.GetReturnValue().Set(v8Result);
-
-}
-
-void ImageViewProxy::setter_rounded(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
-{
-	Isolate* isolate = args.GetIsolate();
-	HandleScope scope(isolate);
-
-	JNIEnv *env = titanium::JNIScope::getEnv();
-	if (!env) {
-		LOGE(TAG, "Failed to get environment, rounded wasn't set");
-		return;
-	}
-
-	static jmethodID methodID = NULL;
-	if (!methodID) {
-		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setRounded", "(Z)V");
-		if (!methodID) {
-			const char *error = "Couldn't find proxy method 'setRounded' with signature '(Z)V'";
-			LOGE(TAG, error);
-		}
-	}
-
-	Local<Object> holder = args.Holder();
-	if (!JavaObject::isJavaObject(holder)) {
-		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
-	}
-	if (holder.IsEmpty() || holder->IsNull()) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
-	if (!proxy) {
-		return;
-	}
-
-	jvalue jArguments[1];
-
-	if (!value->IsBoolean() && !value->IsNull()) {
-		const char *error = "Invalid value, expected type Boolean.";
-		LOGE(TAG, error);
-	}
-	
-
-	if (!value->IsNull()) {
-		Local<Boolean> arg_0 = value->ToBoolean(isolate);
-		jArguments[0].z =
-			titanium::TypeConverter::jsBooleanToJavaBoolean(
-				env, arg_0);
-	} else {
-		jArguments[0].z = NULL;
-	}
-
-	jobject javaProxy = proxy->getJavaObject();
-	if (javaProxy == NULL) {
-		return;
-	}
-	env->CallVoidMethodA(javaProxy, methodID, jArguments);
-
-	proxy->unreferenceJavaObject(javaProxy);
-
 
 
 	if (env->ExceptionCheck()) {
@@ -2817,6 +2700,633 @@ void ImageViewProxy::setter_memoryCacheEnabled(Local<Name> property, Local<Value
 
 
 
+void ImageViewProxy::setter_timeout(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		LOGE(TAG, "Failed to get environment, timeout wasn't set");
+		return;
+	}
+
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setTimeout", "(I)V");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'setTimeout' with signature '(I)V'";
+			LOGE(TAG, error);
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		return;
+	}
+
+	jvalue jArguments[1];
+
+	
+
+		if ((titanium::V8Util::isNaN(isolate, value) && !value->IsUndefined()) || value->ToString(isolate)->Length() == 0) {
+			const char *error = "Invalid value, expected type Number.";
+			LOGE(TAG, error);
+		}
+	if (!value->IsNull()) {
+		Local<Number> arg_0 = value->ToNumber(isolate);
+		jArguments[0].i =
+			titanium::TypeConverter::jsNumberToJavaInt(
+				env, arg_0);
+	} else {
+		jArguments[0].i = NULL;
+	}
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		return;
+	}
+	env->CallVoidMethodA(javaProxy, methodID, jArguments);
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+	}
+
+
+
+
+	Proxy::setProperty(property, value, args);
+}
+
+
+void ImageViewProxy::getter_brokenLinkImage(Local<Name> property, const PropertyCallbackInfo<Value>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		titanium::JSException::GetJNIEnvironmentError(isolate);
+		return;
+	}
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "getBrokenLinkImage", "()Ljava/lang/String;");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'getBrokenLinkImage' with signature '()Ljava/lang/String;'";
+			LOGE(TAG, error);
+				titanium::JSException::Error(isolate, error);
+				return;
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		args.GetReturnValue().Set(Undefined(isolate));
+		return;
+	}
+
+	jvalue* jArguments = 0;
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	jstring jResult = (jstring)env->CallObjectMethodA(javaProxy, methodID, jArguments);
+
+
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		Local<Value> jsException = titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+		return;
+	}
+
+	if (jResult == NULL) {
+		args.GetReturnValue().Set(Null(isolate));
+		return;
+	}
+
+	Local<Value> v8Result = titanium::TypeConverter::javaStringToJsString(isolate, env, jResult);
+
+	env->DeleteLocalRef(jResult);
+
+
+	args.GetReturnValue().Set(v8Result);
+
+}
+
+void ImageViewProxy::setter_brokenLinkImage(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		LOGE(TAG, "Failed to get environment, brokenLinkImage wasn't set");
+		return;
+	}
+
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setBrokenLinkImage", "(Ljava/lang/String;)V");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'setBrokenLinkImage' with signature '(Ljava/lang/String;)V'";
+			LOGE(TAG, error);
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		return;
+	}
+
+	jvalue jArguments[1];
+
+	
+
+	if (!value->IsNull()) {
+		Local<Value> arg_0 = value;
+		jArguments[0].l =
+			titanium::TypeConverter::jsValueToJavaString(
+				isolate,
+				env, arg_0);
+	} else {
+		jArguments[0].l = NULL;
+	}
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		return;
+	}
+	env->CallVoidMethodA(javaProxy, methodID, jArguments);
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+				env->DeleteLocalRef(jArguments[0].l);
+
+
+	if (env->ExceptionCheck()) {
+		titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+	}
+
+
+
+
+}
+
+
+void ImageViewProxy::getter_dontAnimate(Local<Name> property, const PropertyCallbackInfo<Value>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		titanium::JSException::GetJNIEnvironmentError(isolate);
+		return;
+	}
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "getDontAnimate", "()Z");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'getDontAnimate' with signature '()Z'";
+			LOGE(TAG, error);
+				titanium::JSException::Error(isolate, error);
+				return;
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		args.GetReturnValue().Set(Undefined(isolate));
+		return;
+	}
+
+	jvalue* jArguments = 0;
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	jboolean jResult = (jboolean)env->CallBooleanMethodA(javaProxy, methodID, jArguments);
+
+
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		Local<Value> jsException = titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+		return;
+	}
+
+
+	Local<Boolean> v8Result = titanium::TypeConverter::javaBooleanToJsBoolean(isolate, env, jResult);
+
+
+
+	args.GetReturnValue().Set(v8Result);
+
+}
+
+void ImageViewProxy::setter_dontAnimate(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		LOGE(TAG, "Failed to get environment, dontAnimate wasn't set");
+		return;
+	}
+
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setDontAnimate", "(Z)V");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'setDontAnimate' with signature '(Z)V'";
+			LOGE(TAG, error);
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		return;
+	}
+
+	jvalue jArguments[1];
+
+	if (!value->IsBoolean() && !value->IsNull()) {
+		const char *error = "Invalid value, expected type Boolean.";
+		LOGE(TAG, error);
+	}
+	
+
+	if (!value->IsNull()) {
+		Local<Boolean> arg_0 = value->ToBoolean(isolate);
+		jArguments[0].z =
+			titanium::TypeConverter::jsBooleanToJavaBoolean(
+				env, arg_0);
+	} else {
+		jArguments[0].z = NULL;
+	}
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		return;
+	}
+	env->CallVoidMethodA(javaProxy, methodID, jArguments);
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+	}
+
+
+
+
+}
+
+
+void ImageViewProxy::getter_contentMode(Local<Name> property, const PropertyCallbackInfo<Value>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		titanium::JSException::GetJNIEnvironmentError(isolate);
+		return;
+	}
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "getContentMode", "()Ljava/lang/String;");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'getContentMode' with signature '()Ljava/lang/String;'";
+			LOGE(TAG, error);
+				titanium::JSException::Error(isolate, error);
+				return;
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		args.GetReturnValue().Set(Undefined(isolate));
+		return;
+	}
+
+	jvalue* jArguments = 0;
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	jstring jResult = (jstring)env->CallObjectMethodA(javaProxy, methodID, jArguments);
+
+
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		Local<Value> jsException = titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+		return;
+	}
+
+	if (jResult == NULL) {
+		args.GetReturnValue().Set(Null(isolate));
+		return;
+	}
+
+	Local<Value> v8Result = titanium::TypeConverter::javaStringToJsString(isolate, env, jResult);
+
+	env->DeleteLocalRef(jResult);
+
+
+	args.GetReturnValue().Set(v8Result);
+
+}
+
+void ImageViewProxy::setter_contentMode(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		LOGE(TAG, "Failed to get environment, contentMode wasn't set");
+		return;
+	}
+
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setContentMode", "(Ljava/lang/String;)V");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'setContentMode' with signature '(Ljava/lang/String;)V'";
+			LOGE(TAG, error);
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		return;
+	}
+
+	jvalue jArguments[1];
+
+	
+
+	if (!value->IsNull()) {
+		Local<Value> arg_0 = value;
+		jArguments[0].l =
+			titanium::TypeConverter::jsValueToJavaString(
+				isolate,
+				env, arg_0);
+	} else {
+		jArguments[0].l = NULL;
+	}
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		return;
+	}
+	env->CallVoidMethodA(javaProxy, methodID, jArguments);
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+				env->DeleteLocalRef(jArguments[0].l);
+
+
+	if (env->ExceptionCheck()) {
+		titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+	}
+
+
+
+
+}
+
+
+void ImageViewProxy::getter_rounded(Local<Name> property, const PropertyCallbackInfo<Value>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		titanium::JSException::GetJNIEnvironmentError(isolate);
+		return;
+	}
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "getRounded", "()Z");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'getRounded' with signature '()Z'";
+			LOGE(TAG, error);
+				titanium::JSException::Error(isolate, error);
+				return;
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		args.GetReturnValue().Set(Undefined(isolate));
+		return;
+	}
+
+	jvalue* jArguments = 0;
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	jboolean jResult = (jboolean)env->CallBooleanMethodA(javaProxy, methodID, jArguments);
+
+
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		Local<Value> jsException = titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+		return;
+	}
+
+
+	Local<Boolean> v8Result = titanium::TypeConverter::javaBooleanToJsBoolean(isolate, env, jResult);
+
+
+
+	args.GetReturnValue().Set(v8Result);
+
+}
+
+void ImageViewProxy::setter_rounded(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		LOGE(TAG, "Failed to get environment, rounded wasn't set");
+		return;
+	}
+
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setRounded", "(Z)V");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'setRounded' with signature '(Z)V'";
+			LOGE(TAG, error);
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		return;
+	}
+
+	jvalue jArguments[1];
+
+	if (!value->IsBoolean() && !value->IsNull()) {
+		const char *error = "Invalid value, expected type Boolean.";
+		LOGE(TAG, error);
+	}
+	
+
+	if (!value->IsNull()) {
+		Local<Boolean> arg_0 = value->ToBoolean(isolate);
+		jArguments[0].z =
+			titanium::TypeConverter::jsBooleanToJavaBoolean(
+				env, arg_0);
+	} else {
+		jArguments[0].z = NULL;
+	}
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		return;
+	}
+	env->CallVoidMethodA(javaProxy, methodID, jArguments);
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+	}
+
+
+
+
+}
+
+
+
 void ImageViewProxy::setter_requestHeader(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
 {
 	Isolate* isolate = args.GetIsolate();
@@ -2977,220 +3487,6 @@ void ImageViewProxy::setter_defaultImage(Local<Name> property, Local<Value> valu
 		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setDefaultImage", "(Ljava/lang/String;)V");
 		if (!methodID) {
 			const char *error = "Couldn't find proxy method 'setDefaultImage' with signature '(Ljava/lang/String;)V'";
-			LOGE(TAG, error);
-		}
-	}
-
-	Local<Object> holder = args.Holder();
-	if (!JavaObject::isJavaObject(holder)) {
-		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
-	}
-	if (holder.IsEmpty() || holder->IsNull()) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
-	if (!proxy) {
-		return;
-	}
-
-	jvalue jArguments[1];
-
-	
-
-	if (!value->IsNull()) {
-		Local<Value> arg_0 = value;
-		jArguments[0].l =
-			titanium::TypeConverter::jsValueToJavaString(
-				isolate,
-				env, arg_0);
-	} else {
-		jArguments[0].l = NULL;
-	}
-
-	jobject javaProxy = proxy->getJavaObject();
-	if (javaProxy == NULL) {
-		return;
-	}
-	env->CallVoidMethodA(javaProxy, methodID, jArguments);
-
-	proxy->unreferenceJavaObject(javaProxy);
-
-
-
-				env->DeleteLocalRef(jArguments[0].l);
-
-
-	if (env->ExceptionCheck()) {
-		titanium::JSException::fromJavaException(isolate);
-		env->ExceptionClear();
-	}
-
-
-
-
-}
-
-
-
-void ImageViewProxy::setter_timeout(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
-{
-	Isolate* isolate = args.GetIsolate();
-	HandleScope scope(isolate);
-
-	JNIEnv *env = titanium::JNIScope::getEnv();
-	if (!env) {
-		LOGE(TAG, "Failed to get environment, timeout wasn't set");
-		return;
-	}
-
-	static jmethodID methodID = NULL;
-	if (!methodID) {
-		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setTimeout", "(I)V");
-		if (!methodID) {
-			const char *error = "Couldn't find proxy method 'setTimeout' with signature '(I)V'";
-			LOGE(TAG, error);
-		}
-	}
-
-	Local<Object> holder = args.Holder();
-	if (!JavaObject::isJavaObject(holder)) {
-		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
-	}
-	if (holder.IsEmpty() || holder->IsNull()) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
-	if (!proxy) {
-		return;
-	}
-
-	jvalue jArguments[1];
-
-	
-
-		if ((titanium::V8Util::isNaN(isolate, value) && !value->IsUndefined()) || value->ToString(isolate)->Length() == 0) {
-			const char *error = "Invalid value, expected type Number.";
-			LOGE(TAG, error);
-		}
-	if (!value->IsNull()) {
-		Local<Number> arg_0 = value->ToNumber(isolate);
-		jArguments[0].i =
-			titanium::TypeConverter::jsNumberToJavaInt(
-				env, arg_0);
-	} else {
-		jArguments[0].i = NULL;
-	}
-
-	jobject javaProxy = proxy->getJavaObject();
-	if (javaProxy == NULL) {
-		return;
-	}
-	env->CallVoidMethodA(javaProxy, methodID, jArguments);
-
-	proxy->unreferenceJavaObject(javaProxy);
-
-
-
-	if (env->ExceptionCheck()) {
-		titanium::JSException::fromJavaException(isolate);
-		env->ExceptionClear();
-	}
-
-
-
-
-	Proxy::setProperty(property, value, args);
-}
-
-
-void ImageViewProxy::getter_brokenLinkImage(Local<Name> property, const PropertyCallbackInfo<Value>& args)
-{
-	Isolate* isolate = args.GetIsolate();
-	HandleScope scope(isolate);
-
-	JNIEnv *env = titanium::JNIScope::getEnv();
-	if (!env) {
-		titanium::JSException::GetJNIEnvironmentError(isolate);
-		return;
-	}
-	static jmethodID methodID = NULL;
-	if (!methodID) {
-		methodID = env->GetMethodID(ImageViewProxy::javaClass, "getBrokenLinkImage", "()Ljava/lang/String;");
-		if (!methodID) {
-			const char *error = "Couldn't find proxy method 'getBrokenLinkImage' with signature '()Ljava/lang/String;'";
-			LOGE(TAG, error);
-				titanium::JSException::Error(isolate, error);
-				return;
-		}
-	}
-
-	Local<Object> holder = args.Holder();
-	if (!JavaObject::isJavaObject(holder)) {
-		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
-	}
-	if (holder.IsEmpty() || holder->IsNull()) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
-	if (!proxy) {
-		args.GetReturnValue().Set(Undefined(isolate));
-		return;
-	}
-
-	jvalue* jArguments = 0;
-
-	jobject javaProxy = proxy->getJavaObject();
-	if (javaProxy == NULL) {
-		args.GetReturnValue().Set(v8::Undefined(isolate));
-		return;
-	}
-	jstring jResult = (jstring)env->CallObjectMethodA(javaProxy, methodID, jArguments);
-
-
-
-	proxy->unreferenceJavaObject(javaProxy);
-
-
-
-	if (env->ExceptionCheck()) {
-		Local<Value> jsException = titanium::JSException::fromJavaException(isolate);
-		env->ExceptionClear();
-		return;
-	}
-
-	if (jResult == NULL) {
-		args.GetReturnValue().Set(Null(isolate));
-		return;
-	}
-
-	Local<Value> v8Result = titanium::TypeConverter::javaStringToJsString(isolate, env, jResult);
-
-	env->DeleteLocalRef(jResult);
-
-
-	args.GetReturnValue().Set(v8Result);
-
-}
-
-void ImageViewProxy::setter_brokenLinkImage(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& args)
-{
-	Isolate* isolate = args.GetIsolate();
-	HandleScope scope(isolate);
-
-	JNIEnv *env = titanium::JNIScope::getEnv();
-	if (!env) {
-		LOGE(TAG, "Failed to get environment, brokenLinkImage wasn't set");
-		return;
-	}
-
-	static jmethodID methodID = NULL;
-	if (!methodID) {
-		methodID = env->GetMethodID(ImageViewProxy::javaClass, "setBrokenLinkImage", "(Ljava/lang/String;)V");
-		if (!methodID) {
-			const char *error = "Couldn't find proxy method 'setBrokenLinkImage' with signature '(Ljava/lang/String;)V'";
 			LOGE(TAG, error);
 		}
 	}
