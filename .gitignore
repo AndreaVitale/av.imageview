@@ -2,4 +2,5 @@
 ios/iphone/*.zip
 android/dist/*.zip
 android/build/*
+android/libs/
 phobeous-build.properties

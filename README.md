@@ -128,6 +128,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | setRequestHeader | Set the `requestHeader` property |  |
 | setRounded | Set the `rounded` property | __Android only__ |
 | setTimeout | Set timeout for requests |  |
+| setSignature | Add a signature to the cache string | __Android only__ |
 | getContentMode | Get the value of `contentMode` property |
 | getLoadingIndicator | Get the value of `loadingIndicator` property |  |
 | getLoadingIndicatorColor | Get the value of `loadingIndicatorColor` property |  |

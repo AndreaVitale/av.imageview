@@ -33,7 +33,7 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.stream.StreamModelLoader;
-
+import com.bumptech.glide.signature.StringSignature;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.KrollDict;
@@ -76,6 +76,7 @@ public class AVImageView extends TiUIView {
   private HashMap requestHeader;
   private boolean handleCookies;
   private boolean dontAnimate;
+  private String signature;
 
   private RequestListener<String, GlideDrawable> requestListener;
 
@@ -91,6 +92,7 @@ public class AVImageView extends TiUIView {
     this.memoryCache = true;
     this.dontAnimate = false;
     this.handleCookies = true;
+	this.signature = "";
     this.okHttpClient = new OkHttpClient
                             .Builder() // default timeouts are 5 seconds
                             .connectTimeout(5, TimeUnit.SECONDS)
@@ -317,6 +319,7 @@ public class AVImageView extends TiUIView {
       gifRequestBuilder =
           drawableRequest.asGif()
               .skipMemoryCache(this.memoryCache)
+			  .signature(new StringSignature(this.signature))
               .diskCacheStrategy(DiskCacheStrategy.SOURCE)
               .placeholder(defaultImageDrawable)
               .error(brokenLinkImageDrawable)
@@ -358,6 +361,7 @@ public class AVImageView extends TiUIView {
           drawableRequest.skipMemoryCache(this.memoryCache)
               .placeholder(defaultImageDrawable)
               .error(brokenLinkImageDrawable)
+              .signature(new StringSignature(this.signature))
               .listener(requestListenerBuilder.createListener(url));
 
       if (this.roundedImage) {
@@ -476,6 +480,10 @@ public class AVImageView extends TiUIView {
     this.memoryCache = enabled;
   }
 
+  synchronized public void setSignature(String str) {
+    this.signature = str;
+  }
+
   synchronized public void setContentMode(String contentMode) {
     this.contentMode = contentMode;
   }
@@ -508,6 +516,8 @@ public class AVImageView extends TiUIView {
   }
 
   synchronized public boolean getMemoryCache() { return this.memoryCache; }
+
+  synchronized public String getSignature() { return this.signature; }
 
   synchronized public String getContentMode() { return this.contentMode; }
 

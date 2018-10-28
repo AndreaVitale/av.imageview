@@ -28,7 +28,7 @@ import android.os.Message;
 @Kroll.
 proxy(creatableInModule = ImageViewModule.class,
       propertyAccessors = {"defaultImage", "brokenLinkImage", "image",
-                           "contentMode", "enableMemoryCache",
+                           "contentMode", "enableMemoryCache", "signature",
                            "loadingIndicator", "rounded", "requestHeader",
                            "handleCookies", "dontAnimate"})
 public class ImageViewProxy extends TiViewProxy {
