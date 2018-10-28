@@ -2,3 +2,5 @@
 ios/iphone/*.zip
 android/android/dist/*.zip
 phobeous-build.properties
+/android/android/java-sources.txt
+/android/android/libs
