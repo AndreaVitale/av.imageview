@@ -119,17 +119,19 @@ public class ImageViewProxy extends TiViewProxy {
   }
 
   // Public APIs
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public String getImage() {
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public String getImage() {
+    // clang-format on
     return getView().getImage();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setImage(final Object uri) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setImage(final Object uri) {
+    // clang-format on
     if (TiApplication.isUIThread()) {
 
       if (uri == null) {
@@ -153,17 +155,19 @@ public class ImageViewProxy extends TiViewProxy {
     }
   }
 
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public String getContentMode() {
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public String getContentMode() {
+    // clang-format on
     return getView().getContentMode();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setContentMode(String contentMode) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setContentMode(String contentMode) {
+    // clang-format on
     if (TiApplication.isUIThread()) {
       getView().setContentMode(contentMode);
     } else {
@@ -172,45 +176,59 @@ public class ImageViewProxy extends TiViewProxy {
     }
   }
 
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public boolean getDontAnimate() {
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public boolean getDontAnimate() {
+    // clang-format on
     return getView().getDontAnimate();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setDontAnimate(boolean enabled) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setDontAnimate(boolean enabled) {
+    // clang-format on
     getView().setDontAnimate(enabled);
   }
 
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public boolean getRounded() {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setSignature(String str) {
+    // clang-format on
+    getView().setSignature(str);
+  }
+
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public boolean getRounded() {
+    // clang-format on
     return getView().getRoundedImage();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setRounded(boolean enabled) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setRounded(boolean enabled) {
+    // clang-format on
     getView().setRoundedImage(enabled);
   }
 
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public String getDefaultImage() {
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public String getDefaultImage() {
+    // clang-format on
     return getView().getDefaultImage();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setDefaultImage(String defaultImage) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setDefaultImage(String defaultImage) {
+    // clang-format on
     if (TiApplication.isUIThread()) {
       getView().setDefaultImage(defaultImage);
     } else {
@@ -219,17 +237,19 @@ public class ImageViewProxy extends TiViewProxy {
     }
   }
 
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public String getBrokenLinkImage() {
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public String getBrokenLinkImage() {
+    // clang-format on
     return getView().getBrokenLinkImage();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setBrokenLinkImage(String brokenLinkImage) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setBrokenLinkImage(String brokenLinkImage) {
+    // clang-format on
     if (TiApplication.isUIThread()) {
       getView().setBrokenLinkImage(brokenLinkImage);
     } else {
@@ -239,52 +259,59 @@ public class ImageViewProxy extends TiViewProxy {
     }
   }
 
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public Boolean getLoadingIndicator() {
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public Boolean getLoadingIndicator() {
+    // clang-format on
     return getView().getLoadingIndicator();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setLoadingIndicator(Boolean enabled) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setLoadingIndicator(Boolean enabled) {
+    // clang-format on
     getView().setLoadingIndicator(enabled);
   }
 
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public String getLoadingIndicatorColor() {
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public String getLoadingIndicatorColor() {
+    // clang-format on
     return getView().getLoadingIndicatorColor();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setLoadingIndicatorColor(String color) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setLoadingIndicatorColor(String color) {
+    // clang-format on
     getView().setLoadingIndicatorColor(color);
   }
 
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public Boolean getMemoryCacheEnabled() {
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public Boolean getMemoryCacheEnabled() {
+    // clang-format on
     return getView().getMemoryCache();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setMemoryCacheEnabled(Boolean enabled) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setMemoryCacheEnabled(Boolean enabled) {
+    // clang-format on
     getView().setMemoryCache(enabled);
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setRequestHeader(HashMap requestHeader) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setRequestHeader(HashMap requestHeader) {
+    // clang-format on
     if (TiApplication.isUIThread()) {
       getView().setRequestHeader(requestHeader);
     } else {
@@ -294,24 +321,27 @@ public class ImageViewProxy extends TiViewProxy {
     }
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setTimeout(int timeout) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setTimeout(int timeout) {
+    // clang-format on
     getView().setTimeout(timeout);
   }
 
-  @Kroll
-      .getProperty
-      @Kroll.method
-      public Boolean getHandleCookies() {
+  // clang-format off
+  @Kroll.getProperty
+  @Kroll.method
+  public Boolean getHandleCookies() {
+    // clang-format on
     return getView().getHandleCookies();
   }
 
-  @Kroll
-      .setProperty
-      @Kroll.method
-      public void setHandleCookies(Boolean handleCookies) {
+  // clang-format off
+  @Kroll.setProperty
+  @Kroll.method
+  public void setHandleCookies(Boolean handleCookies) {
+    // clang-format on
     getView().setHandleCookies(handleCookies);
   }
 }

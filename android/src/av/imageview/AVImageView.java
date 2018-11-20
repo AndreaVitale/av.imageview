@@ -92,7 +92,7 @@ public class AVImageView extends TiUIView {
     this.memoryCache = true;
     this.dontAnimate = false;
     this.handleCookies = true;
-	this.signature = "";
+    this.signature = "";
     this.okHttpClient = new OkHttpClient
                             .Builder() // default timeouts are 5 seconds
                             .connectTimeout(5, TimeUnit.SECONDS)
@@ -150,8 +150,9 @@ public class AVImageView extends TiUIView {
                            "brokenLinkImage",
                            "requestHeader",
                            "rounded",
-                           "image",
-                           "dontAnimate"};
+                           "signature",
+                           "dontAnimate",
+                           "image"};
 
     for (String key : properties) {
       if (args.containsKey(key)) {
@@ -179,6 +180,8 @@ public class AVImageView extends TiUIView {
       this.setRoundedImage(TiConvert.toBoolean(value));
     if (key.equals("dontAnimate"))
       this.setDontAnimate(TiConvert.toBoolean(value));
+    if (key.equals("signature"))
+      this.setSignature(value.toString());
     if (key.equals("image")) {
       Object uri = value;
 
@@ -229,6 +232,7 @@ public class AVImageView extends TiUIView {
 
   public void setImage(String image) {
 
+    Glide.clear(this.imageView);
     if (image == null || image == "") {
       // clear image
       this.imageView.setImageBitmap(null);
@@ -319,7 +323,7 @@ public class AVImageView extends TiUIView {
       gifRequestBuilder =
           drawableRequest.asGif()
               .skipMemoryCache(this.memoryCache)
-			  .signature(new StringSignature(this.signature))
+              .signature(new StringSignature(this.signature))
               .diskCacheStrategy(DiskCacheStrategy.SOURCE)
               .placeholder(defaultImageDrawable)
               .error(brokenLinkImageDrawable)
@@ -480,9 +484,7 @@ public class AVImageView extends TiUIView {
     this.memoryCache = enabled;
   }
 
-  synchronized public void setSignature(String str) {
-    this.signature = str;
-  }
+  synchronized public void setSignature(String str) { this.signature = str; }
 
   synchronized public void setContentMode(String contentMode) {
     this.contentMode = contentMode;
