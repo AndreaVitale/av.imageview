@@ -4,3 +4,5 @@ android/dist/*.zip
 android/build/*
 android/libs/
 phobeous-build.properties
+/android/android/java-sources.txt
+/android/android/libs

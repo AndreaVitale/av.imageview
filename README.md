@@ -109,7 +109,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | loadingIndicator | Enable or disable the activity indicator when the download is in progress | `true` by default |
 | loadingIndicatorColor | change the loading indicator color |  |
 | requestHeader | An object used to define extra http request header fields |  |
-| timeout | Set timeout for requests |  |
+| timeout | Set timeout for requests, in milliseconds |  |
 | handleCookies | Enable cookie handling for remote images |  |
 | enableMemoryCache | Enable or disable the memory cache mechanism | `true` by default and *Android only*, for iOS have a look to module properties [here](https://github.com/AndreaVitale/av.imageview#global-properties-ios-only) |
 | rounded | Enable or disable the circle transformation that automatically render the image as a perfect circle | Android only |
@@ -127,7 +127,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | setClipsToBound | Set the `clipToBounds` property | __iOS only__ |
 | setRequestHeader | Set the `requestHeader` property |  |
 | setRounded | Set the `rounded` property | __Android only__ |
-| setTimeout | Set timeout for requests |  |
+| setTimeout | Set timeout for requests, in milliseconds |  |
 | setSignature | Add a signature to the cache string | __Android only__ |
 | getContentMode | Get the value of `contentMode` property |
 | getLoadingIndicator | Get the value of `loadingIndicator` property |  |
@@ -137,7 +137,7 @@ About the enabled `contentMode`, you can learn more about this [here](https://de
 | getClipsToBound | Get the value of `clipToBounds` property | __iOS only__ |
 | getRequestHeader | Get the `requestHeader` property |  |
 | getRounded | Get the `rounded` property | __Android only__ |
-| getTimeout | Get current timeout of requests |  |
+| getTimeout | Get current timeout of requests, in milliseconds |  |
 
 ### Events
 
