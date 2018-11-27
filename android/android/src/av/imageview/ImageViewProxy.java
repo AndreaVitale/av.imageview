@@ -27,7 +27,7 @@ import android.os.Message;
 
 @Kroll.proxy(creatableInModule=ImageViewModule.class, propertyAccessors = {
 	"defaultImage", "brokenLinkImage", "image", "contentMode",  "enableMemoryCache",
-	"loadingIndicator", "enableMemoryCache", "rounded", "requestHeader", "handleCookies"
+	"loadingIndicator", "enableMemoryCache", "rounded", "requestHeader", "handleCookies", "validatesSecureCertificate"
 })
 public class ImageViewProxy extends TiViewProxy
 {
@@ -219,14 +219,14 @@ public class ImageViewProxy extends TiViewProxy
 	public String getLoadingIndicatorColor() {
 	    return getView().getLoadingIndicatorColor();
 	}
-	
+
 	@Kroll.setProperty
 	@Kroll.method
 	public void setLoadingIndicatorColor(String color) {
 		getView().setLoadingIndicatorColor(color);
 	}
 
-	
+
 	@Kroll.getProperty
 	@Kroll.method
 	public Boolean getMemoryCacheEnabled() {
@@ -265,5 +265,17 @@ public class ImageViewProxy extends TiViewProxy
 	@Kroll.method
 	public void setHandleCookies(Boolean handleCookies) {
 		getView().setHandleCookies(handleCookies);
+	}
+
+	@Kroll.getProperty
+	@Kroll.method
+	public Boolean getValidatesSecureCertificate() {
+		return getView().getValidatesSecureCertificate();
+	}
+
+	@Kroll.setProperty
+	@Kroll.method
+	public void setValidatesSecureCertificate(Boolean validatesSecureCertificate) {
+		getView().setValidatesSecureCertificate(validatesSecureCertificate);
 	}
 }
