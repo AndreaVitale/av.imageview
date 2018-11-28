@@ -30,7 +30,7 @@ proxy(creatableInModule = ImageViewModule.class,
       propertyAccessors = {"defaultImage", "brokenLinkImage", "image",
                            "contentMode", "enableMemoryCache", "signature",
                            "loadingIndicator", "rounded", "requestHeader",
-                           "handleCookies", "dontAnimate"})
+                           "handleCookies", "dontAnimate", "validatesSecureCertificate"})
 public class ImageViewProxy extends TiViewProxy {
   // Standard Debugging variables
   private static final String LCAT = "AVImageViewProxy";
@@ -344,4 +344,16 @@ public class ImageViewProxy extends TiViewProxy {
     // clang-format on
     getView().setHandleCookies(handleCookies);
   }
+
+  @Kroll.getProperty
+	@Kroll.method
+	public Boolean getValidatesSecureCertificate() {
+		return getView().getValidatesSecureCertificate();
+	}
+
+	@Kroll.setProperty
+	@Kroll.method
+	public void setValidatesSecureCertificate(Boolean validatesSecureCertificate) {
+		getView().setValidatesSecureCertificate(validatesSecureCertificate);
+	}
 }

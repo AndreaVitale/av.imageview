@@ -53,6 +53,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import av.imageview.utils.CookiesHelper;
+import av.imageview.utils.SSLHelper;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
 
 public class AVImageView extends TiUIView {
   private static final String LCAT = "AVImageView";
@@ -77,6 +81,7 @@ public class AVImageView extends TiUIView {
   private boolean handleCookies;
   private boolean dontAnimate;
   private String signature;
+  private boolean validatesSecureCertificate;
 
   private RequestListener<String, GlideDrawable> requestListener;
 
@@ -92,6 +97,7 @@ public class AVImageView extends TiUIView {
     this.memoryCache = true;
     this.dontAnimate = false;
     this.handleCookies = true;
+    this.validatesSecureCertificate = true;
     this.signature = "";
     this.okHttpClient = new OkHttpClient
                             .Builder() // default timeouts are 5 seconds
@@ -142,7 +148,8 @@ public class AVImageView extends TiUIView {
   public void processProperties(KrollDict args) {
     super.processProperties(args);
 
-    String[] properties = {"loadingIndicator",
+    String[] properties = {"validatesSecureCertificate", // Needs to be at the very begining, at least before request is launched
+                           "loadingIndicator",
                            "loadingIndicatorColor",
                            "enableMemoryCache",
                            "contentMode",
@@ -192,14 +199,27 @@ public class AVImageView extends TiUIView {
       }
     }
     if (key.equals("timeout")) {
-      this.okHttpClient =
-          new OkHttpClient.Builder()
-              .connectTimeout(TiConvert.toInt(value), TimeUnit.MILLISECONDS)
-              .readTimeout(TiConvert.toInt(value), TimeUnit.MILLISECONDS)
-              .build();
+      okhttp3.OkHttpClient.Builder builder = new OkHttpClient.Builder()
+      .connectTimeout(TiConvert.toInt(value), TimeUnit.MILLISECONDS)
+      .readTimeout(TiConvert.toInt(value), TimeUnit.MILLISECONDS);
+			if(!this.validatesSecureCertificate)
+			{
+				Log.d(LCAT, "Not validating SSL");
+				builder.sslSocketFactory(SSLHelper.trustAllSslSocketFactory, (X509TrustManager)SSLHelper.trustAllCerts[0]);
+		    builder.hostnameVerifier(new HostnameVerifier() {
+		      @Override
+		      public boolean verify(String hostname, SSLSession session) {
+		        return true;
+		      }
+		    });
+			}
+
+			this.okHttpClient = builder.build();
     }
     if (key.equals("handleCookies"))
       this.setHandleCookies(TiConvert.toBoolean(value));
+    if (key.equals("validatesSecureCertificate"))
+      this.setValidatesSecureCertificate(TiConvert.toBoolean(value));
   }
 
   @Override
@@ -403,10 +423,20 @@ public class AVImageView extends TiUIView {
   }
 
   public void setTimeout(int timeout) {
-    this.okHttpClient = new OkHttpClient.Builder()
-                            .connectTimeout(timeout, TimeUnit.MILLISECONDS)
-                            .readTimeout(timeout, TimeUnit.MILLISECONDS)
-                            .build();
+    okhttp3.OkHttpClient.Builder builder = new OkHttpClient.Builder()
+    .connectTimeout(TiConvert.toInt(timeout), TimeUnit.MILLISECONDS)
+    .readTimeout(TiConvert.toInt(timeout), TimeUnit.MILLISECONDS);
+    if(!this.validatesSecureCertificate)
+    {
+      builder.sslSocketFactory(SSLHelper.trustAllSslSocketFactory, (X509TrustManager)SSLHelper.trustAllCerts[0]);
+      builder.hostnameVerifier(new HostnameVerifier() {
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+          return true;
+        }
+      });
+    }
+    this.okHttpClient = builder.build();
   }
 
   private String sanitizeUrl(String url) {
@@ -538,6 +568,57 @@ public class AVImageView extends TiUIView {
   }
 
   synchronized public boolean getHandleCookies() { return this.handleCookies; }
+
+  synchronized public void setValidatesSecureCertificate(boolean validatesSecureCertificate) {
+    if(this.validatesSecureCertificate == validatesSecureCertificate)
+    {
+      return; // Nothing to do
+    }
+
+    if(this.okHttpClient != null)
+    {
+      if(validatesSecureCertificate)
+      { // Recreate a standard OkHttpClient with pre-set timeouts
+        this.okHttpClient = new OkHttpClient.Builder()
+        .connectTimeout(this.okHttpClient.connectTimeoutMillis(), TimeUnit.MILLISECONDS)
+        .readTimeout(this.okHttpClient.readTimeoutMillis(), TimeUnit.MILLISECONDS)
+        .build();
+      }
+      else
+      { // Clone existing OkHttpClient with alltrustedcertificates
+        this.okHttpClient = SSLHelper.trustAllSslClient(this.okHttpClient);
+      }
+    }
+    else
+    {
+      if(validatesSecureCertificate)
+      {
+        this.okHttpClient = new OkHttpClient.Builder() // default timeouts are 5 seconds
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5, TimeUnit.SECONDS)
+        .build();
+      }
+      else
+      {
+        this.okHttpClient = new OkHttpClient.Builder() // default timeouts are 5 seconds
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5, TimeUnit.SECONDS)
+        .sslSocketFactory(SSLHelper.trustAllSslSocketFactory, (X509TrustManager)SSLHelper.trustAllCerts[0])
+        .hostnameVerifier(new HostnameVerifier() {
+          @Override
+          public boolean verify(String hostname, SSLSession session) {
+            return true;
+          }
+        })
+        .build();
+      }
+    }
+    this.validatesSecureCertificate = validatesSecureCertificate;
+	}
+
+	synchronized public boolean getValidatesSecureCertificate() {
+			return this.validatesSecureCertificate;
+	}
 
   // Utility to create a specific request listener
   private class RequestListenerBuilder {
