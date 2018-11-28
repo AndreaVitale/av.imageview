@@ -53,16 +53,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import av.imageview.utils.CookiesHelper;
-
-import javax.net.ssl.X509TrustManager;
+import av.imageview.utils.SSLHelper;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import java.security.cert.CertificateException;
-import java.security.NoSuchAlgorithmException;
-import java.security.KeyManagementException;
+import javax.net.ssl.X509TrustManager;
 
 public class AVImageView extends TiUIView {
   private static final String LCAT = "AVImageView";
@@ -90,48 +84,6 @@ public class AVImageView extends TiUIView {
   private boolean validatesSecureCertificate;
 
   private RequestListener<String, GlideDrawable> requestListener;
-
-  public static OkHttpClient trustAllSslClient(OkHttpClient client) {
-    okhttp3.OkHttpClient.Builder builder = client.newBuilder();
-    builder.sslSocketFactory(trustAllSslSocketFactory, (X509TrustManager)trustAllCerts[0]);
-    builder.hostnameVerifier(new HostnameVerifier() {
-      @Override
-      public boolean verify(String hostname, SSLSession session) {
-        return true;
-      }
-    });
-    return builder.build();
-  }
-
-  private static final TrustManager[] trustAllCerts = new TrustManager[] {
-    new X509TrustManager() {
-      @Override
-      public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-      }
-
-      @Override
-      public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-      }
-
-      @Override
-      public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-        return new java.security.cert.X509Certificate[]{};
-      }
-    }
-  };
-
-  private static final SSLContext trustAllSslContext;
-
-  static {
-    try {
-      trustAllSslContext = SSLContext.getInstance("SSL");
-      trustAllSslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-    } catch (NoSuchAlgorithmException | KeyManagementException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static final SSLSocketFactory trustAllSslSocketFactory = trustAllSslContext.getSocketFactory();
 
   public AVImageView(TiViewProxy proxy) {
     super(proxy);
@@ -253,7 +205,7 @@ public class AVImageView extends TiUIView {
 			if(!this.validatesSecureCertificate)
 			{
 				Log.d(LCAT, "Not validating SSL");
-				builder.sslSocketFactory(trustAllSslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+				builder.sslSocketFactory(SSLHelper.trustAllSslSocketFactory, (X509TrustManager)SSLHelper.trustAllCerts[0]);
 		    builder.hostnameVerifier(new HostnameVerifier() {
 		      @Override
 		      public boolean verify(String hostname, SSLSession session) {
@@ -476,7 +428,7 @@ public class AVImageView extends TiUIView {
     .readTimeout(TiConvert.toInt(timeout), TimeUnit.MILLISECONDS);
     if(!this.validatesSecureCertificate)
     {
-      builder.sslSocketFactory(trustAllSslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+      builder.sslSocketFactory(SSLHelper.trustAllSslSocketFactory, (X509TrustManager)SSLHelper.trustAllCerts[0]);
       builder.hostnameVerifier(new HostnameVerifier() {
         @Override
         public boolean verify(String hostname, SSLSession session) {
@@ -634,7 +586,7 @@ public class AVImageView extends TiUIView {
       }
       else
       { // Clone existing OkHttpClient with alltrustedcertificates
-        this.okHttpClient = AVImageView.trustAllSslClient(this.okHttpClient);
+        this.okHttpClient = SSLHelper.trustAllSslClient(this.okHttpClient);
       }
     }
     else
@@ -651,7 +603,7 @@ public class AVImageView extends TiUIView {
         this.okHttpClient = new OkHttpClient.Builder() // default timeouts are 5 seconds
         .connectTimeout(5, TimeUnit.SECONDS)
         .readTimeout(5, TimeUnit.SECONDS)
-        .sslSocketFactory(trustAllSslSocketFactory, (X509TrustManager)trustAllCerts[0])
+        .sslSocketFactory(SSLHelper.trustAllSslSocketFactory, (X509TrustManager)SSLHelper.trustAllCerts[0])
         .hostnameVerifier(new HostnameVerifier() {
           @Override
           public boolean verify(String hostname, SSLSession session) {
