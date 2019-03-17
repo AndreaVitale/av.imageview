@@ -331,11 +331,11 @@ public class AVImageView extends TiUIView {
           this.requestHeader.put("Cookie", cookiesString);
         }
       }
+
       drawableRequest =
           Glide.with(this.proxy.getActivity().getBaseContext())
-              .using(new StreamModelLoaderWrapper<GlideUrl>(
-                  new OkHttpUrlLoader(okHttpClient)))
-              .load(GlideUrlBuilder.build(url, this.requestHeader));
+              .using(new StreamModelLoaderWrapper<GlideUrl>(new OkHttpUrlLoader(okHttpClient)))
+              .load(GlideUrlBuilder.build(url, this.requestHeader != null ? (HashMap)this.requestHeader.clone() : new HashMap()));
     }
 
     // Handling GIF
