@@ -113,8 +113,11 @@
     UIImage *placeholderImage = (placeholderImagePath != nil) ? [self loadLocalImage:placeholderImagePath] : nil;
     UIImage *brokenLinkImage = (brokenLinkImagePath != nil) ? [self loadLocalImage:brokenLinkImagePath] : nil;
     
-    if ([imageObj isKindOfClass:[NSNull class]])
+    if ([imageObj isKindOfClass:[NSNull class]]) {
+        [imageView setImage:nil];
+        
         return;
+    }
     
     [imageView sd_cancelCurrentAnimationImagesLoad];
     
