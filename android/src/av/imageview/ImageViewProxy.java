@@ -26,7 +26,10 @@ import android.os.Handler;
 import android.os.Message;
 
 @Kroll.
-proxy(creatableInModule = ImageViewModule.class)
+proxy(creatableInModule = ImageViewModule.class, propertyAccessors = {"defaultImage", "brokenLinkImage", "image",
+                           "contentMode", "enableMemoryCache", "signature",
+                           "loadingIndicator", "rounded", "requestHeader",
+                           "handleCookies", "dontAnimate", "validatesSecureCertificate"})
 public class ImageViewProxy extends TiViewProxy {
   // Standard Debugging variables
   private static final String LCAT = "AVImageViewProxy";
