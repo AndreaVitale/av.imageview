@@ -26,7 +26,7 @@
 		24DD6CFA1134B3F500162E58 /* AvImageviewModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* AvImageviewModule.m */; };
 		24DE9E1111C5FE74003F90F6 /* AvImageviewModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DE9E0F11C5FE74003F90F6 /* AvImageviewModuleAssets.h */; };
 		24DE9E1211C5FE74003F90F6 /* AvImageviewModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* AvImageviewModuleAssets.m */; };
-		65BF4F9B22438E2C0080B9C0 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 659456261F3B66E7001C046F /* SDWebImage.framework */; };
+		3A5C53242243EB1100B8AE68 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A5C53232243EB1100B8AE68 /* SDWebImage.framework */; };
 		65D4363A1CDB4B9B00EC9CC2 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65D436391CDB4B9B00EC9CC2 /* ImageIO.framework */; };
 		65D4363D1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 65D4363B1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.h */; };
 		65D4363E1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D4363C1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.m */; };
@@ -52,8 +52,7 @@
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
 		24DE9E0F11C5FE74003F90F6 /* AvImageviewModuleAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AvImageviewModuleAssets.h; path = Classes/AvImageviewModuleAssets.h; sourceTree = "<group>"; };
 		24DE9E1011C5FE74003F90F6 /* AvImageviewModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AvImageviewModuleAssets.m; path = Classes/AvImageviewModuleAssets.m; sourceTree = "<group>"; };
-		659456241F3B63AC001C046F /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
-		659456261F3B66E7001C046F /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = platform/SDWebImage.framework; sourceTree = "<group>"; };
+		3A5C53232243EB1100B8AE68 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = platform/SDWebImage.framework; sourceTree = "<group>"; };
 		65D436391CDB4B9B00EC9CC2 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		65D4363B1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AvImageviewImageViewProxy.h; path = Classes/AvImageviewImageViewProxy.h; sourceTree = "<group>"; };
 		65D4363C1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AvImageviewImageViewProxy.m; path = Classes/AvImageviewImageViewProxy.m; sourceTree = "<group>"; };
@@ -69,8 +68,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65BF4F9B22438E2C0080B9C0 /* SDWebImage.framework in Frameworks */,
 				65D4363A1CDB4B9B00EC9CC2 /* ImageIO.framework in Frameworks */,
+				3A5C53242243EB1100B8AE68 /* SDWebImage.framework in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -100,8 +99,7 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				659456261F3B66E7001C046F /* SDWebImage.framework */,
-				659456241F3B63AC001C046F /* SDWebImage.framework */,
+				3A5C53232243EB1100B8AE68 /* SDWebImage.framework */,
 				65D436391CDB4B9B00EC9CC2 /* ImageIO.framework */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 			);

@@ -8,3 +8,5 @@ android/libs/
 phobeous-build.properties
 /android/android/java-sources.txt
 /android/android/libs
+/ios/Carthage
+/ios/Cartfile.resolved
