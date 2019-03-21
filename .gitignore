@@ -12,3 +12,4 @@ phobeous-build.properties
 /ios/Cartfile.resolved
 ios/imageview-ios.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad
 ios/imageview-ios.xcodeproj/project.xcworkspace/xcuserdata
+ios/imageview-ios.xcodeproj/xcuserdata
