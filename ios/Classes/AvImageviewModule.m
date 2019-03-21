@@ -8,59 +8,51 @@
  */
 
 #import "AvImageviewModule.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
-#import "SDWebImage/UIImageView+WebCache.h"
 
 @implementation AvImageviewModule
 
 #pragma mark Internal
 
--(id)moduleGUID
-{
-	return @"ddffa9fa-4366-40f0-9031-d32000a82138";
+- (id)moduleGUID {
+  return @"ddffa9fa-4366-40f0-9031-d32000a82138";
 }
 
--(NSString*)moduleId
-{
-	return @"av.imageview";
+- (NSString *)moduleId {
+  return @"av.imageview";
 }
 
 #pragma mark Lifecycle
 
--(void)startup
-{
-	[super startup];
-	DebugLog(@"[DEBUG] %@ loaded",self);
+- (void)startup {
+  [super startup];
+  DebugLog(@"[DEBUG] %@ loaded", self);
 }
 
 #pragma Public APIs
 
--(void)setShouldCacheImagesInMemory:(id)shouldCacheImagesInMemory
-{
-    ENSURE_SINGLE_ARG(shouldCacheImagesInMemory, NSNumber);
-    [SDImageCache sharedImageCache].config.shouldCacheImagesInMemory = [TiUtils boolValue:shouldCacheImagesInMemory];
+- (void)setShouldCacheImagesInMemory:(id)shouldCacheImagesInMemory {
+  ENSURE_SINGLE_ARG(shouldCacheImagesInMemory, NSNumber);
+  [SDImageCache sharedImageCache].config.shouldCacheImagesInMemory = [TiUtils boolValue:shouldCacheImagesInMemory];
 }
 
--(void)setShouldDecompressImages:(id)shouldDecompressImages
-{
-    ENSURE_SINGLE_ARG(shouldDecompressImages, NSNumber);
-    [SDImageCache sharedImageCache].config.shouldDecompressImages = [TiUtils boolValue:shouldDecompressImages];
+- (void)setShouldDecompressImages:(id)shouldDecompressImages {
+  ENSURE_SINGLE_ARG(shouldDecompressImages, NSNumber);
+  [SDImageCache sharedImageCache].config.shouldDecompressImages = [TiUtils boolValue:shouldDecompressImages];
 }
 
--(void)setMaxCacheSize:(id)maxCacheSize
-{
-    ENSURE_SINGLE_ARG(maxCacheSize, NSNumber);
-    [SDImageCache sharedImageCache].config.maxCacheSize = [TiUtils intValue:maxCacheSize];
+- (void)setMaxCacheSize:(id)maxCacheSize {
+  ENSURE_SINGLE_ARG(maxCacheSize, NSNumber);
+  [SDImageCache sharedImageCache].config.maxCacheSize = [TiUtils intValue:maxCacheSize];
 }
 
--(void)setMaxCacheAge:(id)maxCacheAge
-{
-    ENSURE_SINGLE_ARG(maxCacheAge, NSNumber);
-    [SDImageCache sharedImageCache].config.maxCacheAge = [TiUtils intValue:maxCacheAge];
+- (void)setMaxCacheAge:(id)maxCacheAge {
+  ENSURE_SINGLE_ARG(maxCacheAge, NSNumber);
+  [SDImageCache sharedImageCache].config.maxCacheAge = [TiUtils intValue:maxCacheAge];
 }
-
 
 MAKE_SYSTEM_PROP(CONTENT_MODE_SCALE_TO_FIT, UIViewContentModeScaleToFill)
 MAKE_SYSTEM_PROP(CONTENT_MODE_ASPECT_FIT, UIViewContentModeScaleAspectFit)

@@ -9,8 +9,6 @@
 
 #import "TiViewProxy.h"
 
-@interface AvImageviewImageViewProxy : TiViewProxy {
-
-}
+@interface AvImageviewImageViewProxy : TiViewProxy
 
 @end
