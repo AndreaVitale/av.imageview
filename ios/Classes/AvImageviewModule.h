@@ -10,7 +10,5 @@
 #import "TiModule.h"
 
 @interface AvImageviewModule : TiModule
-{
-}
 
 @end

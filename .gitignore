@@ -10,3 +10,4 @@ phobeous-build.properties
 /android/android/libs
 /ios/Carthage
 /ios/Cartfile.resolved
+ios/imageview-ios.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad
