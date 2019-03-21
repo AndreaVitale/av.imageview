@@ -153,8 +153,8 @@
                          placeholderImage:placeholderImage
                                   options: handleCookies
                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *url) {
-                                    autoWidth = image.size.width;
-                                    autoHeight = image.size.height;
+                                    self->autoWidth = image.size.width;
+                                    self->autoHeight = image.size.height;
                                     
                                     NSMutableDictionary *event = [[NSMutableDictionary alloc] init];
                                     
@@ -164,7 +164,7 @@
                                     
                                     if (error != nil) {
                                         if (brokenLinkImage != nil)
-                                            imageView.image = brokenLinkImage;
+                                            self->imageView.image = brokenLinkImage;
                                         
                                         [event setValue:[error localizedDescription] forKey:@"reason"];
                                         
@@ -175,8 +175,8 @@
                                             [self.proxy fireEvent:@"load" withObject:event];
                                     }
                                     
-                                    if ([activityIndicator isAnimating])
-                                        [activityIndicator stopAnimating];
+                                    if ([self->activityIndicator isAnimating])
+                                        [self->activityIndicator stopAnimating];
                                     
                                     [(TiViewProxy*)[self proxy] contentsWillChange];
                                     
@@ -199,9 +199,10 @@
 }
 
 -(UIImage *)loadLocalImage:(NSString *)imagePath {
-    if (imagePath == nil || imagePath.length == 0)
-        return;
-
+    if (imagePath == nil || imagePath.length == 0) {
+        return nil;
+    }
+  
     if(imagePath != nil){
         UIImage *image = nil;
 
@@ -243,13 +244,14 @@
 
 -(void)fadeImage:(SDImageCacheType) cacheType {
     if (cacheType == SDImageCacheTypeNone) {
-        imageView.alpha = 0;
+        imageView.alpha = 0.0;
 
         [UIView animateWithDuration:0.3 animations:^{
-            imageView.alpha = 1;
+          self->imageView.alpha = 1.0;
         }];
-    } else
-        imageView.alpha = 1;
+    } else {
+        imageView.alpha = 1.0;
+    }
 }
 
 #pragma mark Public setter methods
@@ -276,8 +278,7 @@
 
     if (placeholderImagePath != nil) {
         imageView.image = (placeholderImagePath != nil) ? [self loadLocalImage:placeholderImagePath] : nil;
-
-        [self fadeImage:nil];
+        [self fadeImage:SDImageCacheTypeDisk];
     }
 }
 

@@ -23,7 +23,6 @@
         CGFloat autoWidth;
     
         FLAnimatedImageView *imageView;
-        UIViewContentMode contentMode;
         UIActivityIndicatorView  *activityIndicator;
 
         NSString *placeholderImagePath;
@@ -33,8 +32,6 @@
         SDWebImageOptions handleCookies;
         id imageObject;
         BOOL configurationComplete;
-        NSTimeInterval timeout;
-
 }
 
 -(void)setWidth_:(id)width;
