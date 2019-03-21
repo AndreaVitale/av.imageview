@@ -26,6 +26,7 @@
 		24DD6CFA1134B3F500162E58 /* AvImageviewModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* AvImageviewModule.m */; };
 		24DE9E1111C5FE74003F90F6 /* AvImageviewModuleAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DE9E0F11C5FE74003F90F6 /* AvImageviewModuleAssets.h */; };
 		24DE9E1211C5FE74003F90F6 /* AvImageviewModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* AvImageviewModuleAssets.m */; };
+		65BF4F9B22438E2C0080B9C0 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 659456261F3B66E7001C046F /* SDWebImage.framework */; };
 		65D4363A1CDB4B9B00EC9CC2 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65D436391CDB4B9B00EC9CC2 /* ImageIO.framework */; };
 		65D4363D1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 65D4363B1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.h */; };
 		65D4363E1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D4363C1CDB4C2C00EC9CC2 /* AvImageviewImageViewProxy.m */; };
@@ -68,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65BF4F9B22438E2C0080B9C0 /* SDWebImage.framework in Frameworks */,
 				65D4363A1CDB4B9B00EC9CC2 /* ImageIO.framework in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 			);

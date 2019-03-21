@@ -10,5 +10,5 @@
 CURRENT_MODULE_VERSION="1.5.1"
 FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/av.imageview/$(CURRENT_MODULE_VERSION)/platform
 
-OTHER_LDFLAGS=$(inherited)
-//OTHER_LDFLAGS=$(inherited) -framework SDWebImage
+//OTHER_LDFLAGS=$(inherited)
+OTHER_LDFLAGS=$(inherited) -framework SDWebImage
