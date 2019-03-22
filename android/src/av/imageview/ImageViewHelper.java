@@ -1,6 +1,7 @@
 package av.imageview;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -11,6 +12,7 @@ import com.bumptech.glide.load.model.LazyHeaders;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.titanium.proxy.TiViewProxy;
+import org.appcelerator.titanium.view.TiDrawableReference;
 
 import java.util.Map;
 
@@ -28,6 +30,14 @@ public class ImageViewHelper {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
 
         return type;
+    }
+
+    public static Drawable getDrawableFromProxyProperty(String propertyName, TiViewProxy proxy) {
+        if (!proxy.hasProperty(propertyName)) {
+            return null;
+        }
+
+        return TiDrawableReference.fromUrl(proxy, proxy.getProperties().getString(propertyName)).getDrawable();
     }
 
     public static RequestBuilder prepareGlideClientFor(Context context, GlideUrl url)

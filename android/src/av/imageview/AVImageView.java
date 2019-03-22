@@ -1,6 +1,7 @@
 package av.imageview;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -8,10 +9,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.titanium.proxy.TiViewProxy;
+import org.appcelerator.titanium.view.TiDrawableReference;
 import org.appcelerator.titanium.view.TiUIView;
 
 import java.lang.ref.WeakReference;
@@ -85,11 +88,20 @@ public class AvImageView extends TiUIView
 
     public void setImageAsURL(String uri)
     {
+        Drawable defaultImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("defaultImage", this.proxy.get());
+        Drawable brokenLinkImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("brokenLinkImage", this.proxy.get());
         GlideUrl url = new GlideUrl(uri, ImageViewHelper.prepareRequestHeaders(uri, this.proxy.get()));
+
+        RequestOptions options;
         RequestBuilder builder;
+
+        options = new RequestOptions();
+        options = options.placeholder(defaultImageDrawable);
+        options = options.error(brokenLinkImageDrawable);
 
         builder = ImageViewHelper.prepareGlideClientFor(this.context, url);
         builder = builder.listener(this.requestListener);
+        builder = builder.apply(options);
         builder = builder.load(url);
 
         builder.into(this.imageView);
