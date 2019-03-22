@@ -85,36 +85,13 @@ public class AvImageView extends TiUIView
 
     public void setImageAsURL(String uri)
     {
-        GlideUrl url = new GlideUrl(uri, this.prepareRequestHeaders(uri));
+        GlideUrl url = new GlideUrl(uri, ImageViewHelper.prepareRequestHeaders(uri, this.proxy.get()));
         RequestBuilder builder;
 
-        builder = Glide.with(this.context).asDrawable();
+        builder = ImageViewHelper.prepareGlideClientFor(this.context, url);
         builder = builder.listener(this.requestListener);
         builder = builder.load(url);
 
         builder.into(this.imageView);
-    }
-
-    private LazyHeaders prepareRequestHeaders(String forUrl)
-    {
-        LazyHeaders.Builder requestHeaders = new LazyHeaders.Builder();
-
-        if (this.proxy.get().hasProperty("handleCookies") && this.proxy.get().getProperties().getBoolean("handleCookies")) {
-            String cookiesForUrl = CookiesHelper.getCookiesStringForURL(forUrl);
-
-            if (cookiesForUrl != null) {
-                requestHeaders.addHeader("Cookie", cookiesForUrl);
-            }
-        }
-
-        if (this.proxy.get().hasProperty("requestHeaders")) {
-            KrollDict providedRequestHeaders = this.proxy.get().getProperties().getKrollDict("requestHeaders");
-
-            for (Map.Entry<String, Object> entry : providedRequestHeaders.entrySet()) {
-                requestHeaders.addHeader(entry.getKey(), providedRequestHeaders.getString(entry.getKey()));
-            }
-        }
-
-        return requestHeaders.build();
     }
 }
