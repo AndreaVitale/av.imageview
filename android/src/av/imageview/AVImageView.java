@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.TransitionOptions;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -69,6 +70,13 @@ public class AvImageView extends TiUIView
         this.processProperty(key, this.proxy.get().getProperties());
     }
 
+    @Override
+    public void release() {
+        super.release();
+
+        Glide.with(this.context).clear(this.imageView);
+    }
+
     public void processProperty(String withName, KrollDict fromProperties)
     {
         if (withName.equals("image") && fromProperties.get(withName) instanceof String) {
@@ -109,6 +117,10 @@ public class AvImageView extends TiUIView
 
         if (currentProperties.containsKey("rounded") && currentProperties.getBoolean("rounded")) {
             options = options.circleCrop();
+        }
+
+        if (currentProperties.containsKey("enableMemoryCache") && !currentProperties.getBoolean("enableMemoryCache")) {
+            options = options.skipMemoryCache(true);
         }
 
         // Creating request builder
