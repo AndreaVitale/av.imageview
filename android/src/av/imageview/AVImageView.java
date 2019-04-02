@@ -107,6 +107,10 @@ public class AvImageView extends TiUIView
             options = options.dontAnimate();
         }
 
+        if (currentProperties.containsKey("rounded") && currentProperties.getBoolean("rounded")) {
+            options = options.circleCrop();
+        }
+
         // Creating request builder
         builder = ImageViewHelper.prepareGlideClientFor(this.context, url);
         builder = builder.listener(this.requestListener);
