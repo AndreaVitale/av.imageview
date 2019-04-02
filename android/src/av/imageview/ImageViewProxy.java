@@ -17,7 +17,7 @@ import android.os.Message;
 import ti.modules.titanium.gesture.TiDeviceOrientationMonitor;
 
 
-@Kroll.proxy(creatableInModule= ImageViewModule.class, propertyAccessors = { "requestHeaders", "handleCookies", "contentMode" })
+@Kroll.proxy(creatableInModule= ImageViewModule.class, propertyAccessors = { "requestHeaders", "handleCookies", "contentMode", "rounded", "animated", "timeout", "enableMemoryCache", "loadingIndicator", "loadingIndicatorColor" })
 public class ImageViewProxy extends TiViewProxy  {
 	private static final String LCAT = "ImageViewProxy";
 	private static final boolean DBG = TiConfig.LOGD;
@@ -26,7 +26,6 @@ public class ImageViewProxy extends TiViewProxy  {
     private static final int MSG_SET_IMAGE_AS_URL = MSG_FIRST_ID + 1001;
 
     private Context context;
-    private TiDeviceOrientationMonitor orientationMonitor;
 
 	@Override
 	public TiUIView createView(Activity activity) {

@@ -21,8 +21,7 @@ import av.imageview.utils.CookiesHelper;
 public class ImageViewHelper {
     private static final String LCAT = "ImageViewHelper";
 
-    public static String getMimeTypeFor(String url)
-    {
+    public static String getMimeTypeFor(String url) {
         String type = null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(url);
 
@@ -40,8 +39,7 @@ public class ImageViewHelper {
         return TiDrawableReference.fromUrl(proxy, proxy.getProperties().getString(propertyName)).getDrawable();
     }
 
-    public static RequestBuilder prepareGlideClientFor(Context context, GlideUrl url)
-    {
+    public static RequestBuilder prepareGlideClientFor(Context context, GlideUrl url) {
         String mimeType = ImageViewHelper.getMimeTypeFor(url.toStringUrl());
 
         if (mimeType == null) {
@@ -56,8 +54,7 @@ public class ImageViewHelper {
         }
     }
 
-    public static LazyHeaders prepareRequestHeaders(String forUrl, TiViewProxy proxy)
-    {
+    public static LazyHeaders prepareRequestHeaders(String forUrl, TiViewProxy proxy) {
         LazyHeaders.Builder requestHeaders = new LazyHeaders.Builder();
 
         if (proxy.hasProperty("handleCookies") && proxy.getProperties().getBoolean("handleCookies")) {
