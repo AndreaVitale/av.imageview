@@ -5,22 +5,19 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.TransitionOptions;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.titanium.proxy.TiViewProxy;
-import org.appcelerator.titanium.view.TiDrawableReference;
 import org.appcelerator.titanium.view.TiUIView;
 
 import java.lang.ref.WeakReference;
-import java.util.Map;
 
-import av.imageview.utils.CookiesHelper;
 import av.imageview.utils.RequestListener;
 
 public class AvImageView extends TiUIView
@@ -86,19 +83,31 @@ public class AvImageView extends TiUIView
         }
     }
 
-    public void setImageAsURL(String uri)
-    {
+    public void setImageAsURL(String uri) {
         Drawable defaultImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("defaultImage", this.proxy.get());
         Drawable brokenLinkImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("brokenLinkImage", this.proxy.get());
         GlideUrl url = new GlideUrl(uri, ImageViewHelper.prepareRequestHeaders(uri, this.proxy.get()));
 
+        KrollDict currentProperties = this.proxy.get().getProperties();
+
+        int timeout = currentProperties.containsKey("timeout")
+                ? currentProperties.getInt("timeout")
+                : ImageViewConstants.DEFAULT_REQUEST_TIMEOUT;
+
         RequestOptions options;
         RequestBuilder builder;
 
+        // Creating request options
         options = new RequestOptions();
         options = options.placeholder(defaultImageDrawable);
         options = options.error(brokenLinkImageDrawable);
+        options = options.timeout(timeout);
 
+        if (currentProperties.containsKey("animated") && !currentProperties.getBoolean("animated")) {
+            options = options.dontAnimate();
+        }
+
+        // Creating request builder
         builder = ImageViewHelper.prepareGlideClientFor(this.context, url);
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
