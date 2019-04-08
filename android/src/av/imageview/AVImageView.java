@@ -1,5 +1,6 @@
 package av.imageview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -18,8 +19,11 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.proxy.TiViewProxy;
+import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.util.TiRHelper;
+import org.appcelerator.titanium.view.TiDrawableReference;
 import org.appcelerator.titanium.view.TiUIView;
 
 import java.lang.ref.WeakReference;
@@ -32,13 +36,13 @@ public class AvImageView extends TiUIView
     private static final String LCAT = "AvImageView";
 
     private WeakReference<TiViewProxy> proxy;
-    private Context context;
+    private Activity context;
     private ImageView imageView;
     private ProgressIndicator progressBar;
     private RelativeLayout layout;
     private RequestListener requestListener;
 
-    public AvImageView(Context context, TiViewProxy proxy) {
+    public AvImageView(Activity context, TiViewProxy proxy) {
         super(proxy);
 
         this.context = context;
@@ -86,23 +90,28 @@ public class AvImageView extends TiUIView
     public void propertyChanged(String key, Object oldValue, Object newValue, KrollProxy proxy) {
         super.propertyChanged(key, oldValue, newValue, proxy);
 
-        Log.d(LCAT, "Property " + key + " has changed.");
-
         this.processProperty(key, this.proxy.get().getProperties());
     }
 
     @Override
     public void release() {
-        super.release();
+        if (!this.context.isFinishing() && !this.context.isDestroyed()) {
+            Log.d(LCAT, "Destroying");
+            Glide.with(this.context).clear(this.imageView);
+        }
 
-        Glide.with(this.context).clear(this.imageView);
+        super.release();
     }
 
     public void processProperty(String withName, KrollDict fromProperties) {
         if (withName.equals("loadingIndicatorColor")) {
             this.progressBar.setColor(fromProperties.getString(withName));
+        } else if (withName.equals("image") && fromProperties.get(withName) == null) {
+            this.clearImage();
         } else if (withName.equals("image") && fromProperties.get(withName) instanceof String) {
             this.setImageAsURL(fromProperties.getString(withName));
+        } else if (withName.equals("image") && fromProperties.get(withName) instanceof TiBlob) {
+            this.setImageAsBlob(TiConvert.toBlob(fromProperties.get(withName)));
         } else if (withName.equals("contentMode")) {
             ImageView.ScaleType scaleType = fromProperties.getString(withName).equals(ImageViewConstants.CONTENT_MODE_ASPECT_FILL) ?
                     ImageView.ScaleType.CENTER_CROP :
@@ -156,5 +165,27 @@ public class AvImageView extends TiUIView
         builder = builder.load(url);
 
         builder.into(this.imageView);
+    }
+
+    public void setImageAsBlob(TiBlob blob) {
+        TiDrawableReference drawableReference = TiDrawableReference.fromBlob(this.proxy.get().getActivity(), blob);
+
+        this.imageView.setImageBitmap(drawableReference.getBitmap());
+
+        if (this.proxy.get().hasListeners(ImageViewConstants.EVENT_IMAGE_LOADED)) {
+            KrollDict payload = new KrollDict();
+
+            payload.put("image", blob);
+
+            this.proxy.get().fireEvent(ImageViewConstants.EVENT_IMAGE_LOADED, payload);
+        }
+
+        if (this.progressBar != null && this.progressBar.getVisibility() == View.VISIBLE) {
+            this.progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void clearImage() {
+        this.imageView.setImageBitmap(null);
     }
 }

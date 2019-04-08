@@ -4,6 +4,7 @@
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/src/av/imageview/ImageViewModule.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/src/av/imageview/ImageViewProxy.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/src/av/imageview/utils/CookiesHelper.java"
+"/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/src/av/imageview/utils/ProgressIndicator.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/src/av/imageview/utils/RequestListener.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/build/generated/java/av/imageview/AvImageviewNewBootstrap.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/build/generated/r/android/support/compat/R.java"
