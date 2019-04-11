@@ -1,58 +1,165 @@
-# Features
-[![gitTio](http://gitt.io/badge.svg)](http://gitt.io/component/av.imageview)
 
-Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ImageView) doesn't support the contentMode property so your rendered image will everytime fit your ImageView. This module allows you to specify which behavior your ImageView must have and adds some extra features to improve the user experience. The module currently supports the following APIs:
-- [x] Content Mode
-- [x] Broken link image fallback
+
+<h1 align="center">av.imageview</h1>
+
+<div align="center">
+	<strong>An optimized ImageView module</strong>
+</div>
+<div align="center">
+  <sub>
+  	for Axway Appcelerator Titanium Framework <br />
+  	<img src="https://jira.appcelerator.org/secure/attachment/62974/Axwaylog%20icon.png" height="20px">
+  </sub>
+</div>
+<br />
+
+<div align="center">
+  <a href="https://img.shields.io/badge/platform-android-green.svg">
+  	<img src="https://img.shields.io/badge/platform-android-brightgreen.svg?style=flat-square">
+  </a>
+  <a href="https://img.shields.io/badge/platform-android-green.svg">
+  	<img src="https://img.shields.io/badge/platform-ios-blue.svg?style=flat-square">
+  </a>
+  <a href="https://img.shields.io/badge/platform-android-green.svg">
+  	<img src="https://img.shields.io/badge/available_on-gittio-red.svg?style=flat-square">
+  </a>
+  <a href="https://opensource.org/licenses/Apache-2.0">
+  	<img src="https://img.shields.io/badge/license-apache_2-lightgrey.svg?style=flat-square">
+  </a>
+</div>
+
+<div align="center">
+  <h3>
+    <a href="#features">Features</a>
+    <span> | </span>
+    <a href="#installation">Installation</a>
+    <span> | </span>
+    <a href="#api">API</a>
+    <span> | </span>
+    <a href="#usage">Usage</a>
+    <span> | </span>
+    <a href="#contributions">Contributions</a>
+  </h3>
+</div>
+
+## Features
+
+Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.ImageView) doesn't support the `contentMode` property so your rendered image will everytime fit your ImageView. The main feature of this module is `contentMode` handling that allows you to specify which behavior your ImageView must have and, in addition, the module adds some extra features like image caching and placeholder-fallback images.
+
+Here is an example of two mainly supported content modes: `CONTENT_MODE_ASPECT_FIT` and `CONTENT_MODE_ASPECT_FILL`.
+
+<div align="center">
+	<img src="https://i.ibb.co/pygDk2R/fit.png" width="30%" />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<img src="https://i.ibb.co/Z8VBW0x/fill.png" width="30%"/>
+</div>
+
+All other macro-features can be grouped in the following list:
+
+- [x] ContentModes handling
 - [x] Loading image placeholder
+- [x] Broken link image fallback
 - [x] Custom HTTP header, useful if the images are protected
 - [x] WebP support
 - [x] GIF support
-- [x] Automatic circle transformation (Android only)
 
-Any PR will be really appreciated!
+## Installation
 
-## Get it
 
-You can install it directly via gittio using
-```bash
-$ gittio install av.imageview
-```
+Pick the latest version of the module from [here](https://github.com/AndreaVitale/av.imageview/releases) and unzip it inside your application module folder or install it automatically via <a href="http://gitt.io/">gitt.io</a>
 
-or manually by cloning this repository or directly by downloading the latest packaged module version [here](https://github.com/AndreaVitale/av.imageview/releases).
+    $ gittio install av.imageview
 
-Now, follow [these steps](http://docs.appcelerator.com/platform/latest/#!/guide/Using_a_Module-section-30082372_UsingaModule-Installingmodules) to install the packaged version of this module into your application.
+In your application's <i>tiapp.xml</i> the <i>av.imageview</i> module is declared as follows:
+
+    <modules>
+        <module platform="iphone">av.imageview</module>
+        <module platform="android">av.imageview</module>
+    </modules>
+
+and you're ready to use it.
+
+## API
+
+All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.View) properties and methods are supported.
+
+| Property | Description | iOS | Android | Note |
+| -------- | ----------- | --- | ------- | ---- |
+| contentMode | Sets the ImageView content mode | ✅ | ✅ | Supported content modes are listed in a [next section](https://github.com/AndreaVitale/av.imageview#supported-content-modes). |
+| defaultImage | Image to display when the image download is in progress |  ✅ | ✅ | Must refers to a __local__ image  |
+| brokenLinkImage | Image to display when the image fetch goes in error | ✅ | ✅ | Must refers to a __local__ image |
+| loadingIndicator | Enable or disable the activity indicator when the download is in progress | ✅ | ✅ | `true` by default |
+| loadingIndicatorColor | Changes the loading indicator color | ✅ | ✅ | |
+| requestHeader | An object used to define extra http request header fields | ✅ | ✅ | |
+| timeout | Sets timeout for requests, in milliseconds | ✅ | ✅ | |
+| handleCookies | Enables cookie handling for remote images | ✅ | ✅ | |
+| shouldCacheImagesInMemory | Activates in-memory cache mechanism | ✅ | ✅| `true` by default |
+| shouldDecompressImages | Enables image decompression | ✅ | 🚫| `true` by default |
+| maxCacheAge | The maximum length of time to keep an image in the cache, in seconds | ✅ | 🚫 | integer value |
+| maxCacheSize | The maximum size of the cache, in bytes | ✅ | 🚫| integer value |
+| rounded | Renders the image in a circle | 🚫 | ✅ | Use with `CONTENT_MODE_ASPECT_FIT` for a correct rendering |
+| animated | Disables the fade-in animation | 🚫 | ✅ | |
+
+#### Events
+
+- `load` an event that is fired when an image was correctly loaded
+	- `image` as a _string_  if a remote or local url was given or as a _blob_ otherwise
+- `error` an event that is fired when the image fetch goes in error
+	- `image` as a _string_  if a remote or local url was given or as a _blob_ otherwise
+	- `reason` contains the reason why the image fetch goes in error
+
+## Supported content modes
+Here is a list of supported content modes:
+
+#### Android and iOS
+- `CONTENT_MODE_ASPECT_FIT`
+- `CONTENT_MODE_ASPECT_FILL`
+
+#### iOS only
+- `CONTENT_MODE_SCALE_TO_FIT`
+- `CONTENT_MODE_REDRAW`
+- `CONTENT_MODE_CENTER`
+- `CONTENT_MODE_TOP`
+- `CONTENT_MODE_BOTTOM`
+- `CONTENT_MODE_LEFT`
+- `CONTENT_MODE_RIGHT`
+- `CONTENT_MODE_TOP_LEFT`
+- `CONTENT_MODE_TOP_RIGHT`
+- `CONTENT_MODE_BOTTOM_LEFT`
+- `CONTENT_MODE_BOTTOM_RIGHT`
 
 ## Usage
-You can easily use this module via Alloy or in a classic way.
-### Alloy
-Here is how you can use the extended-imageview directly in alloy:
+
+You can simply use this module by declaring an `ImageView` in your `controller.xml` file as follows:
+
 ```xml
-    <Alloy>
-        <Window>
-            <View class="container">
-                <ImageView module="av.imageview" />
-            </View>
-        </Window>
-    </Alloy>
+    <ImageView id="Photo" module="av.imageview" />
 ```
-and inside the related TSS you can do
-```css
-    "ImageView": {
-        width: 100,
-        height: 100,
-        image: "https://static.pexels.com/photos/27954/pexels-photo-27954.jpg",
+and style it by using the related `controller.tss` file:
+
+```tss
+    "#Photo": {
+        width: Ti.UI.FILL,
+        height: 200,
+        contentMode: Alloy.Globals.CONTENT_MODE_FILL,
+        loadingIndicatorColor: "red"
     }
 ```
 
-### ListView ItemTemplate
-To include this module in a ListItemTemplate, you have to do:
+and of course expose as a global variable your desired `CONTENT_MODE` inside `Alloy.Globals` namespace.
+
+#### ListView ItemTemplate
+Using the module in a `ListItemTemplate` is a bit difference because custom module proxies cannot be directly used inside of it.
+
+
 ```xml
-    <ImageView ns="AvImageview" />
+    <ItemTemplate>
+        <ImageView ns="AvImageview" />
+    </ItemTemplate>
 ```
-where `AvImageview` is a variable declared in `alloy.js` like this:
+where `AvImageview` is a variable declared in `alloy.js` like as follows:
 ```javascript
-    var AvImageview = require("av.imageview");
+    const AvImageview = require("av.imageview");
 
     //and to use contentmodes constants via alloy
     Alloy.Globals.CONTENT_MODE_FIT = AvImageview.CONTENT_MODE_ASPECT_FIT;
@@ -62,7 +169,7 @@ where `AvImageview` is a variable declared in `alloy.js` like this:
     Alloy.Globals.REQUEST_HEADERS = {
         'Authorization': 'place or assign dinamically your logged user access token',
         'Another HTTP header field': 'with its value'
-    };
+    };
 ```
 A complete example can be:
 ```xml
@@ -79,108 +186,11 @@ A complete example can be:
             <ListItem template="template" photo:image="http://wp-admin.goldenbird-italy.com/wp-content/uploads/2015/07/italy_2631046a.jpg"></ListItem>
             <ListItem template="template" photo:image="http://www.travelviaitaly.com/wp-content/uploads/2015/12/Rome-Italy.jpg"></ListItem>
         </ListSection>
-    </ListView>
+    </ListView>
 ```
-### Classic
-You can instantiate an extended-imageview in this way:
-```javascript
-    require('av.imageview').createImageView({
-        width: 100,
-        height: 100,
-        image: "https://static.pexels.com/photos/27954/pexels-photo-27954.jpg",
-        requestHeader: {
-            'Authorization': 'Bearer your_access_token_here'
-        }
-    });
-```
-## API
 
-All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.UI.View) properties and methods are supported.
+Do you want a more complete example? Look a the sample [app.js](https://github.com/everyup/ti.linkedin/blob/master/example/app.js).
 
-About the enabled `contentMode`, you can learn more about this [here](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/index.html#//apple_ref/c/econst/UIViewContentModeScaleToFill).
-
-### Extra properties
-
-| Property | Description | Note |
-| ---------- | ---------- | ----- |
-| contentMode | Set the ImageView content mode | Supported content modes are listed in a [next section](https://github.com/AndreaVitale/av.imageview#supported-content-modes). |
-| defaultImage | __Local__ image to display when the image download is in progress |  |
-| brokenLinkImage | __Local__ image to display when the given link doesn't work or the image doesn't exists |  |
-| loadingIndicator | Enable or disable the activity indicator when the download is in progress | `true` by default |
-| loadingIndicatorColor | change the loading indicator color |  |
-| requestHeader | An object used to define extra http request header fields |  |
-| timeout | Set timeout for requests, in milliseconds |  |
-| handleCookies | Enable cookie handling for remote images |  |
-| enableMemoryCache | Enable or disable the memory cache mechanism | `true` by default and *Android only*, for iOS have a look to module properties [here](https://github.com/AndreaVitale/av.imageview#global-properties-ios-only) |
-| rounded | Enable or disable the circle transformation that automatically render the image as a perfect circle | Android only |
-| dontAnimate | Disable the fadeIn | Android only |
-
-### Extra methods
-
-| Method | Description | Note |
-| ---------- | ---------- | --- |
-| setContentMode | Set the `contentMode` property |  |
-| setLoadingIndicator | Set the `loadingIndicator` property |  |
-| setLoadingIndicatorColor | Set the `loadingIndicatorColor` property |  |
-| setDefaultImage | Set the `defaultImage` property |  |
-| setBrokenLinkImage | Set the `brokenLinkImage` property |  |
-| setClipsToBound | Set the `clipToBounds` property | __iOS only__ |
-| setRequestHeader | Set the `requestHeader` property |  |
-| setRounded | Set the `rounded` property | __Android only__ |
-| setTimeout | Set timeout for requests, in milliseconds |  |
-| setSignature | Add a signature to the cache string | __Android only__ |
-| getContentMode | Get the value of `contentMode` property |
-| getLoadingIndicator | Get the value of `loadingIndicator` property |  |
-| getLoadingIndicatorColor | Get the value of `loadingIndicatorColor` property |  |
-| getDefaultImage | Get the value of `defaultImage` property |  |
-| getBrokenLinkImage | Get the value of `brokenLinkImage` property |  |
-| getClipsToBound | Get the value of `clipToBounds` property | __iOS only__ |
-| getRequestHeader | Get the `requestHeader` property |  |
-| getRounded | Get the `rounded` property | __Android only__ |
-| getTimeout | Get current timeout of requests, in milliseconds |  |
-
-### Events
-
-| Event | Description |
-| ----- | ----------- |
-| load | Fired when the current image was successfully downloaded |
-| error | Fired when the image was not fetched |
-
-### Supported Content Modes
-Here is a list of supported content modes:
-
-#### Android and iOS
-- CONTENT_MODE_ASPECT_FIT
-- CONTENT_MODE_ASPECT_FILL
-
-#### iOS only
-- CONTENT_MODE_SCALE_TO_FIT
-- CONTENT_MODE_REDRAW
-- CONTENT_MODE_CENTER
-- CONTENT_MODE_TOP
-- CONTENT_MODE_BOTTOM
-- CONTENT_MODE_LEFT
-- CONTENT_MODE_RIGHT
-- CONTENT_MODE_TOP_LEFT
-- CONTENT_MODE_TOP_RIGHT
-- CONTENT_MODE_BOTTOM_LEFT
-- CONTENT_MODE_BOTTOM_RIGHT
-
-### Global properties (iOS only)
-| Property | Description | Note |
-| ---------- | ---------- | ----- |
-| shouldCacheImagesInMemory | Specify if memory will be used to cache images | `true` by default
-| shouldDecompressImages | Specify if image decompression must be enabled or not | `true` by default
-| maxCacheAge | The maximum length of time to keep an image in the cache, in seconds | int
-| maxCacheSize | The maximum size of the cache, in bytes | int
-
-## Donate
+## Contributions
 
 If you enjoy this module, feel free to contribute with your PR or [donate](https://paypal.me/VitaleAndrea) :-)
-
-## Credits
-Anyone who contributes to the module enhancement!
-
-[@rs](https://github.com/rs) for the amazing [SDWebImage](https://github.com/rs/SDWebImage) library. Currently lib version used: 4.1.0.
-
-[@bumptech](https://github.com/bumptech) for the amazing [Glide](https://github.com/bumptech/glide) library. Currently lib version used: 3.8.0.
