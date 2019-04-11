@@ -49,9 +49,9 @@ Currently [Titanium.UI.ImageView](http://docs.appcelerator.com/platform/latest/#
 Here is an example of two mainly supported content modes: `CONTENT_MODE_ASPECT_FIT` and `CONTENT_MODE_ASPECT_FILL`.
 
 <div align="center">
-	<img src="https://i.ibb.co/pygDk2R/fit.png" width="40%" />
+	<img src="https://i.ibb.co/pygDk2R/fit.png" width="30%" />
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<img src="https://i.ibb.co/Z8VBW0x/fill.png" width="40%"/>
+	<img src="https://i.ibb.co/Z8VBW0x/fill.png" width="30%"/>
 </div>
 
 All other macro-features can be grouped in the following list:
@@ -68,14 +68,14 @@ All other macro-features can be grouped in the following list:
 
 Pick the latest version of the module from [here](https://github.com/AndreaVitale/av.imageview/releases) and unzip it inside your application module folder or install it automatically via <a href="http://gitt.io/">gitt.io</a>
 
-	gittio install av.imageview
+    $ gittio install av.imageview
 
 In your application's <i>tiapp.xml</i> the <i>av.imageview</i> module is declared as follows:
 
-	<modules>
-		<module platform="iphone">av.imageview</module>
-		<module platform="android">av.imageview</module>
-	</modules>
+    <modules>
+        <module platform="iphone">av.imageview</module>
+        <module platform="android">av.imageview</module>
+    </modules>
 
 and you're ready to use it.
 
@@ -133,17 +133,17 @@ Here is a list of supported content modes:
 You can simply use this module by declaring an `ImageView` in your `controller.xml` file as follows:
 
 ```xml
-<ImageView id="Photo" module="av.imageview" />
+    <ImageView id="Photo" module="av.imageview" />
 ```
 and style it by using the related `controller.tss` file:
 
 ```tss
-"#Photo": {
-	width: Ti.UI.FILL,
-	height: 200,
-	contentMode: Alloy.Globals.CONTENT_MODE_FILL,
-	loadingIndicatorColor: "red"
-}
+    "#Photo": {
+        width: Ti.UI.FILL,
+        height: 200,
+        contentMode: Alloy.Globals.CONTENT_MODE_FILL,
+        loadingIndicatorColor: "red"
+    }
 ```
 
 and of course expose as a global variable your desired `CONTENT_MODE` inside `Alloy.Globals` namespace.
