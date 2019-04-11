@@ -1,4 +1,5 @@
 
+
 <h1 align="center">av.imageview</h1>
 
 <div align="center">
@@ -84,20 +85,20 @@ All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titan
 
 | Property | Description | iOS | Android | Note |
 | -------- | ----------- | --- | ------- | ---- |
-| contentMode | Set the ImageView content mode | ✅ | ✅ | Supported content modes are listed in a [next section](https://github.com/AndreaVitale/av.imageview#supported-content-modes). |
-| defaultImage | __Local__ image to display when the image download is in progress |  ✅ | ✅ |  |
-| brokenLinkImage | __Local__ image to display when the given link doesn't work or the image doesn't exists | ✅ | ✅ | |
+| contentMode | Sets the ImageView content mode | ✅ | ✅ | Supported content modes are listed in a [next section](https://github.com/AndreaVitale/av.imageview#supported-content-modes). |
+| defaultImage | Image to display when the image download is in progress |  ✅ | ✅ | Must refers to a __local__ image  |
+| brokenLinkImage | Image to display when the image fetch goes in error | ✅ | ✅ | Must refers to a __local__ image |
 | loadingIndicator | Enable or disable the activity indicator when the download is in progress | ✅ | ✅ | `true` by default |
-| loadingIndicatorColor | change the loading indicator color | ✅ | ✅ | |
+| loadingIndicatorColor | Changes the loading indicator color | ✅ | ✅ | |
 | requestHeader | An object used to define extra http request header fields | ✅ | ✅ | |
-| timeout | Set timeout for requests, in milliseconds | ✅ | ✅ | |
-| handleCookies | Enable cookie handling for remote images | ✅ | ✅ | |
-| shouldCacheImagesInMemory | Enable or disable memory cache | ✅ | ✅| `true` by default |
-| shouldDecompressImages | Specify if image decompression must be enabled or not | ✅ | 🚫| `true` by default |
+| timeout | Sets timeout for requests, in milliseconds | ✅ | ✅ | |
+| handleCookies | Enables cookie handling for remote images | ✅ | ✅ | |
+| shouldCacheImagesInMemory | Activates in-memory cache mechanism | ✅ | ✅| `true` by default |
+| shouldDecompressImages | Enables image decompression | ✅ | 🚫| `true` by default |
 | maxCacheAge | The maximum length of time to keep an image in the cache, in seconds | ✅ | 🚫 | integer value |
 | maxCacheSize | The maximum size of the cache, in bytes | ✅ | 🚫| integer value |
-| rounded | Enable or disable the circle transformation that automatically render the image as a perfect circle | 🚫 | ✅ | Use with `CONTENT_MODE_ASPECT_FIT` for a correct rendering |
-| animated | Disable the fade-in animation | 🚫 | ✅ | |
+| rounded | Renders the image in a circle | 🚫 | ✅ | Use with `CONTENT_MODE_ASPECT_FIT` for a correct rendering |
+| animated | Disables the fade-in animation | 🚫 | ✅ | |
 
 #### Events
 
