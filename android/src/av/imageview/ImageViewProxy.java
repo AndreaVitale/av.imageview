@@ -3,7 +3,6 @@ package av.imageview;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.AsyncResult;
-import org.appcelerator.kroll.common.Log;
 import org.appcelerator.kroll.common.TiConfig;
 import org.appcelerator.kroll.common.TiMessenger;
 import org.appcelerator.titanium.TiApplication;
@@ -13,11 +12,10 @@ import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiUIView;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Message;
 
 
-@Kroll.proxy(creatableInModule= ImageViewModule.class, propertyAccessors = { "requestHeaders", "handleCookies", "contentMode", "rounded", "animated", "timeout", "enableMemoryCache", "loadingIndicator", "loadingIndicatorColor" })
+@Kroll.proxy(creatableInModule= ImageViewModule.class, propertyAccessors = { "requestHeaders", "handleCookies", "contentMode", "rounded", "animated", "timeout", "shouldCacheImagesInMemory", "loadingIndicator", "loadingIndicatorColor" })
 public class ImageViewProxy extends TiViewProxy  {
 	private static final String LCAT = "ImageViewProxy";
 	private static final boolean DBG = TiConfig.LOGD;

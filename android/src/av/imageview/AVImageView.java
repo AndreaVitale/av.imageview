@@ -1,28 +1,22 @@
 package av.imageview;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.TransitionOptions;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
-import org.appcelerator.titanium.util.TiRHelper;
 import org.appcelerator.titanium.view.TiDrawableReference;
 import org.appcelerator.titanium.view.TiUIView;
 
@@ -96,7 +90,6 @@ public class AvImageView extends TiUIView
     @Override
     public void release() {
         if (!this.context.isFinishing() && !this.context.isDestroyed()) {
-            Log.d(LCAT, "Destroying");
             Glide.with(this.context).clear(this.imageView);
         }
 
@@ -150,7 +143,7 @@ public class AvImageView extends TiUIView
             options = options.circleCrop();
         }
 
-        if (currentProperties.containsKey("enableMemoryCache") && !currentProperties.getBoolean("enableMemoryCache")) {
+        if (currentProperties.containsKey("shouldCacheImagesInMemory") && !currentProperties.getBoolean("shouldCacheImagesInMemory")) {
             options = options.skipMemoryCache(true);
         }
 
