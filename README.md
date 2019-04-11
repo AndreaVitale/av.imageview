@@ -97,7 +97,7 @@ All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titan
 | maxCacheAge | The maximum length of time to keep an image in the cache, in seconds | ✅ | 🚫 | integer value |
 | maxCacheSize | The maximum size of the cache, in bytes | ✅ | 🚫| integer value |
 | rounded | Enable or disable the circle transformation that automatically render the image as a perfect circle | 🚫 | ✅ | Use with `CONTENT_MODE_ASPECT_FIT` for a correct rendering |
-| animated | Disable the fadeIn | 🚫 | ✅ | |
+| animated | Disable the fade-in animation | 🚫 | ✅ | |
 
 #### Events
 
@@ -152,8 +152,8 @@ Using the module in a `ListItemTemplate` is a bit difference because custom modu
 
 
 ```xml
-	   <ItemTemplate>
-	    <ImageView ns="AvImageview" />
+    <ItemTemplate>
+        <ImageView ns="AvImageview" />
     </ItemTemplate>
 ```
 where `AvImageview` is a variable declared in `alloy.js` like as follows:
