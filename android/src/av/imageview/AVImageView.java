@@ -2,6 +2,7 @@ package av.imageview;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -101,10 +102,15 @@ public class AvImageView extends TiUIView
             this.progressBar.setColor(fromProperties.getString(withName));
         } else if (withName.equals("image") && fromProperties.get(withName) == null) {
             this.clearImage();
-        } else if (withName.equals("image") && fromProperties.get(withName) instanceof String) {
-            this.setImageAsURL(fromProperties.getString(withName));
         } else if (withName.equals("image") && fromProperties.get(withName) instanceof TiBlob) {
             this.setImageAsBlob(TiConvert.toBlob(fromProperties.get(withName)));
+        } else if (withName.equals("image") && fromProperties.get(withName) instanceof String) {
+            String uri = fromProperties.getString(withName);
+
+            if (uri.startsWith("http") || uri.startsWith("ftp"))
+                this.setImageAsURL(uri);
+            else
+                this.setImageAsLocalUri(uri);
         } else if (withName.equals("contentMode")) {
             ImageView.ScaleType scaleType = fromProperties.getString(withName).equals(ImageViewConstants.CONTENT_MODE_ASPECT_FILL) ?
                     ImageView.ScaleType.CENTER_CROP :
@@ -156,6 +162,29 @@ public class AvImageView extends TiUIView
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(url);
+
+        builder.into(this.imageView);
+    }
+
+    public void setImageAsLocalUri(String filename) {
+        Drawable imageDrawable = ImageViewHelper.getDrawableFromProxyProperty("image", this.proxy.get());
+        KrollDict currentProperties = this.proxy.get().getProperties();
+        RequestBuilder builder;
+
+        RequestOptions options = new RequestOptions();
+
+        if (currentProperties.containsKey("animated") && !currentProperties.getBoolean("animated")) {
+            options = options.dontAnimate();
+        }
+
+        if (currentProperties.containsKey("rounded") && currentProperties.getBoolean("rounded")) {
+            options = options.circleCrop();
+        }
+
+        // Creating request builder
+        builder = Glide.with(context).asDrawable();
+        builder = builder.listener(this.requestListener);
+        builder = builder.load(imageDrawable);
 
         builder.into(this.imageView);
     }
