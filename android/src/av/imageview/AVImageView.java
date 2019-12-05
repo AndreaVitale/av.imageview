@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.DrawableImageViewTarget;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -163,7 +164,8 @@ public class AvImageView extends TiUIView
         builder = builder.apply(options);
         builder = builder.load(url);
 
-        builder.into(this.imageView);
+        builder.into(new DrawableImageViewTarget(this.imageView, /*waitForLayout=*/ true));
+        
     }
 
     public void setImageAsLocalUri(String filename) {
