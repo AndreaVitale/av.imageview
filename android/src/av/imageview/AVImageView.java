@@ -164,7 +164,7 @@ public class AvImageView extends TiUIView
         builder = builder.apply(options);
         builder = builder.load(url);
 
-        builder.into(new DrawableImageViewTarget(this.imageView, /*waitForLayout=*/ true));
+        builder.into(new DrawableImageViewTarget(this.imageView, true));
         
     }
 

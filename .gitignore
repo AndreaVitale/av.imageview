@@ -6,3 +6,4 @@ android/libs/
 phobeous-build.properties
 /android/android/java-sources.txt
 /android/android/libs
+/android/ti.imageview.gradle

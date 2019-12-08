@@ -7,6 +7,7 @@
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/src/av/imageview/utils/ProgressIndicator.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/src/av/imageview/utils/RequestListener.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/build/generated/java/av/imageview/AvImageviewNewBootstrap.java"
+"/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/build/generated/java/av/imageview/CommonJsSourceProvider.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/build/generated/r/android/support/compat/R.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/build/generated/r/android/support/coreui/R.java"
 "/Users/andrea/Sviluppo/Appcelerator/Modules/av.imageview/android/build/generated/r/android/support/coreutils/R.java"
