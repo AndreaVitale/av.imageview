@@ -1,9 +1,12 @@
 .DS_Store
-ios/iphone/*.zip
+ios/*.zip
+ios/dist
+ios/build
+ios/Carthage
+ios/Cartfile.resolved
+ios/imageview-ios.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad
+ios/imageview-ios.xcodeproj/project.xcworkspace/xcuserdata
+ios/imageview-ios.xcodeproj/xcuserdata
 android/dist/*.zip
 android/build/*
 android/libs/
-phobeous-build.properties
-/android/android/java-sources.txt
-/android/android/libs
-/android/ti.imageview.gradle
