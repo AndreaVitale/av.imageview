@@ -24,6 +24,7 @@ public class ImageViewProxy extends TiViewProxy  {
     private static final int MSG_SET_IMAGE_AS_URL = MSG_FIRST_ID + 1001;
     private static final int MSG_SET_IMAGE_AS_BLOB = MSG_FIRST_ID + 1002;
     private static final int MSG_SET_IMAGE_AS_EMPTY = MSG_FIRST_ID + 1003;
+    private static final int MSG_SET_IMAGE_AS_LOCAL_URI = MSG_FIRST_ID + 1004;
 
     private Activity activity;
 
@@ -91,14 +92,18 @@ public class ImageViewProxy extends TiViewProxy  {
             } else {
                 TiMessenger.sendBlockingMainMessage(this.getMainHandler().obtainMessage(MSG_SET_IMAGE_AS_EMPTY));
             }
-        } else if (uri instanceof String) {
+        } else if (uri instanceof String && TiApplication.isUIThread()) {
             this.setProperty("image", uri.toString());
 
-            if (TiApplication.isUIThread()) {
+            if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp"))
                 this.getView().setImageAsURL(uri.toString());
-            } else {
+            else
+                this.getView().setImageAsLocalUri(uri.toString());
+        } else if (uri instanceof String && !TiApplication.isUIThread()) {
+            if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp"))
                 TiMessenger.sendBlockingMainMessage(this.getMainHandler().obtainMessage(MSG_SET_IMAGE_AS_URL), uri.toString());
-            }
+            else
+                TiMessenger.sendBlockingMainMessage(this.getMainHandler().obtainMessage(MSG_SET_IMAGE_AS_LOCAL_URI), uri.toString());
         } else {
             this.setProperty("image", TiConvert.toBlob(uri));
 
