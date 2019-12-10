@@ -8,6 +8,7 @@ ios/imageview-ios.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad
 ios/imageview-ios.xcodeproj/project.xcworkspace/xcuserdata
 ios/imageview-ios.xcodeproj/xcuserdata
 android/dist/*.zip
+android/dist/*.jar
 android/build/*
 android/libs/
 android/ti.imageview.gradle

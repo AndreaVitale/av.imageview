@@ -169,7 +169,7 @@ public class AvImageView extends TiUIView
     }
 
     public void setImageAsLocalUri(String filename) {
-        Drawable imageDrawable = ImageViewHelper.getDrawableFromProxyProperty("image", this.proxy.get());
+        Drawable imageDrawable = TiDrawableReference.fromUrl(this.proxy.get(), filename).getDrawable();
         KrollDict currentProperties = this.proxy.get().getProperties();
         RequestBuilder builder;
 
@@ -186,6 +186,7 @@ public class AvImageView extends TiUIView
         // Creating request builder
         builder = Glide.with(context).asDrawable();
         builder = builder.listener(this.requestListener);
+        builder = builder.apply(options);
         builder = builder.load(imageDrawable);
 
         builder.into(this.imageView);
