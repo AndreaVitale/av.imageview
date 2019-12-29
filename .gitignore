@@ -10,5 +10,7 @@ ios/imageview-ios.xcodeproj/xcuserdata
 android/dist/*.zip
 android/dist/*.jar
 android/build/*
+android/build.properties
+android/java-sources.txt
 android/libs/
 android/ti.imageview.gradle

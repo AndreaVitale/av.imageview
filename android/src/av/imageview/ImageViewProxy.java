@@ -15,16 +15,15 @@ import android.app.Activity;
 import android.os.Message;
 
 
-@Kroll.proxy(creatableInModule= ImageViewModule.class, propertyAccessors = { "requestHeaders", "handleCookies", "contentMode", "rounded", "animated", "timeout", "shouldCacheImagesInMemory", "loadingIndicator", "loadingIndicatorColor" })
+@Kroll.proxy(creatableInModule= ImageViewModule.class, propertyAccessors = {
+        "requestHeaders", "handleCookies", "contentMode", "rounded", "animated", "timeout",
+        "shouldCacheImagesInMemory", "loadingIndicator", "loadingIndicatorColor", "image"
+})
 public class ImageViewProxy extends TiViewProxy  {
 	private static final String LCAT = "ImageViewProxy";
 	private static final boolean DBG = TiConfig.LOGD;
 
     private static final int MSG_FIRST_ID = TiViewProxy.MSG_LAST_ID + 1;
-    private static final int MSG_SET_IMAGE_AS_URL = MSG_FIRST_ID + 1001;
-    private static final int MSG_SET_IMAGE_AS_BLOB = MSG_FIRST_ID + 1002;
-    private static final int MSG_SET_IMAGE_AS_EMPTY = MSG_FIRST_ID + 1003;
-    private static final int MSG_SET_IMAGE_AS_LOCAL_URI = MSG_FIRST_ID + 1004;
 
     private Activity activity;
 
@@ -50,68 +49,4 @@ public class ImageViewProxy extends TiViewProxy  {
     {
 		super.handleCreationDict(properties);
 	}
-
-	@Override
-    public boolean handleMessage(Message message)
-    {
-        AsyncResult result;
-
-	    switch (message.what)
-        {
-            case MSG_SET_IMAGE_AS_URL:
-                result = (AsyncResult) message.obj;
-                this.getView().setImageAsURL((String) result.getArg());
-                result.setResult(null);
-
-                return true;
-            case MSG_SET_IMAGE_AS_BLOB:
-                result = (AsyncResult) message.obj;
-                this.getView().setImageAsBlob((TiBlob) result.getArg());
-                result.setResult(null);
-
-                return true;
-            case MSG_SET_IMAGE_AS_EMPTY:
-                result = (AsyncResult) message.obj;
-                this.getView().clearImage();
-                result.setResult(null);
-
-                return true;
-            default:
-                return super.handleMessage(message);
-        }
-    }
-
-    @Kroll.setProperty
-    @Kroll.method
-    public void setImage(Object uri) {
-        if (uri == null) {
-            this.setProperty("image", null);
-
-            if (TiApplication.isUIThread()) {
-                this.getView().clearImage();
-            } else {
-                TiMessenger.sendBlockingMainMessage(this.getMainHandler().obtainMessage(MSG_SET_IMAGE_AS_EMPTY));
-            }
-        } else if (uri instanceof String && TiApplication.isUIThread()) {
-            this.setProperty("image", uri.toString());
-
-            if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp"))
-                this.getView().setImageAsURL(uri.toString());
-            else
-                this.getView().setImageAsLocalUri(uri.toString());
-        } else if (uri instanceof String && !TiApplication.isUIThread()) {
-            if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp"))
-                TiMessenger.sendBlockingMainMessage(this.getMainHandler().obtainMessage(MSG_SET_IMAGE_AS_URL), uri.toString());
-            else
-                TiMessenger.sendBlockingMainMessage(this.getMainHandler().obtainMessage(MSG_SET_IMAGE_AS_LOCAL_URI), uri.toString());
-        } else {
-            this.setProperty("image", TiConvert.toBlob(uri));
-
-            if (TiApplication.isUIThread()) {
-                this.getView().setImageAsBlob(TiConvert.toBlob(uri));
-            } else {
-                TiMessenger.sendBlockingMainMessage(this.getMainHandler().obtainMessage(MSG_SET_IMAGE_AS_BLOB), TiConvert.toBlob(uri));
-            }
-        }
-    }
 }

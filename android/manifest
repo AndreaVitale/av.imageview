@@ -15,4 +15,4 @@ name: av.imageview
 moduleid: av.imageview
 guid: ec658f35-69c8-45fa-8f7c-6354b4f761b4
 platform: android
-minsdk: 7.0.0
+minsdk: 8.0.0
