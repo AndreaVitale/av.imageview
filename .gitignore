@@ -13,4 +13,4 @@ android/build/*
 android/build.properties
 android/java-sources.txt
 android/libs/
-android/ti.imageview.gradle
+android/av.imageview.gradle
