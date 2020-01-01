@@ -7,8 +7,7 @@
  * Copyright (c) 2009-2016 by Appcelerator, Inc. All Rights Reserved.
  */
 
-#import "SDWebImage/FLAnimatedImageView+WebCache.h"
-#import "SDWebImage/UIImageView+WebCache.h"
+#import <SDWebImage/SDWebImage.h>
 #import "TiUIView.h"
 
 @interface AvImageviewImageView : TiUIView {
@@ -22,16 +21,19 @@
   CGFloat autoHeight;
   CGFloat autoWidth;
 
-  FLAnimatedImageView *imageView;
+  SDAnimatedImageView *imageView;
   UIActivityIndicatorView *activityIndicator;
 
   NSString *placeholderImagePath;
   NSString *brokenLinkImagePath;
 
   NSDictionary *requestHeader;
-  SDWebImageOptions handleCookies;
   id imageObject;
   BOOL configurationComplete;
+
+  // Options
+  BOOL useCookies;
+  BOOL avoidDecodeImage;
 }
 
 - (void)setWidth_:(id)width;
