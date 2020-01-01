@@ -168,7 +168,7 @@ public class AvImageView extends TiUIView
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(url);
-        if (signature != "") {
+        if (signature != "" && signature != null) {
             builder.signature(new ObjectKey(signature));
         }
         builder.into(new DrawableImageViewTarget(this.imageView, true));
