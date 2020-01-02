@@ -99,6 +99,7 @@ All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titan
 | maxCacheSize | The maximum size of the cache, in bytes | ✅ | 🚫| integer value |
 | rounded | Renders the image in a circle | 🚫 | ✅ | Use with `CONTENT_MODE_ASPECT_FIT` for a correct rendering |
 | animated | Disables the fade-in animation | 🚫 | ✅ | |
+| signature | Sets a custom caching signature (<a href="https://github.com/bumptech/glide/wiki/Caching-and-Cache-Invalidation#custom-cache-invalidation" target="_blank">Glide documentation</a>) | 🚫 | ✅ | string value |
 
 #### Events
 

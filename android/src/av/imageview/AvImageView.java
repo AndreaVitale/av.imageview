@@ -12,6 +12,7 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.bumptech.glide.signature.ObjectKey;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -134,6 +135,7 @@ public class AvImageView extends TiUIView
 
         RequestOptions options;
         RequestBuilder builder;
+        String signature = "";
 
         // Creating request options
         options = new RequestOptions();
@@ -157,14 +159,19 @@ public class AvImageView extends TiUIView
             this.progressBar.setVisibility(View.VISIBLE);
         }
 
+        if (currentProperties.containsKey("signature") && currentProperties.getString("signature") != "") {
+            signature = currentProperties.getString("signature");
+        }
+
         // Creating request builder
         builder = ImageViewHelper.prepareGlideClientFor(this.context, url);
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(url);
-
+        if (signature != "" && signature != null) {
+            builder.signature(new ObjectKey(signature));
+        }
         builder.into(new DrawableImageViewTarget(this.imageView, true));
-        
     }
 
     public void setImageAsLocalUri(String filename) {
