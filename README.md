@@ -20,11 +20,14 @@
   <a href="https://img.shields.io/badge/platform-android-green.svg">
   	<img src="https://img.shields.io/badge/platform-ios-blue.svg?style=flat-square">
   </a>
-  <a href="https://img.shields.io/badge/platform-android-green.svg">
-  	<img src="https://img.shields.io/badge/available_on-gittio-red.svg?style=flat-square">
-  </a>
   <a href="https://opensource.org/licenses/Apache-2.0">
   	<img src="https://img.shields.io/badge/license-apache_2-lightgrey.svg?style=flat-square">
+  </a>
+  <a href="https://github.com/SDWebImage/SDWebImage">
+        <img src="https://img.shields.io/badge/sdwebimage-5.4.1-orange.svg?style=flat-square">
+  </a>
+  <a href="https://github.com/bumptech/glide">
+    <img src="https://img.shields.io/badge/glide-4.9.0-green.svg?style=flat-square">
   </a>
 </div>
 
@@ -94,7 +97,7 @@ All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titan
 | timeout | Sets timeout for requests, in milliseconds | ✅ | ✅ | |
 | handleCookies | Enables cookie handling for remote images | ✅ | ✅ | |
 | shouldCacheImagesInMemory | Activates in-memory cache mechanism | ✅ | ✅| `true` by default |
-| shouldDecompressImages | Enables image decompression | ✅ | 🚫| `true` by default |
+| avoidDecodeImage | Disable image decompression | ✅ | 🚫| `false` by default |
 | maxCacheAge | The maximum length of time to keep an image in the cache, in seconds | ✅ | 🚫 | integer value |
 | maxCacheSize | The maximum size of the cache, in bytes | ✅ | 🚫| integer value |
 | rounded | Renders the image in a circle | 🚫 | ✅ | Use with `CONTENT_MODE_ASPECT_FIT` for a correct rendering |
