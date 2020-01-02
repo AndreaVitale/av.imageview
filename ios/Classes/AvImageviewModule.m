@@ -8,7 +8,7 @@
  */
 
 #import "AvImageviewModule.h"
-#import "SDWebImage/UIImageView+WebCache.h"
+#import <SDWebImage/SDWebImage.h>
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
@@ -25,13 +25,6 @@
   return @"av.imageview";
 }
 
-#pragma mark Lifecycle
-
-- (void)startup {
-  [super startup];
-  DebugLog(@"[DEBUG] %@ loaded", self);
-}
-
 #pragma Public APIs
 
 - (void)setShouldCacheImagesInMemory:(id)shouldCacheImagesInMemory {
@@ -40,18 +33,17 @@
 }
 
 - (void)setShouldDecompressImages:(id)shouldDecompressImages {
-  ENSURE_SINGLE_ARG(shouldDecompressImages, NSNumber);
-  [SDImageCache sharedImageCache].config.shouldDecompressImages = [TiUtils boolValue:shouldDecompressImages];
+  NSLog(@"[ERROR] The \"shouldDecompressImages\" property was removed in AV.ImageView iOS 2.0.0 in favor of the per-image option \"avoidDecodeImage\"!");
 }
 
 - (void)setMaxCacheSize:(id)maxCacheSize {
   ENSURE_SINGLE_ARG(maxCacheSize, NSNumber);
-  [SDImageCache sharedImageCache].config.maxCacheSize = [TiUtils intValue:maxCacheSize];
+  [SDImageCache sharedImageCache].config.maxDiskSize = [TiUtils intValue:maxCacheSize];
 }
 
 - (void)setMaxCacheAge:(id)maxCacheAge {
   ENSURE_SINGLE_ARG(maxCacheAge, NSNumber);
-  [SDImageCache sharedImageCache].config.maxCacheAge = [TiUtils intValue:maxCacheAge];
+  [SDImageCache sharedImageCache].config.maxDiskAge = [TiUtils intValue:maxCacheAge];
 }
 
 MAKE_SYSTEM_PROP(CONTENT_MODE_SCALE_TO_FIT, UIViewContentModeScaleToFill)

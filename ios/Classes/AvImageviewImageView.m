@@ -26,7 +26,7 @@
   [super initializeState];
 
   if (self) {
-    imageView = [[FLAnimatedImageView alloc] initWithFrame:[self bounds]];
+    imageView = [[SDAnimatedImageView alloc] initWithFrame:[self bounds]];
     imageView.clipsToBounds = YES;
 
     activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -116,7 +116,7 @@
     return;
   }
 
-  [imageView sd_cancelCurrentAnimationImagesLoad];
+  [SDWebImagePrefetcher.sharedImagePrefetcher cancelPrefetching];
 
   if ([imageObj isKindOfClass:[NSString class]]) {
     //fix downloading the image if url contains spaces or none ASCII characters
@@ -135,6 +135,9 @@
 
       [activityIndicator startAnimating];
     }
+    
+    // Set options
+    SDWebImageOptions imageOptions = [self configureImageOptions];
 
     if ([imageUrl.scheme isEqualToString:@"http"] || [imageUrl.scheme isEqualToString:@"https"]) {
       NSString *userAgent = [[TiApp app] userAgent];
@@ -148,7 +151,7 @@
 
       [imageView sd_setImageWithURL:imageUrl
                    placeholderImage:placeholderImage
-                            options:handleCookies
+                            options:imageOptions
                           completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *url) {
                             self->autoWidth = image.size.width;
                             self->autoHeight = image.size.height;
@@ -251,6 +254,21 @@
   }
 }
 
+- (SDWebImageOptions)configureImageOptions
+{
+  SDWebImageOptions imageOptions = 0;
+
+  if (useCookies) {
+    imageOptions |= SDWebImageHandleCookies;
+  }
+
+  if (avoidDecodeImage) {
+    imageOptions |= SDImageCacheAvoidDecodeImage;
+  }
+
+  return imageOptions;
+}
+
 #pragma mark Public setter methods
 
 - (void)setWidth_:(id)width_ {
@@ -305,15 +323,16 @@
 }
 
 - (void)setHandleCookies_:(id)args {
-  BOOL useCookies = [TiUtils boolValue:args];
-  if (useCookies) {
-    handleCookies = SDWebImageHandleCookies;
-  }
+  useCookies = [TiUtils boolValue:args];
+}
+
+- (void)setAvoidDecodeImage_:(id)args {
+  avoidDecodeImage = [TiUtils boolValue:args];
 }
 
 - (void)setTimeout_:(id)args {
   NSTimeInterval timeout = [TiUtils doubleValue:args def:5000] / 1000;
-  [[SDWebImageDownloader sharedDownloader] setDownloadTimeout:timeout];
+  SDWebImageDownloaderConfig.defaultDownloaderConfig.downloadTimeout = timeout;
 }
 
 #pragma mark utility methodds
