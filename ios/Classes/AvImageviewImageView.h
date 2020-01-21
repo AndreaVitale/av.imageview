@@ -27,7 +27,7 @@
   NSString *placeholderImagePath;
   NSString *brokenLinkImagePath;
 
-  NSDictionary *requestHeader;
+  NSDictionary *requestHeaders;
   id imageObject;
   BOOL configurationComplete;
 
@@ -45,7 +45,7 @@
 - (void)setLoadingIndicatorColor_:(id)args;
 - (void)setContentMode_:(id)args;
 - (void)setClipsToBounds_:(id)clips;
-- (void)setRequestHeader_:(id)args;
+- (void)setRequestHeaders_:(id)args;
 - (void)setTimeout_:(id)args;
 
 @end
