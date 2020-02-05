@@ -55,7 +55,7 @@
   [self setLoadingIndicator_:[self.proxy valueForKey:@"loadingIndicator"]];
   [self setLoadingIndicatorColor_:[self.proxy valueForKey:@"loadingIndicatorColor"]];
   [self setContentMode_:[self.proxy valueForKey:@"contentMode"]];
-  [self setRequestHeader_:[self.proxy valueForKey:@"requestHeader"]];
+  [self setRequestHeaders_:[self.proxy valueForKey:@"requestHeaders"]];
   [self setHandleCookies_:[self.proxy valueForKey:@"handleCookies"]];
 }
 
@@ -145,9 +145,9 @@
       [[SDWebImageDownloader sharedDownloader] setValue:userAgent forHTTPHeaderField:@"User-Agent"];
 
       //Extending HTTP header with custom values
-      if (requestHeader != nil)
-        for (id key in requestHeader)
-          [[SDWebImageDownloader sharedDownloader] setValue:[requestHeader valueForKey:key] forHTTPHeaderField:key];
+      if (requestHeaders != nil)
+        for (id key in requestHeaders)
+          [[SDWebImageDownloader sharedDownloader] setValue:[requestHeaders valueForKey:key] forHTTPHeaderField:key];
 
       [imageView sd_setImageWithURL:imageUrl
                    placeholderImage:placeholderImage
@@ -318,8 +318,8 @@
   loadingIndicatorColor = [TiUtils colorValue:value];
 }
 
-- (void)setRequestHeader_:(id)args {
-  requestHeader = args;
+- (void)setRequestHeaders_:(id)args {
+  requestHeaders = args;
 }
 
 - (void)setHandleCookies_:(id)args {
