@@ -84,19 +84,25 @@
   imageArg = [imageArg stringByReplacingOccurrencesOfString:@"~ipad" withString:@""];
 
   if (imageArg != nil) {
-    unsigned char digest[CC_SHA1_DIGEST_LENGTH];
-    NSData *stringBytes = [imageArg dataUsingEncoding:NSUTF8StringEncoding];
+    // Handle asset catalog in SDK 9+
+    image = [UIImage imageNamed:imageArg];
 
-    if (CC_SHA1([stringBytes bytes], (CC_LONG)[stringBytes length], digest)) {
-      NSMutableString *sha = [[NSMutableString alloc] init];
+    // Handle asset catalog in SDK < 9
+    if (image == nil) {
+      unsigned char digest[CC_SHA1_DIGEST_LENGTH];
+      NSData *stringBytes = [imageArg dataUsingEncoding:NSUTF8StringEncoding];
 
-      for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-        [sha appendFormat:@"%02x", digest[i]];
+      if (CC_SHA1([stringBytes bytes], (CC_LONG)[stringBytes length], digest)) {
+        NSMutableString *sha = [[NSMutableString alloc] init];
 
-      [sha appendString:@"."];
-      [sha appendString:[img pathExtension]];
+        for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+          [sha appendFormat:@"%02x", digest[i]];
 
-      image = [UIImage imageNamed:sha];
+        [sha appendString:@"."];
+        [sha appendString:[img pathExtension]];
+
+        image = [UIImage imageNamed:sha];
+      }
     }
   }
 
