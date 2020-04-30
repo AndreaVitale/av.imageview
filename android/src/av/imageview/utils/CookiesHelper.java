@@ -21,7 +21,7 @@ public class CookiesHelper
     {
         try
         {
-            StringBuffer cookieStringBuffer = new StringBuffer();
+            StringBuilder cookieStringBuffer = new StringBuilder();
             HttpCookie[] urlCookies = getHTTPCookiesForURL(urlString);
 
             if(urlCookies != null)

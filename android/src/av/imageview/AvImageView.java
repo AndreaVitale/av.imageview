@@ -2,7 +2,6 @@ package av.imageview;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -159,7 +158,7 @@ public class AvImageView extends TiUIView
             this.progressBar.setVisibility(View.VISIBLE);
         }
 
-        if (currentProperties.containsKey("signature") && currentProperties.getString("signature") != "") {
+        if (currentProperties.containsKey("signature") && !currentProperties.getString("signature").equals("")) {
             signature = currentProperties.getString("signature");
         }
 
@@ -168,7 +167,7 @@ public class AvImageView extends TiUIView
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(url);
-        if (signature != "" && signature != null) {
+        if (!signature.equals("") && signature != null) {
             builder.signature(new ObjectKey(signature));
         }
         builder.into(new DrawableImageViewTarget(this.imageView, true));
