@@ -158,7 +158,7 @@ public class AvImageView extends TiUIView
             this.progressBar.setVisibility(View.VISIBLE);
         }
 
-        if (currentProperties.containsKey("signature") && !currentProperties.getString("signature").equals("")) {
+        if (currentProperties.containsKey("signature") && currentProperties.getString("signature") != "") {
             signature = currentProperties.getString("signature");
         }
 
@@ -167,7 +167,7 @@ public class AvImageView extends TiUIView
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(url);
-        if (!signature.equals("") && signature != null) {
+        if (signature != null && !signature.equals("")) {
             builder.signature(new ObjectKey(signature));
         }
         builder.into(new DrawableImageViewTarget(this.imageView, true));
