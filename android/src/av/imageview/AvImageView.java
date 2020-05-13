@@ -67,6 +67,8 @@ public class AvImageView extends TiUIView
         super.processProperties(properties);
 
         String[] orderedProperties = {
+                "defaultImage",
+                "brokenLinkImage",
                 "loadingIndicatorColor",
                 "contentMode",
                 "image"

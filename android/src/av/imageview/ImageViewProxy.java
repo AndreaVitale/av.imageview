@@ -12,7 +12,7 @@ import org.appcelerator.titanium.view.TiUIView;
 @Kroll.proxy(creatableInModule= ImageViewModule.class, propertyAccessors = {
         "requestHeaders", "handleCookies", "contentMode", "rounded", "animated", "timeout",
         "shouldCacheImagesInMemory", "loadingIndicator", "loadingIndicatorColor", "image",
-        "signature"
+        "signature", "defaultImage", "brokenLinkImage"
 })
 public class ImageViewProxy extends TiViewProxy  {
 	private static final String LCAT = "ImageViewProxy";
