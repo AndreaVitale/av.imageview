@@ -24,7 +24,7 @@
   	<img src="https://img.shields.io/badge/license-apache_2-lightgrey.svg?style=flat-square">
   </a>
   <a href="https://github.com/SDWebImage/SDWebImage">
-        <img src="https://img.shields.io/badge/sdwebimage-5.4.1-orange.svg?style=flat-square">
+        <img src="https://img.shields.io/badge/sdwebimage-5.8.0-orange.svg?style=flat-square">
   </a>
   <a href="https://github.com/bumptech/glide">
     <img src="https://img.shields.io/badge/glide-4.9.0-green.svg?style=flat-square">
