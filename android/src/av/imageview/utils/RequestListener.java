@@ -1,15 +1,15 @@
 package av.imageview.utils;
 
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.target.Target;
 
 import org.appcelerator.kroll.KrollDict;
-import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 
 import java.lang.ref.WeakReference;

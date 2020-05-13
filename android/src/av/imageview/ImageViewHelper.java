@@ -2,7 +2,6 @@ package av.imageview;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.bumptech.glide.Glide;

@@ -2,7 +2,6 @@ package av.imageview;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -68,6 +67,8 @@ public class AvImageView extends TiUIView
         super.processProperties(properties);
 
         String[] orderedProperties = {
+                "defaultImage",
+                "brokenLinkImage",
                 "loadingIndicatorColor",
                 "contentMode",
                 "image"
@@ -168,7 +169,7 @@ public class AvImageView extends TiUIView
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(url);
-        if (signature != "" && signature != null) {
+        if (signature != null && !signature.equals("")) {
             builder.signature(new ObjectKey(signature));
         }
         builder.into(new DrawableImageViewTarget(this.imageView, true));
