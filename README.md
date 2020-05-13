@@ -89,8 +89,8 @@ All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titan
 | Property | Description | iOS | Android | Note |
 | -------- | ----------- | --- | ------- | ---- |
 | contentMode | Sets the ImageView content mode | ✅ | ✅ | Supported content modes are listed in a [next section](https://github.com/AndreaVitale/av.imageview#supported-content-modes). |
-| defaultImage | Image to display when the image download is in progress |  ✅ | ✅ | Must refers to a __local__ image  |
-| brokenLinkImage | Image to display when the image fetch goes in error | ✅ | ✅ | Must refers to a __local__ image |
+| defaultImage | Image to display when the image download is in progress |  ✅ | ✅ | Must refers to a __local__ image ; __Android__ must be set before assigning an image (e.g. at creation) |
+| brokenLinkImage | Image to display when the image fetch goes in error | ✅ | ✅ | Must refers to a __local__ image; __Android__ must be set before assigning an image (e.g. at creation) |
 | loadingIndicator | Enable or disable the activity indicator when the download is in progress | ✅ | ✅ | `true` by default |
 | loadingIndicatorColor | Changes the loading indicator color | ✅ | ✅ | |
 | requestHeader | An object used to define extra http request header fields | ✅ | ✅ | |
