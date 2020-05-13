@@ -93,7 +93,7 @@ All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titan
 | brokenLinkImage | Image to display when the image fetch goes in error | ✅ | ✅ | Must refers to a __local__ image |
 | loadingIndicator | Enable or disable the activity indicator when the download is in progress | ✅ | ✅ | `true` by default |
 | loadingIndicatorColor | Changes the loading indicator color | ✅ | ✅ | |
-| requestHeader | An object used to define extra http request header fields | ✅ | ✅ | |
+| requestHeaders | An object used to define extra http request header fields | ✅ | ✅ | |
 | timeout | Sets timeout for requests, in milliseconds | ✅ | ✅ | |
 | handleCookies | Enables cookie handling for remote images | ✅ | ✅ | |
 | shouldCacheImagesInMemory | Activates in-memory cache mechanism | ✅ | ✅| `true` by default |

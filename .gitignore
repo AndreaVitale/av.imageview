@@ -4,6 +4,7 @@ ios/dist
 ios/build
 ios/Carthage
 ios/Cartfile.resolved
+ios/run.command
 ios/imageview-ios.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad
 ios/imageview-ios.xcodeproj/project.xcworkspace/xcuserdata
 ios/imageview-ios.xcodeproj/xcuserdata

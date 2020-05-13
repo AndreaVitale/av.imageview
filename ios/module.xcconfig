@@ -7,7 +7,7 @@
 // http://developer.apple.com/mac/library/documentation/DeveloperTools/Conceptual/XcodeBuildSystem/400-Build_Configurations/build_configs.html
 //
 
-CURRENT_MODULE_VERSION="1.5.1"
+CURRENT_MODULE_VERSION="1.5.2"
 FRAMEWORK_SEARCH_PATHS=$(SRCROOT)/../../modules/iphone/av.imageview/$(CURRENT_MODULE_VERSION)/platform
 
 //OTHER_LDFLAGS=$(inherited)

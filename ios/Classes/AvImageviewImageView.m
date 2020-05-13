@@ -218,7 +218,6 @@
 
     // Load the image from the application assets
     NSString *fileNamePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:imagePath];
-    ;
     image = [UIImage imageWithContentsOfFile:fileNamePath];
 
     if (image != nil)

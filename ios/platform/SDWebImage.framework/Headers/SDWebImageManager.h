@@ -87,7 +87,7 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
 [manager loadImageWithURL:imageURL
                   options:0
                  progress:nil
-                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
                     if (image) {
                         // do something with image
                     }
@@ -262,8 +262,26 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
 - (void)cancelAll;
 
 /**
- * Return the cache key for a given URL
+ * Remove the specify URL from failed black list.
+ * @param url The failed URL.
+ */
+- (void)removeFailedURL:(nonnull NSURL *)url;
+
+/**
+ * Remove all the URL from failed black list.
+ */
+- (void)removeAllFailedURLs;
+
+/**
+ * Return the cache key for a given URL, does not considerate transformer or thumbnail.
+ * @note This method does not have context option, only use the url and manager level cacheKeyFilter to generate the cache key.
  */
 - (nullable NSString *)cacheKeyForURL:(nullable NSURL *)url;
+
+/**
+ * Return the cache key for a given URL and context option.
+ * @note The context option like `.thumbnailPixelSize` and `.imageTransformer` will effect the generated cache key, using this if you have those context associated.
+*/
+- (nullable NSString *)cacheKeyForURL:(nullable NSURL *)url context:(nullable SDWebImageContext *)context;
 
 @end
