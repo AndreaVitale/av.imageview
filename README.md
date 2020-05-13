@@ -27,7 +27,7 @@
         <img src="https://img.shields.io/badge/sdwebimage-5.8.0-orange.svg?style=flat-square">
   </a>
   <a href="https://github.com/bumptech/glide">
-    <img src="https://img.shields.io/badge/glide-4.9.0-green.svg?style=flat-square">
+    <img src="https://img.shields.io/badge/glide-4.11.0-green.svg?style=flat-square">
   </a>
 </div>
 
