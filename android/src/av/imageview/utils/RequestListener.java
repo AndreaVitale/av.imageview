@@ -1,6 +1,5 @@
 package av.imageview.utils;
 
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ProgressBar;
 
