@@ -15,6 +15,7 @@ import com.bumptech.glide.signature.ObjectKey;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -165,14 +166,14 @@ public class AvImageView extends TiUIView
         }
 
         // Creating request builder
-        builder = ImageViewHelper.prepareGlideClientFor(this.context, url);
+        builder = ImageViewHelper.prepareGlideClientFor(TiApplication.getAppCurrentActivity(), url);
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(url);
         if (signature != null && !signature.equals("")) {
             builder.signature(new ObjectKey(signature));
         }
-        builder.into(new DrawableImageViewTarget(this.imageView, true));
+        builder.into(this.imageView);
     }
 
     public void setImageAsLocalUri(String filename) {

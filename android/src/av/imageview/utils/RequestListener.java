@@ -1,5 +1,6 @@
 package av.imageview.utils;
 
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -16,7 +17,7 @@ import java.lang.ref.WeakReference;
 
 import av.imageview.ImageViewConstants;
 
-public class RequestListener implements com.bumptech.glide.request.RequestListener {
+public class RequestListener implements com.bumptech.glide.request.RequestListener<Drawable> {
     private WeakReference<TiViewProxy> proxy;
     private WeakReference<ProgressBar> progressBar;
 
@@ -31,7 +32,7 @@ public class RequestListener implements com.bumptech.glide.request.RequestListen
     }
 
     @Override
-    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
+    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
         KrollDict currentProperties = this.proxy.get().getProperties();
 
         if (this.proxy.get().hasListeners(ImageViewConstants.EVENT_IMAGE_LOAD_ERROR)) {
@@ -51,7 +52,7 @@ public class RequestListener implements com.bumptech.glide.request.RequestListen
     }
 
     @Override
-    public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
+    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
         KrollDict currentProperties = this.proxy.get().getProperties();
 
         if (this.proxy.get().hasListeners(ImageViewConstants.EVENT_IMAGE_LOADED)) {
@@ -68,4 +69,6 @@ public class RequestListener implements com.bumptech.glide.request.RequestListen
 
         return false;
     }
+
+
 }
