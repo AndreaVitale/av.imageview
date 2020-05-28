@@ -32,7 +32,6 @@ public class AvImageView extends TiUIView
     private static final String LCAT = "AvImageView";
 
     private WeakReference<TiViewProxy> proxy;
-    private Activity context;
     private ImageView imageView;
     private ProgressIndicator progressBar;
     private RelativeLayout layout;
@@ -41,7 +40,6 @@ public class AvImageView extends TiUIView
     public AvImageView(Activity context, TiViewProxy proxy) {
         super(proxy);
 
-        this.context = context;
         this.proxy = new WeakReference<>(proxy);
         this.layout = new RelativeLayout(context);
         this.imageView = new ImageView(context);
@@ -93,8 +91,9 @@ public class AvImageView extends TiUIView
 
     @Override
     public void release() {
-        if (!this.context.isFinishing() && !this.context.isDestroyed()) {
-            Glide.with(this.context).clear(this.imageView);
+        Activity act = TiApplication.getAppCurrentActivity();
+        if (!act.isFinishing() && !act.isDestroyed()) {
+            Glide.with(act).clear(this.imageView);
         }
 
         super.release();
@@ -192,7 +191,7 @@ public class AvImageView extends TiUIView
         }
 
         // Creating request builder
-        builder = Glide.with(context).asDrawable();
+        builder = Glide.with(TiApplication.getAppCurrentActivity()).asDrawable();
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(imageDrawable);
