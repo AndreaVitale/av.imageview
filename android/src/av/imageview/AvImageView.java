@@ -88,7 +88,7 @@ public class AvImageView extends TiUIView
     public void propertyChanged(String key, Object oldValue, Object newValue, KrollProxy proxy) {
         super.propertyChanged(key, oldValue, newValue, proxy);
 
-        this.processProperty(key, this.proxy.get().getProperties());
+        this.processProperty(key, proxy.getProperties());
     }
 
     @Override
