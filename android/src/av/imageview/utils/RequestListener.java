@@ -69,6 +69,4 @@ public class RequestListener implements com.bumptech.glide.request.RequestListen
 
         return false;
     }
-
-
 }
