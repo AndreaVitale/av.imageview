@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference;
 
 import av.imageview.ImageViewConstants;
 
-public class RequestListener implements com.bumptech.glide.request.RequestListener<Drawable> {
+public class RequestListener implements com.bumptech.glide.request.RequestListener {
     private WeakReference<TiViewProxy> proxy;
     private WeakReference<ProgressBar> progressBar;
 
@@ -32,7 +32,7 @@ public class RequestListener implements com.bumptech.glide.request.RequestListen
     }
 
     @Override
-    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
         KrollDict currentProperties = this.proxy.get().getProperties();
 
         if (this.proxy.get().hasListeners(ImageViewConstants.EVENT_IMAGE_LOAD_ERROR)) {
@@ -52,7 +52,7 @@ public class RequestListener implements com.bumptech.glide.request.RequestListen
     }
 
     @Override
-    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+    public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
         KrollDict currentProperties = this.proxy.get().getProperties();
 
         if (this.proxy.get().hasListeners(ImageViewConstants.EVENT_IMAGE_LOADED)) {

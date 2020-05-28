@@ -10,6 +10,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.view.TiDrawableReference;
 
@@ -35,7 +36,7 @@ public class ImageViewHelper {
             return null;
         }
 
-        return TiDrawableReference.fromUrl(proxy, proxy.getProperties().getString(propertyName)).getDrawable();
+        return TiDrawableReference.fromUrl(TiApplication.getAppCurrentActivity(), proxy.getProperties().getString(propertyName)).getDrawable();
     }
 
     public static RequestBuilder prepareGlideClientFor(Context context, GlideUrl url) {
