@@ -15,6 +15,7 @@ import com.bumptech.glide.signature.ObjectKey;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -31,7 +32,6 @@ public class AvImageView extends TiUIView
     private static final String LCAT = "AvImageView";
 
     private WeakReference<TiViewProxy> proxy;
-    private Activity context;
     private ImageView imageView;
     private ProgressIndicator progressBar;
     private RelativeLayout layout;
@@ -40,7 +40,6 @@ public class AvImageView extends TiUIView
     public AvImageView(Activity context, TiViewProxy proxy) {
         super(proxy);
 
-        this.context = context;
         this.proxy = new WeakReference<>(proxy);
         this.layout = new RelativeLayout(context);
         this.imageView = new ImageView(context);
@@ -87,13 +86,14 @@ public class AvImageView extends TiUIView
     public void propertyChanged(String key, Object oldValue, Object newValue, KrollProxy proxy) {
         super.propertyChanged(key, oldValue, newValue, proxy);
 
-        this.processProperty(key, this.proxy.get().getProperties());
+        this.processProperty(key, proxy.getProperties());
     }
 
     @Override
     public void release() {
-        if (!this.context.isFinishing() && !this.context.isDestroyed()) {
-            Glide.with(this.context).clear(this.imageView);
+        Activity act = TiApplication.getAppCurrentActivity();
+        if (!act.isFinishing() && !act.isDestroyed()) {
+            Glide.with(act).clear(this.imageView);
         }
 
         super.release();
@@ -165,14 +165,14 @@ public class AvImageView extends TiUIView
         }
 
         // Creating request builder
-        builder = ImageViewHelper.prepareGlideClientFor(this.context, url);
+        builder = ImageViewHelper.prepareGlideClientFor(TiApplication.getAppCurrentActivity(), url);
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(url);
         if (signature != null && !signature.equals("")) {
             builder.signature(new ObjectKey(signature));
         }
-        builder.into(new DrawableImageViewTarget(this.imageView, true));
+        builder.into(this.imageView);
     }
 
     public void setImageAsLocalUri(String filename) {
@@ -191,7 +191,7 @@ public class AvImageView extends TiUIView
         }
 
         // Creating request builder
-        builder = Glide.with(context).asDrawable();
+        builder = Glide.with(TiApplication.getAppCurrentActivity()).asDrawable();
         builder = builder.listener(this.requestListener);
         builder = builder.apply(options);
         builder = builder.load(imageDrawable);
