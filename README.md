@@ -164,7 +164,8 @@ Using the module in a `ListItemTemplate` is a bit difference because custom modu
 where `AvImageview` is a variable declared in `alloy.js` like as follows:
 ```javascript
     const AvImageview = require("av.imageview");
-
+    global.AvImageview = AvImageview;
+    
     //and to use contentmodes constants via alloy
     Alloy.Globals.CONTENT_MODE_FIT = AvImageview.CONTENT_MODE_ASPECT_FIT;
     Alloy.Globals.CONTENT_MODE_FILL = AvImageview.CONTENT_MODE_ASPECT_FILL;
