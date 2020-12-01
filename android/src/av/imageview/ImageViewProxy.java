@@ -34,6 +34,13 @@ public class ImageViewProxy extends TiViewProxy  {
 		return view;
 	}
 
+	@Override
+	public void onDestroy(Activity activity) {
+		super.onDestroy(activity);
+
+		this.activity = null;
+	}
+
 	protected AvImageView getView() {
 	    return (AvImageView) this.getOrCreateView();
     }
