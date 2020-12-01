@@ -92,7 +92,7 @@ public class AvImageView extends TiUIView
     @Override
     public void release() {
         Activity act = TiApplication.getAppCurrentActivity();
-        if (!act.isFinishing() && !act.isDestroyed()) {
+        if (act != null && !act.isFinishing() && !act.isDestroyed()) {
             Glide.with(act).clear(this.imageView);
         }
 
