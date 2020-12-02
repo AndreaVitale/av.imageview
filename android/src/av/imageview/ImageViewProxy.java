@@ -17,28 +17,16 @@ import org.appcelerator.titanium.view.TiUIView;
 public class ImageViewProxy extends TiViewProxy  {
 	private static final String LCAT = "ImageViewProxy";
 	private static final boolean DBG = TiConfig.LOGD;
-
     private static final int MSG_FIRST_ID = TiViewProxy.MSG_LAST_ID + 1;
-
-    private Activity activity;
 
 	@Override
 	public TiUIView createView(Activity activity) {
-	    this.activity = activity;
-
-		TiUIView view = new AvImageView(this.activity, this);
+		TiUIView view = new AvImageView(this);
 
 		view.getLayoutParams().autoFillsHeight = false;
 		view.getLayoutParams().autoFillsWidth = false;
 
 		return view;
-	}
-
-	@Override
-	public void onDestroy(Activity activity) {
-		super.onDestroy(activity);
-
-		this.activity = null;
 	}
 
 	protected AvImageView getView() {
