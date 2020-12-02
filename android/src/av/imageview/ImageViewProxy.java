@@ -20,13 +20,10 @@ public class ImageViewProxy extends TiViewProxy  {
 
     private static final int MSG_FIRST_ID = TiViewProxy.MSG_LAST_ID + 1;
 
-    private Activity activity;
-
 	@Override
 	public TiUIView createView(Activity activity) {
-	    this.activity = activity;
 
-		TiUIView view = new AvImageView(this.activity, this);
+		TiUIView view = new AvImageView(activity, this);
 
 		view.getLayoutParams().autoFillsHeight = false;
 		view.getLayoutParams().autoFillsWidth = false;
