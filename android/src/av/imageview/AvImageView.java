@@ -147,23 +147,23 @@ public class AvImageView extends TiUIView {
         options = options.error(brokenLinkImageDrawable);
         options = options.timeout(timeout);
 
-        if (currentProperties.containsKey("animated") && !currentProperties.getBoolean("animated")) {
+        if (currentProperties.containsKeyAndNotNull("animated") && !currentProperties.getBoolean("animated")) {
             options = options.dontAnimate();
         }
 
-        if (currentProperties.containsKey("rounded") && currentProperties.getBoolean("rounded")) {
+        if (currentProperties.containsKeyAndNotNull("rounded") && currentProperties.getBoolean("rounded")) {
             options = options.circleCrop();
         }
 
-        if (currentProperties.containsKey("shouldCacheImagesInMemory") && !currentProperties.getBoolean("shouldCacheImagesInMemory")) {
+        if (currentProperties.containsKeyAndNotNull("shouldCacheImagesInMemory") && !currentProperties.getBoolean("shouldCacheImagesInMemory")) {
             options = options.skipMemoryCache(true);
         }
 
-        if (currentProperties.containsKey("loadingIndicator") && currentProperties.getBoolean("loadingIndicator")) {
+        if (currentProperties.containsKeyAndNotNull("loadingIndicator") && currentProperties.getBoolean("loadingIndicator")) {
             this.progressBar.setVisibility(View.VISIBLE);
         }
 
-        if (currentProperties.containsKey("signature") && !currentProperties.getString("signature").isEmpty()) {
+        if (currentProperties.containsKeyAndNotNull("signature") && !currentProperties.getString("signature").isEmpty()) {
             signature = currentProperties.getString("signature");
         }
 
