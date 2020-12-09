@@ -38,7 +38,12 @@ public class RequestListener implements com.bumptech.glide.request.RequestListen
             KrollDict payload = new KrollDict();
 
             payload.put("image", currentProperties.getString("image"));
-            payload.put("reason", e.getMessage());
+
+            if (e != null) {
+                payload.put("reason", e.getMessage());
+            } else {
+                payload.put("reason", "unknown");
+            }
 
             this.proxy.get().fireEvent(ImageViewConstants.EVENT_IMAGE_LOAD_ERROR, payload);
         }

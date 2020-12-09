@@ -1,6 +1,6 @@
 package av.imageview;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,41 +10,31 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.signature.ObjectKey;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
-import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
 import org.appcelerator.titanium.view.TiDrawableReference;
 import org.appcelerator.titanium.view.TiUIView;
 
-import java.lang.ref.WeakReference;
-
 import av.imageview.utils.ProgressIndicator;
 import av.imageview.utils.RequestListener;
 
-public class AvImageView extends TiUIView
-{
+public class AvImageView extends TiUIView {
     private static final String LCAT = "AvImageView";
-
-    private WeakReference<TiViewProxy> proxy;
     private ImageView imageView;
     private ProgressIndicator progressBar;
     private RelativeLayout layout;
-    private RequestListener requestListener;
 
-    public AvImageView(Activity context, TiViewProxy proxy) {
+    public AvImageView(TiViewProxy proxy) {
         super(proxy);
 
-        this.proxy = new WeakReference<>(proxy);
-        this.layout = new RelativeLayout(context);
-        this.imageView = new ImageView(context);
-        this.progressBar = new ProgressIndicator(context);
-        this.requestListener = new RequestListener(proxy, this.progressBar);
+        this.layout = new RelativeLayout(proxy.getActivity());
+        this.imageView = new ImageView(proxy.getActivity());
+        this.progressBar = new ProgressIndicator(proxy.getActivity());
 
         this.layout.setLayoutParams(new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -91,9 +81,22 @@ public class AvImageView extends TiUIView
 
     @Override
     public void release() {
-        Activity act = TiApplication.getAppCurrentActivity();
-        if (!act.isFinishing() && !act.isDestroyed()) {
-            Glide.with(act).clear(this.imageView);
+        if (this.imageView != null) {
+            // this line might not be required as calling the clear will eventually stop image-resource being loaded
+            // but unfortunately it'll try to show the current placeholder
+            //Glide.with(this.imageView.getContext()).clear(this.imageView);
+
+            clearImage();
+            this.imageView = null;
+        }
+
+        if (this.progressBar != null) {
+            this.progressBar = null;
+        }
+
+        if (this.layout != null) {
+            this.layout.removeAllViews();
+            this.layout = null;
         }
 
         super.release();
@@ -123,19 +126,19 @@ public class AvImageView extends TiUIView
         }
     }
 
+    @SuppressLint("CheckResult")
     public void setImageAsURL(String uri) {
-        Drawable defaultImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("defaultImage", this.proxy.get());
-        Drawable brokenLinkImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("brokenLinkImage", this.proxy.get());
-        GlideUrl url = new GlideUrl(uri, ImageViewHelper.prepareRequestHeaders(uri, this.proxy.get()));
+        Drawable defaultImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("defaultImage", proxy);
+        Drawable brokenLinkImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("brokenLinkImage", proxy);
+        GlideUrl url = new GlideUrl(uri, ImageViewHelper.prepareRequestHeaders(uri, proxy));
 
-        KrollDict currentProperties = this.proxy.get().getProperties();
+        KrollDict currentProperties = proxy.getProperties();
 
         int timeout = currentProperties.containsKey("timeout")
                 ? currentProperties.getInt("timeout")
                 : ImageViewConstants.DEFAULT_REQUEST_TIMEOUT;
 
         RequestOptions options;
-        RequestBuilder builder;
         String signature = "";
 
         // Creating request options
@@ -144,29 +147,29 @@ public class AvImageView extends TiUIView
         options = options.error(brokenLinkImageDrawable);
         options = options.timeout(timeout);
 
-        if (currentProperties.containsKey("animated") && !currentProperties.getBoolean("animated")) {
+        if (currentProperties.containsKeyAndNotNull("animated") && !currentProperties.getBoolean("animated")) {
             options = options.dontAnimate();
         }
 
-        if (currentProperties.containsKey("rounded") && currentProperties.getBoolean("rounded")) {
+        if (currentProperties.containsKeyAndNotNull("rounded") && currentProperties.getBoolean("rounded")) {
             options = options.circleCrop();
         }
 
-        if (currentProperties.containsKey("shouldCacheImagesInMemory") && !currentProperties.getBoolean("shouldCacheImagesInMemory")) {
+        if (currentProperties.containsKeyAndNotNull("shouldCacheImagesInMemory") && !currentProperties.getBoolean("shouldCacheImagesInMemory")) {
             options = options.skipMemoryCache(true);
         }
 
-        if (currentProperties.containsKey("loadingIndicator") && currentProperties.getBoolean("loadingIndicator")) {
+        if (currentProperties.containsKeyAndNotNull("loadingIndicator") && currentProperties.getBoolean("loadingIndicator")) {
             this.progressBar.setVisibility(View.VISIBLE);
         }
 
-        if (currentProperties.containsKey("signature") && currentProperties.getString("signature") != "") {
+        if (currentProperties.containsKeyAndNotNull("signature") && !currentProperties.getString("signature").isEmpty()) {
             signature = currentProperties.getString("signature");
         }
 
         // Creating request builder
-        builder = ImageViewHelper.prepareGlideClientFor(TiApplication.getAppCurrentActivity(), url);
-        builder = builder.listener(this.requestListener);
+        RequestBuilder builder = ImageViewHelper.prepareGlideClientFor(proxy.getActivity(), url);
+        builder = builder.listener(new RequestListener(proxy, this.progressBar));
         builder = builder.apply(options);
         builder = builder.load(url);
         if (signature != null && !signature.equals("")) {
@@ -176,9 +179,8 @@ public class AvImageView extends TiUIView
     }
 
     public void setImageAsLocalUri(String filename) {
-        Drawable imageDrawable = TiDrawableReference.fromUrl(this.proxy.get(), filename).getDrawable();
-        KrollDict currentProperties = this.proxy.get().getProperties();
-        RequestBuilder builder;
+        Drawable imageDrawable = TiDrawableReference.fromUrl(proxy, filename).getDrawable();
+        KrollDict currentProperties = proxy.getProperties();
 
         RequestOptions options = new RequestOptions();
 
@@ -191,8 +193,8 @@ public class AvImageView extends TiUIView
         }
 
         // Creating request builder
-        builder = Glide.with(TiApplication.getAppCurrentActivity()).asDrawable();
-        builder = builder.listener(this.requestListener);
+        RequestBuilder<Drawable> builder = Glide.with(proxy.getActivity()).asDrawable();
+        builder = builder.listener(new RequestListener(proxy, this.progressBar));
         builder = builder.apply(options);
         builder = builder.load(imageDrawable);
 
@@ -200,16 +202,16 @@ public class AvImageView extends TiUIView
     }
 
     public void setImageAsBlob(TiBlob blob) {
-        TiDrawableReference drawableReference = TiDrawableReference.fromBlob(this.proxy.get().getActivity(), blob);
+        TiDrawableReference drawableReference = TiDrawableReference.fromBlob(proxy.getActivity(), blob);
 
         this.imageView.setImageBitmap(drawableReference.getBitmap());
 
-        if (this.proxy.get().hasListeners(ImageViewConstants.EVENT_IMAGE_LOADED)) {
+        if (proxy.hasListeners(ImageViewConstants.EVENT_IMAGE_LOADED)) {
             KrollDict payload = new KrollDict();
 
             payload.put("image", blob);
 
-            this.proxy.get().fireEvent(ImageViewConstants.EVENT_IMAGE_LOADED, payload);
+            proxy.fireEvent(ImageViewConstants.EVENT_IMAGE_LOADED, payload);
         }
 
         if (this.progressBar != null && this.progressBar.getVisibility() == View.VISIBLE) {
