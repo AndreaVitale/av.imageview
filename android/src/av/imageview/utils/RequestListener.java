@@ -32,6 +32,8 @@ public class RequestListener implements com.bumptech.glide.request.RequestListen
 
     @Override
     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
+        if (this.proxy == null) { return false; }
+        
         KrollDict currentProperties = this.proxy.get().getProperties();
 
         if (this.proxy.get().hasListeners(ImageViewConstants.EVENT_IMAGE_LOAD_ERROR)) {
