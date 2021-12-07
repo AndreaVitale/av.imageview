@@ -14,6 +14,7 @@ import com.bumptech.glide.signature.ObjectKey;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -168,7 +169,7 @@ public class AvImageView extends TiUIView {
         }
 
         // Creating request builder
-        RequestBuilder builder = ImageViewHelper.prepareGlideClientFor(proxy.getActivity(), url);
+        RequestBuilder builder = ImageViewHelper.prepareGlideClientFor(TiApplication.getInstance(), url);
         builder = builder.listener(new RequestListener(proxy, this.progressBar));
         builder = builder.apply(options);
         builder = builder.load(url);
@@ -193,7 +194,7 @@ public class AvImageView extends TiUIView {
         }
 
         // Creating request builder
-        RequestBuilder<Drawable> builder = Glide.with(proxy.getActivity()).asDrawable();
+        RequestBuilder<Drawable> builder = Glide.with(TiApplication.getInstance()).asDrawable();
         builder = builder.listener(new RequestListener(proxy, this.progressBar));
         builder = builder.apply(options);
         builder = builder.load(imageDrawable);
