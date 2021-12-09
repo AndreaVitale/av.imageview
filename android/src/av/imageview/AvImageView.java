@@ -1,6 +1,7 @@
 package av.imageview;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,7 +15,6 @@ import com.bumptech.glide.signature.ObjectKey;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
-import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -168,15 +168,20 @@ public class AvImageView extends TiUIView {
             signature = currentProperties.getString("signature");
         }
 
-        // Creating request builder
-        RequestBuilder builder = ImageViewHelper.prepareGlideClientFor(TiApplication.getInstance(), url);
-        builder = builder.listener(new RequestListener(proxy, this.progressBar));
-        builder = builder.apply(options);
-        builder = builder.load(url);
-        if (signature != null && !signature.equals("")) {
-            builder.signature(new ObjectKey(signature));
+        // Creating request builder. The activity may be null, e.g. when switching from light- to dark
+        // mode, which is fine because the image can remain as-is
+        Activity activity = proxy.getActivity();
+
+        if (activity != null) {
+            RequestBuilder builder = ImageViewHelper.prepareGlideClientFor(activity, url);
+            builder = builder.listener(new RequestListener(proxy, this.progressBar));
+            builder = builder.apply(options);
+            builder = builder.load(url);
+            if (signature != null && !signature.equals("")) {
+                builder.signature(new ObjectKey(signature));
+            }
+            builder.into(this.imageView);
         }
-        builder.into(this.imageView);
     }
 
     public void setImageAsLocalUri(String filename) {
@@ -193,13 +198,19 @@ public class AvImageView extends TiUIView {
             options = options.circleCrop();
         }
 
-        // Creating request builder
-        RequestBuilder<Drawable> builder = Glide.with(TiApplication.getInstance()).asDrawable();
-        builder = builder.listener(new RequestListener(proxy, this.progressBar));
-        builder = builder.apply(options);
-        builder = builder.load(imageDrawable);
 
-        builder.into(this.imageView);
+        // Creating request builder. The activity may be null, e.g. when switching from light- to dark
+        // mode, which is fine because the image can remain as-is
+        Activity activity = proxy.getActivity();
+
+        if (activity != null) {
+            RequestBuilder<Drawable> builder = Glide.with(activity).asDrawable();
+            builder = builder.listener(new RequestListener(proxy, this.progressBar));
+            builder = builder.apply(options);
+            builder = builder.load(imageDrawable);
+
+            builder.into(this.imageView);
+        }
     }
 
     public void setImageAsBlob(TiBlob blob) {
