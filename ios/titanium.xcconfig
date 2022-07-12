@@ -4,7 +4,7 @@
 // OF YOUR TITANIUM SDK YOU'RE BUILDING FOR
 //
 //
-TITANIUM_SDK_VERSION = 9.0.3.GA
+TITANIUM_SDK_VERSION = 10.0.2.GA
 
 
 //
@@ -12,4 +12,4 @@ TITANIUM_SDK_VERSION = 9.0.3.GA
 //
 TITANIUM_SDK = /Users/$(USER)/Library/Application Support/Titanium/mobilesdk/osx/$(TITANIUM_SDK_VERSION)
 HEADER_SEARCH_PATHS = $(inherited) "$(TITANIUM_SDK)/iphone/include"
-FRAMEWORK_SEARCH_PATHS = $(inherited) "$(TITANIUM_SDK)/iphone/Frameworks"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$(TITANIUM_SDK)/iphone/Frameworks/**"
