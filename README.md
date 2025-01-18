@@ -172,7 +172,7 @@ where `AvImageview` is a variable declared in `alloy.js` like as follows:
 
     //If you need to access to protected images you can define which request header fields the module has to use for every request
     Alloy.Globals.REQUEST_HEADERS = {
-        'Authorization': 'place or assign dinamically your logged user access token',
+        'Authorization': 'place or assign your logged user access token dynamically (if required)',
         'Another HTTP header field': 'with its value'
     };
 ```

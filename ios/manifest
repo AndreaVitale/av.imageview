@@ -2,13 +2,13 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 3.0.0
+version: 4.0.0
 apiversion: 2
 architectures: arm64 x86_64
 description: imageview-ios
 author: Andrea Vitale
 license: MIT
-mac: true
+mac: false
 copyright: Copyright (c) 2017-present by Andrea Vitale
 
 # these should not be edited
@@ -16,4 +16,4 @@ name: imageview-ios
 moduleid: av.imageview
 guid: ddffa9fa-4366-40f0-9031-d32000a82138
 platform: iphone
-minsdk: 9.2.0
+minsdk: 11.0.0

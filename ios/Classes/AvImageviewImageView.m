@@ -128,8 +128,8 @@
     //fix downloading the image if url contains spaces or none ASCII characters
     //source : https://stackoverflow.com/questions/1441106/nsdata-nsurl-url-with-space-having-problem
     NSString *srtImageUrl = [TiUtils stringValue:imageObj];
-    srtImageUrl = [srtImageUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-
+    srtImageUrl = [srtImageUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    
     NSURL *imageUrl = [NSURL URLWithString:srtImageUrl];
 
     if (loadingIndicator) {
