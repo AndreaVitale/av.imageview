@@ -14,6 +14,7 @@ import com.bumptech.glide.signature.ObjectKey;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
+import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
@@ -181,6 +182,7 @@ public class AvImageView extends TiUIView {
     public void setImageAsLocalUri(String filename) {
         Drawable imageDrawable = TiDrawableReference.fromUrl(proxy, filename).getDrawable();
         KrollDict currentProperties = proxy.getProperties();
+        String mimeType = ImageViewHelper.getMimeTypeFor(filename);
 
         RequestOptions options = new RequestOptions();
 
@@ -193,10 +195,17 @@ public class AvImageView extends TiUIView {
         }
 
         // Creating request builder
-        RequestBuilder<Drawable> builder = Glide.with(proxy.getActivity()).asDrawable();
+        RequestBuilder builder;
+        if (mimeType.equals("image/gif")) {
+            // local gif file
+            builder = Glide.with(TiApplication.getAppRootOrCurrentActivity().getApplicationContext()).asGif();
+            builder = builder.load(TiDrawableReference.fromUrl(proxy, filename).getUrl());
+        }  else {
+            builder = Glide.with(TiApplication.getAppRootOrCurrentActivity().getApplicationContext()).asDrawable();
+            builder = builder.load(imageDrawable);
+        }
         builder = builder.listener(new RequestListener(proxy, this.progressBar));
         builder = builder.apply(options);
-        builder = builder.load(imageDrawable);
 
         builder.into(this.imageView);
     }
