@@ -198,10 +198,10 @@ public class AvImageView extends TiUIView {
         RequestBuilder builder;
         if (mimeType.equals("image/gif")) {
             // local gif file
-            builder = Glide.with(TiApplication.getAppRootOrCurrentActivity().getApplicationContext()).asGif();
+            builder = Glide.with(proxy.getActivity().getApplicationContext()).asGif();
             builder = builder.load(TiDrawableReference.fromUrl(proxy, filename).getUrl());
         }  else {
-            builder = Glide.with(TiApplication.getAppRootOrCurrentActivity().getApplicationContext()).asDrawable();
+            builder = Glide.with(proxy.getActivity().getApplicationContext()).asDrawable();
             builder = builder.load(imageDrawable);
         }
         builder = builder.listener(new RequestListener(proxy, this.progressBar));
