@@ -180,6 +180,9 @@ public class AvImageView extends TiUIView {
     }
 
     public void setImageAsLocalUri(String filename) {
+        if (proxy == null || proxy.getActivity() == null) {
+            return;
+        }
         Drawable imageDrawable = TiDrawableReference.fromUrl(proxy, filename).getDrawable();
         KrollDict currentProperties = proxy.getProperties();
         String mimeType = ImageViewHelper.getMimeTypeFor(filename);
@@ -198,10 +201,10 @@ public class AvImageView extends TiUIView {
         RequestBuilder builder;
         if (mimeType.equals("image/gif")) {
             // local gif file
-            builder = Glide.with(proxy.getActivity().getApplicationContext()).asGif();
+            builder = Glide.with(proxy.getActivity()).asGif();
             builder = builder.load(TiDrawableReference.fromUrl(proxy, filename).getUrl());
-        }  else {
-            builder = Glide.with(proxy.getActivity().getApplicationContext()).asDrawable();
+        } else {
+            builder = Glide.with(proxy.getActivity()).asDrawable();
             builder = builder.load(imageDrawable);
         }
         builder = builder.listener(new RequestListener(proxy, this.progressBar));
