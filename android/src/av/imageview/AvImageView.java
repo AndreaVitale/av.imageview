@@ -199,7 +199,7 @@ public class AvImageView extends TiUIView {
 
         // Creating request builder
         RequestBuilder builder;
-        if (mimeType.equals("image/gif")) {
+        if ("image/gif".equals(mimeType)) {
             // local gif file
             builder = Glide.with(proxy.getActivity()).asGif();
             builder = builder.load(TiDrawableReference.fromUrl(proxy, filename).getUrl());
