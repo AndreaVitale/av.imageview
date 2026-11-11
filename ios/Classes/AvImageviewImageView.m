@@ -150,14 +150,26 @@
 
       [[SDWebImageDownloader sharedDownloader] setValue:userAgent forHTTPHeaderField:@"User-Agent"];
 
-      //Extending HTTP header with custom values
-      if (requestHeaders != nil)
-        for (id key in requestHeaders)
-          [[SDWebImageDownloader sharedDownloader] setValue:[requestHeaders valueForKey:key] forHTTPHeaderField:key];
+      SDWebImageMutableContext *context = [SDWebImageMutableContext dictionary];
+
+      // Extend the HTTP headers of this request only: headers set on the shared downloader
+      // would be sent with every later request, from any image view
+      if (requestHeaders != nil) {
+        NSDictionary *headers = [requestHeaders copy];
+        context[SDWebImageContextDownloadRequestModifier] = [SDWebImageDownloaderRequestModifier requestModifierWithBlock:^NSURLRequest *_Nullable(NSURLRequest *_Nonnull request) {
+          NSMutableURLRequest *mutableRequest = [request mutableCopy];
+          for (id key in headers) {
+            [mutableRequest setValue:[TiUtils stringValue:[headers valueForKey:key]] forHTTPHeaderField:[TiUtils stringValue:key]];
+          }
+          return mutableRequest;
+        }];
+      }
 
       [imageView sd_setImageWithURL:imageUrl
                    placeholderImage:placeholderImage
                             options:imageOptions
+                            context:context
+                           progress:nil
                           completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *url) {
                             self->autoWidth = image.size.width;
                             self->autoHeight = image.size.height;
