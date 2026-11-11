@@ -131,9 +131,14 @@ public class AvImageView extends TiUIView {
     public void setImageAsURL(String uri) {
         Drawable defaultImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("defaultImage", proxy);
         Drawable brokenLinkImageDrawable = ImageViewHelper.getDrawableFromProxyProperty("brokenLinkImage", proxy);
-        GlideUrl url = new GlideUrl(uri, ImageViewHelper.prepareRequestHeaders(uri, proxy));
-
         KrollDict currentProperties = proxy.getProperties();
+
+        GlideUrl url;
+        if (currentProperties.containsKeyAndNotNull("cacheKey") && !currentProperties.getString("cacheKey").isEmpty()) {
+            url = new CacheKeyGlideUrl(uri, ImageViewHelper.prepareRequestHeaders(uri, proxy), currentProperties.getString("cacheKey"));
+        } else {
+            url = new GlideUrl(uri, ImageViewHelper.prepareRequestHeaders(uri, proxy));
+        }
 
         int timeout = currentProperties.containsKey("timeout")
                 ? currentProperties.getInt("timeout")
