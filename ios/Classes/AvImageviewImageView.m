@@ -56,6 +56,7 @@
   [self setLoadingIndicatorColor_:[self.proxy valueForKey:@"loadingIndicatorColor"]];
   [self setContentMode_:[self.proxy valueForKey:@"contentMode"]];
   [self setRequestHeaders_:[self.proxy valueForKey:@"requestHeaders"]];
+  [self setCacheKey_:[self.proxy valueForKey:@"cacheKey"]];
   [self setHandleCookies_:[self.proxy valueForKey:@"handleCookies"]];
 }
 
@@ -162,6 +163,14 @@
             [mutableRequest setValue:[TiUtils stringValue:[headers valueForKey:key]] forHTTPHeaderField:[TiUtils stringValue:key]];
           }
           return mutableRequest;
+        }];
+      }
+
+      // Cache under a fixed key instead of the URL, e.g. for signed URLs that change on every request
+      if (cacheKey != nil) {
+        NSString *key = cacheKey;
+        context[SDWebImageContextCacheKeyFilter] = [SDWebImageCacheKeyFilter cacheKeyFilterWithBlock:^NSString *_Nullable(NSURL *_Nonnull url) {
+          return key;
         }];
       }
 
@@ -337,6 +346,11 @@
 
 - (void)setRequestHeaders_:(id)args {
   requestHeaders = args;
+}
+
+- (void)setCacheKey_:(id)args {
+  NSString *value = [TiUtils stringValue:args];
+  cacheKey = value.length > 0 ? value : nil;
 }
 
 - (void)setHandleCookies_:(id)args {

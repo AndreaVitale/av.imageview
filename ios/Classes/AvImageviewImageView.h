@@ -28,6 +28,7 @@
   NSString *brokenLinkImagePath;
 
   NSDictionary *requestHeaders;
+  NSString *cacheKey;
   id imageObject;
   BOOL configurationComplete;
 
@@ -46,6 +47,7 @@
 - (void)setContentMode_:(id)args;
 - (void)setClipsToBounds_:(id)clips;
 - (void)setRequestHeaders_:(id)args;
+- (void)setCacheKey_:(id)args;
 - (void)setTimeout_:(id)args;
 
 @end

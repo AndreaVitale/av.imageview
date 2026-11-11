@@ -102,6 +102,7 @@ All [Titanium.UI.View](http://docs.appcelerator.com/platform/latest/#!/api/Titan
 | maxCacheSize | The maximum size of the cache, in bytes | ✅ | 🚫| integer value |
 | rounded | Renders the image in a circle | 🚫 | ✅ | Use with `CONTENT_MODE_ASPECT_FIT` for a correct rendering |
 | animated | Disables the fade-in animation | 🚫 | ✅ | |
+| cacheKey | Caches the remote image under this key instead of its URL, so an image whose URL changes on every request (e.g. a signed URL with an expiry) is still found in the cache | ✅ | ✅ | string value; set it before (or together with) `image` |
 | signature | Sets a custom caching signature (<a href="https://github.com/bumptech/glide/wiki/Caching-and-Cache-Invalidation#custom-cache-invalidation" target="_blank">Glide documentation</a>) | 🚫 | ✅ | string value |
 
 #### Events
